@@ -516,7 +516,7 @@ async function loadAdminMembers() {
     ytTaskDocs.forEach(({ id, data: t }) => { _ytTaskMap[id] = t.name; });
     _allMemberDocs = memberDocs;
 
-    // 更新員工篩選下拉
+    // 更新員工篩選下拉（只顯示員工名單裡的名字）
     const filterStaff = document.getElementById('filter-staff');
     const prev = filterStaff.value;
     filterStaff.innerHTML = '<option value="">👤 全部員工</option>';
@@ -524,16 +524,6 @@ async function loadAdminMembers() {
       const opt = document.createElement('option');
       opt.value = s.name; opt.textContent = s.name;
       filterStaff.appendChild(opt);
-    });
-    // 加入備註中有但不在員工名單的名稱
-    const knownStaff = new Set(staffDocs.map(s => s.data.name));
-    memberDocs.forEach(({ data: d }) => {
-      if (d.note && !knownStaff.has(d.note)) {
-        knownStaff.add(d.note);
-        const opt = document.createElement('option');
-        opt.value = d.note; opt.textContent = d.note;
-        filterStaff.appendChild(opt);
-      }
     });
     if (prev) filterStaff.value = prev;
 
@@ -552,7 +542,7 @@ function renderFilteredMembers() {
   const today = todayStr();
 
   let filtered = _allMemberDocs.filter(({ data: d }) => {
-    if (filterStaff && d.note !== filterStaff) return false;
+    if (filterStaff && !(d.note && d.note.includes(filterStaff))) return false;
     if (filterGroup && (d.groupStatus || 'in') !== filterGroup) return false;
     if (filterPay   && (d.payStatus   || 'wait') !== filterPay)  return false;
     return true;
