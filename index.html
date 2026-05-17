@@ -205,6 +205,7 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
     <button class="tab-btn active" data-tab="tab-checkin">📅 簽到</button>
     <button class="tab-btn" data-tab="tab-news">🏦 幣託介紹</button>
     <button class="tab-btn" data-tab="tab-tasks">📋 任務</button>
+    <button class="tab-btn" data-tab="tab-store">🏪 店家任務</button>
     <button class="tab-btn" data-tab="tab-setting">⚙️ 設定</button>
   </div>
 
@@ -372,6 +373,124 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
     </div>
   </div>
 
+  <!-- 店家任務 TAB -->
+  <div class="tab-pane" id="tab-store">
+
+    <!-- 說明區 -->
+    <div style="background:linear-gradient(135deg,rgba(22,85,192,0.18),rgba(0,144,255,0.10));border:1px solid rgba(0,144,255,0.3);border-radius:16px;padding:18px 16px;margin-bottom:14px">
+      <div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:4px">🏪 店家實境收益任務</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:14px">真實探店 × 真誠回饋 × 共享成長</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
+        <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:10px 8px;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">👥</div>
+          <div style="font-size:11px;font-weight:700;color:#fff">真實互動</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">親身體驗與店家良性互動</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:10px 8px;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">⏰</div>
+          <div style="font-size:11px;font-weight:700;color:#fff">輕鬆參與</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">流程簡單固定，利用閒暇時間</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:10px 8px;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">🛡️</div>
+          <div style="font-size:11px;font-weight:700;color:#fff">安心保障</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">基於個人真實感受</div>
+        </div>
+      </div>
+
+      <!-- 流程 -->
+      <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:8px">任務執行流程</div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+          <div style="font-size:12px;color:#cde"><strong style="color:#fff">線上登記</strong>：填寫下方回饋表並送出</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+          <div style="font-size:12px;color:#cde"><strong style="color:#fff">實地體驗</strong>：前往指定店家實際體驗</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+          <div style="font-size:12px;color:#cde"><strong style="color:#fff">心得回傳</strong>：依實際觀察填寫體驗回饋</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div>
+          <div style="font-size:12px;color:#cde"><strong style="color:#fff">領取回饋</strong>：審核通過後入帳 <strong style="color:#ffd700">700元</strong></div>
+        </div>
+      </div>
+
+      <!-- 獎勵 -->
+      <div style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.3);border-radius:10px;padding:12px 14px">
+        <div style="font-size:12px;font-weight:700;color:#ffd700;margin-bottom:8px">🏆 任務獎勵金</div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#cde;margin-bottom:4px"><span>任務酬勞</span><span style="color:#fff;font-weight:700">500元</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#cde;margin-bottom:8px"><span>體驗補貼</span><span style="color:#fff;font-weight:700">200元</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:800;background:rgba(220,38,38,0.15);border-radius:7px;padding:8px 10px"><span style="color:#ffd700">總計可領取</span><span style="color:#ffd700;font-size:18px">700元</span></div>
+      </div>
+    </div>
+
+    <!-- 可前往店家 -->
+    <div style="margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:10px">📍 可前往店家類型</div>
+      <div style="margin-bottom:8px">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600">🍽️ 餐飲類</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          ${['火鍋','燒肉','韓式料理','日式料理','義式料理','早餐加盟','咖啡廳','手搖飲','酒吧/餐酒館','吃到飽','高級餐廳'].map(s=>`<span style="background:rgba(0,144,255,0.12);border:1px solid rgba(0,144,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#8ecfff">${s}</span>`).join('')}
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600">✨ 生活體驗類</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          ${['美容美甲','美髮沙龍','按摩SPA','健身房','寵物店','KTV'].map(s=>`<span style="background:rgba(0,229,160,0.10);border:1px solid rgba(0,229,160,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#6ee7c0">${s}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- 我的店家任務紀錄 -->
+    <div style="margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:8px">📋 我的任務紀錄</div>
+      <div id="store-task-history" style="font-size:13px;color:var(--muted);text-align:center;padding:12px">載入中...</div>
+    </div>
+
+    <!-- 回饋表單 -->
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:18px 16px;margin-bottom:16px">
+      <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px">📝 店家實境任務回饋表</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:16px">完整填寫後送出，等候審核通過入帳 700 元</div>
+
+      <div style="margin-bottom:12px">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:5px">任務日期</div>
+        <input type="date" id="store-date" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+      </div>
+      <div style="margin-bottom:12px">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:5px">店家名稱／分店</div>
+        <input type="text" id="store-name" placeholder="例：鼎泰豐 信義店" autocomplete="off" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+      </div>
+
+      <div style="border-top:1px solid var(--border2);margin:14px 0 14px"></div>
+      <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:12px">體驗回饋內容</div>
+
+      ${[
+        ['1','本次接待服務整體感受','例如：服務態度、專業介紹、親切程度、應對方式等'],
+        ['2','店內環境與氛圍體驗','例如：整潔度、舒適感、空間氣氛、音樂、燈光等'],
+        ['3','印象最深刻的地方','讓您加分或特別有感的細節'],
+        ['4','商品／服務的實際感受','例如：品質、效果、實用性、價格感受等'],
+        ['5','店內動線與整體安排','例如：等候流程、座位安排、空間規劃等'],
+        ['6','是否會願意再次回訪？原因是什麼？','請說明原因'],
+        ['7','如果推薦給朋友，您會怎麼介紹這間店？','請說明'],
+        ['8','其他建議或希望店家改善的地方','（選填）']
+      ].map(([n,q,hint])=>`
+        <div style="margin-bottom:14px">
+          <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:3px">${n}️⃣ ${q}</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:5px">${hint}</div>
+          <textarea id="store-q${n}" placeholder="✍️ 回饋內容..." rows="3" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:13px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+        </div>`).join('')}
+
+      <div id="store-form-error" style="color:#e03f5e;font-size:13px;margin-bottom:10px;display:none"></div>
+      <button id="store-submit-btn" style="width:100%;padding:14px;background:linear-gradient(135deg,#1655c0,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">
+        📤 送出回饋表等候審核
+      </button>
+    </div>
+  </div>
+
   <!-- 設定 TAB -->
   <div class="tab-pane" id="tab-setting">
     <div style="max-width:420px;margin:0 auto;padding-top:8px">
@@ -474,6 +593,67 @@ async function fsList(col) {
   const snap = await getDocs(collection(db, col));
   return snap.docs.map(d => ({ id: d.id, data: d.data() }));
 }
+
+// ── 店家任務 ──
+async function loadStoreHistory() {
+  const el = document.getElementById('store-task-history');
+  try {
+    const docs = await fsList('store_reviews');
+    const mine = docs.filter(({ data: d }) => d.uid === currentUID);
+    if (!mine.length) { el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:8px">尚無任務紀錄</div>'; return; }
+    el.innerHTML = mine.map(({ data: d }) => {
+      const statusMap = { pending: ['#ffc800','⏳ 審核中'], approved: ['#0f9','✅ 已通過'], rejected: ['#f55','❌ 已拒絕'] };
+      const [col, label] = statusMap[d.status] || statusMap.pending;
+      return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;margin-bottom:8px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#fff">${d.storeName}</div>
+          <div style="font-size:11px;color:var(--muted)">${d.date}</div>
+        </div>
+        <span style="font-size:12px;font-weight:700;color:${col}">${label}${d.status==='approved'?' +700元':''}</span>
+      </div>`;
+    }).join('');
+  } catch(e) { el.innerHTML = ''; }
+}
+
+// 預設今天日期
+document.getElementById('store-date').value = todayStr();
+
+document.getElementById('store-submit-btn').addEventListener('click', async () => {
+  const errEl = document.getElementById('store-form-error');
+  errEl.style.display = 'none';
+  const date      = document.getElementById('store-date').value;
+  const storeName = document.getElementById('store-name').value.trim();
+  const answers   = [1,2,3,4,5,6,7,8].map(n => document.getElementById(`store-q${n}`).value.trim());
+
+  if (!date || !storeName) { errEl.textContent = '請填寫任務日期與店家名稱'; errEl.style.display = 'block'; return; }
+  const emptyRequired = answers.slice(0,7).some(a => a.length < 10);
+  if (emptyRequired) { errEl.textContent = '請填寫第1～7題回饋內容（每題至少10字）'; errEl.style.display = 'block'; return; }
+
+  const btn = document.getElementById('store-submit-btn');
+  btn.textContent = '送出中...'; btn.disabled = true;
+  try {
+    const reviewId = `${currentUID}_store_${Date.now()}`;
+    await fsUpdate(`store_reviews/${reviewId}`, {
+      uid: currentUID, date, storeName,
+      q1: answers[0], q2: answers[1], q3: answers[2], q4: answers[3],
+      q5: answers[4], q6: answers[5], q7: answers[6], q8: answers[7],
+      status: 'pending', createdAt: new Date().toISOString()
+    });
+    showToast('✅ 回饋表已送出，等候審核！');
+    // 清空表單
+    document.getElementById('store-name').value = '';
+    [1,2,3,4,5,6,7,8].forEach(n => document.getElementById(`store-q${n}`).value = '');
+    loadStoreHistory();
+  } catch(e) {
+    errEl.textContent = '送出失敗：' + e.message; errEl.style.display = 'block';
+  }
+  btn.textContent = '📤 送出回饋表等候審核'; btn.disabled = false;
+});
+
+// 切到店家任務分頁時載入紀錄
+document.querySelector('[data-tab="tab-store"]').addEventListener('click', () => {
+  if (currentUID) loadStoreHistory();
+});
 
 // ── 修改密碼 ──
 document.getElementById('pw-save-btn').addEventListener('click', async () => {
