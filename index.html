@@ -650,6 +650,27 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       </div>
 
       <div id="store-form-error" style="color:#e03f5e;font-size:13px;margin-bottom:10px;display:none"></div>
+
+      <!-- 發票上傳 -->
+      <div style="background:rgba(255,193,7,0.06);border:1px solid rgba(255,193,7,0.25);border-radius:12px;padding:14px;margin-bottom:12px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">🧾 發票上傳</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px">請上傳消費發票截圖或照片</div>
+        <div class="upload-area" id="invoice-upload-area" style="cursor:pointer;min-height:80px">
+          <input type="file" accept="image/*" id="invoice-file-input" style="display:none">
+          <div class="upload-area-hint" id="invoice-upload-hint">
+            <div class="uicon">🧾</div>
+            <div>點擊上傳發票</div>
+          </div>
+          <img class="upload-preview" id="invoice-preview" alt="發票預覽" style="display:none">
+        </div>
+      </div>
+
+      <!-- 影片提示 -->
+      <div style="background:rgba(0,144,255,0.06);border:1px solid rgba(0,144,255,0.2);border-radius:12px;padding:14px;margin-bottom:16px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">🎬 影片心得</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.7">請將影片心得直接傳給助理，助理確認後會同步審核資料。</div>
+      </div>
+
       <button id="store-submit-btn" style="width:100%;padding:14px;background:linear-gradient(135deg,#1655c0,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">
         📤 送出回饋表等候審核
       </button>
@@ -663,62 +684,27 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
     <!-- 說明 banner -->
     <div style="background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(0,144,255,0.08));border:1px solid rgba(124,58,237,0.25);border-radius:16px;padding:18px 16px;margin-bottom:14px;position:relative;overflow:hidden">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#7c3aed,#2272e8,#00e5a0)"></div>
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
         <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#2272e8);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 4px 16px rgba(124,58,237,0.35)">🤖</div>
         <div>
-          <div style="font-size:16px;font-weight:800;color:var(--text)">AI數據推行任務</div>
+          <div style="font-size:16px;font-weight:800;color:var(--text)">AI數據任務</div>
           <div style="font-size:11px;color:var(--muted);margin-top:2px">掌握熱勢 × 參與數據 × 回報任務</div>
         </div>
       </div>
       <div style="background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--text);line-height:1.8">
-        📢 參與本輪AI數據任務，完成後回報截圖與登記，管理員確認後即入帳獎勵。
+        📢 每日兩個時段，各自上傳截圖回報，管理員確認後即入帳獎勵。
       </div>
     </div>
 
     <!-- 我的AI任務紀錄 -->
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:14px">
       <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">📋 我的 AI 任務紀錄</div>
-      <div id="ai-task-history">載入中...</div>
+      <div id="ai-task-history"><div style="color:var(--muted);text-align:center;padding:12px;font-size:13px">載入中...</div></div>
     </div>
 
-    <!-- 回報表單 -->
-    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:18px 16px;margin-bottom:16px">
-      <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:2px">📝 AI數據任務回報登記</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:16px">上傳截圖並確認登記，等候管理員審核</div>
+    <!-- 今日時段（從Firebase動態載入） -->
+    <div id="ai-slots-container"></div>
 
-      <div style="margin-bottom:12px">
-        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">任務日期</div>
-        <input type="date" id="ai-date" style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;font-size:14px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit">
-      </div>
-
-      <div style="margin-bottom:12px">
-        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">任務名稱／本輪主題</div>
-        <input type="text" id="ai-task-name" placeholder="例：本輪AI數據任務" autocomplete="off" style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;font-size:14px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit">
-      </div>
-
-      <div style="margin-bottom:16px">
-        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">上傳截圖（任務完成畫面）</div>
-        <div class="upload-area" id="ai-upload-area" style="cursor:pointer">
-          <input type="file" accept="image/*" id="ai-file-input" style="display:none">
-          <div class="upload-area-hint" id="ai-upload-hint">
-            <div class="uicon">📸</div>
-            <div>點擊上傳任務截圖</div>
-            <div style="font-size:10px;margin-top:3px;color:var(--muted)">請上傳清晰的任務完成截圖</div>
-          </div>
-          <img class="upload-preview" id="ai-preview" alt="預覽" style="display:none">
-        </div>
-      </div>
-
-      <div style="margin-bottom:16px">
-        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">✍️ 備註（選填）</div>
-        <textarea id="ai-note" placeholder="可填寫本次任務的補充說明..." rows="3" style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
-      </div>
-
-      <div id="ai-form-error" style="color:#e03f5e;font-size:13px;margin-bottom:10px;display:none"></div>
-      <button id="ai-submit-btn" style="width:100%;padding:14px;background:linear-gradient(135deg,#7c3aed,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">
-        📤 送出回報登記等候審核
-      </button>
-    </div>
   </div>
 
   <!-- 設定 TAB -->
@@ -909,16 +895,25 @@ document.getElementById('store-submit-btn').addEventListener('click', async () =
   const btn = document.getElementById('store-submit-btn');
   btn.textContent = '送出中...'; btn.disabled = true;
   try {
+    // 發票圖片（選填）
+    let invoiceBase64 = '';
+    const invoiceFile = document.getElementById('invoice-file-input').files[0];
+    if (invoiceFile) invoiceBase64 = await compressImage(invoiceFile);
+
     const reviewId = `${currentUID}_store_${Date.now()}`;
     await fsUpdate(`store_reviews/${reviewId}`, {
       uid: currentUID, date, storeName,
       q1: answers[0], q2: answers[1], q3: answers[2], q4: answers[3],
       q5: answers[4], q6: answers[5], q7: answers[6], q8: answers[7],
+      invoiceBase64,
       status: 'pending', createdAt: new Date().toISOString()
     });
     showToast('✅ 回饋表已送出，等候審核！');
     document.getElementById('store-name').value = '';
     [1,2,3,4,5,6,7,8].forEach(n => document.getElementById(`store-q${n}`).value = '');
+    document.getElementById('invoice-preview').style.display = 'none';
+    document.getElementById('invoice-upload-hint').style.display = 'flex';
+    document.getElementById('invoice-file-input').value = '';
     loadStoreHistory();
   } catch(e) {
     errEl.textContent = '送出失敗：' + e.message; errEl.style.display = 'block';
@@ -932,21 +927,6 @@ document.querySelector('[data-tab="tab-store"]').addEventListener('click', () =>
 });
 
 // ── AI 任務 ──
-document.getElementById('ai-date').value = todayStr();
-
-document.getElementById('ai-upload-area').addEventListener('click', () => {
-  document.getElementById('ai-file-input').click();
-});
-
-document.getElementById('ai-file-input').addEventListener('change', () => {
-  const file = document.getElementById('ai-file-input').files[0];
-  if (!file) return;
-  const preview = document.getElementById('ai-preview');
-  preview.src = URL.createObjectURL(file);
-  preview.style.display = 'block';
-  document.getElementById('ai-upload-hint').style.display = 'none';
-});
-
 async function loadAiTaskHistory() {
   const el = document.getElementById('ai-task-history');
   try {
@@ -966,8 +946,8 @@ async function loadAiTaskHistory() {
       const [col, label] = statusMap[d.status] || statusMap.pending;
       return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;margin-bottom:8px">
         <div>
-          <div style="font-size:13px;font-weight:700;color:var(--text)">${d.taskName || 'AI數據任務'}</div>
-          <div style="font-size:11px;color:var(--muted)">${d.date}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text)">${d.slotName || d.taskName || 'AI數據任務'}</div>
+          <div style="font-size:11px;color:var(--muted)">${d.date}${d.slotLabel ? ' · '+d.slotLabel : ''}</div>
         </div>
         <span style="font-size:12px;font-weight:700;color:${col}">${label}${d.status==='approved'&&d.reward?' +'+d.reward+'元':''}</span>
       </div>`;
@@ -975,42 +955,143 @@ async function loadAiTaskHistory() {
   } catch(e) { el.innerHTML = ''; }
 }
 
-document.getElementById('ai-submit-btn').addEventListener('click', async () => {
-  const errEl = document.getElementById('ai-form-error');
-  errEl.style.display = 'none';
-  const date     = document.getElementById('ai-date').value;
-  const taskName = document.getElementById('ai-task-name').value.trim();
-  const fileInput = document.getElementById('ai-file-input');
-  const note     = document.getElementById('ai-note').value.trim();
+async function renderAiSlots() {
+  const container = document.getElementById('ai-slots-container');
+  container.innerHTML = '';
+  const today = todayStr();
 
-  if (!date || !taskName) { errEl.textContent = '請填寫任務日期與任務名稱'; errEl.style.display = 'block'; return; }
-  if (!fileInput.files[0]) { errEl.textContent = '請上傳任務截圖'; errEl.style.display = 'block'; return; }
+  // 讀取後台設定的今日時段
+  const config = await fsGet('ai_config/today');
+  const slots = [
+    { key: 'slot1', label: config?.slot1 || '時段一（尚未公告）', active: !!config?.slot1 },
+    { key: 'slot2', label: config?.slot2 || '時段二（尚未公告）', active: !!config?.slot2 },
+  ];
 
-  const btn = document.getElementById('ai-submit-btn');
-  btn.textContent = '送出中...'; btn.disabled = true;
-  try {
-    const base64 = await compressImage(fileInput.files[0]);
-    const reviewId = `${currentUID}_ai_${Date.now()}`;
-    await fsUpdate(`ai_reviews/${reviewId}`, {
-      uid: currentUID, date, taskName, note,
-      imageBase64: base64,
-      status: 'pending', createdAt: new Date().toISOString()
-    });
-    showToast('✅ AI任務已回報，等候審核！');
-    document.getElementById('ai-task-name').value = '';
-    document.getElementById('ai-note').value = '';
-    document.getElementById('ai-preview').style.display = 'none';
-    document.getElementById('ai-upload-hint').style.display = 'flex';
-    fileInput.value = '';
-    loadAiTaskHistory();
-  } catch(e) {
-    errEl.textContent = '送出失敗：' + e.message; errEl.style.display = 'block';
+  // 讀取今日已提交紀錄
+  const docs = await fsList('ai_reviews');
+  const todayMine = docs.filter(({ data: d }) => d.uid === currentUID && d.date === today);
+  const submittedSlots = new Set(todayMine.map(({ data: d }) => d.slotKey));
+
+  for (const slot of slots) {
+    const done = submittedSlots.has(slot.key);
+    const card = document.createElement('div');
+    card.style.cssText = 'background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:16px;margin-bottom:12px';
+
+    const slotColor = slot.key === 'slot1' ? '#7c3aed' : '#2272e8';
+
+    if (!slot.active) {
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:0">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(148,163,184,0.15);display:flex;align-items:center;justify-content:center;font-size:16px">🕐</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--muted)">${slot.key === 'slot1' ? '時段一' : '時段二'}</div>
+            <div style="font-size:11px;color:var(--muted)">尚未公告，請等候通知</div>
+          </div>
+        </div>`;
+    } else if (done) {
+      const rec = todayMine.find(({ data: d }) => d.slotKey === slot.key);
+      const st = rec?.data?.status || 'pending';
+      const stMap = { pending: ['#ffc800','⏳ 審核中'], approved: ['var(--green)','✅ 已通過'], rejected: ['var(--red)','❌ 已拒絕'] };
+      const [col, stLabel] = stMap[st] || stMap.pending;
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:32px;height:32px;border-radius:8px;background:${slotColor}22;display:flex;align-items:center;justify-content:center;font-size:16px">✅</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--text)">${slot.label}</div>
+              <div style="font-size:11px;color:var(--muted)">已回報</div>
+            </div>
+          </div>
+          <span style="font-size:12px;font-weight:700;color:${col}">${stLabel}</span>
+        </div>`;
+    } else {
+      card.innerHTML = `
+        <div style="margin-bottom:12px;display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:8px;background:${slotColor}22;display:flex;align-items:center;justify-content:center;font-size:16px">🤖</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">${slot.label}</div>
+            <div style="font-size:11px;color:var(--muted)">今日 ${slot.key === 'slot1' ? '第一' : '第二'} 時段</div>
+          </div>
+        </div>
+        <div class="upload-area" id="ai-area-${slot.key}" style="cursor:pointer;min-height:80px;margin-bottom:10px">
+          <input type="file" accept="image/*" id="ai-file-${slot.key}" style="display:none">
+          <div id="ai-hint-${slot.key}" class="upload-area-hint">
+            <div class="uicon">📸</div>
+            <div>點擊上傳任務截圖</div>
+          </div>
+          <img id="ai-prev-${slot.key}" class="upload-preview" alt="" style="display:none">
+        </div>
+        <div style="margin-bottom:10px">
+          <textarea id="ai-note-${slot.key}" placeholder="✍️ 備註（選填）..." rows="2" style="width:100%;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+        </div>
+        <div id="ai-err-${slot.key}" style="color:#e03f5e;font-size:12px;margin-bottom:8px;display:none"></div>
+        <button id="ai-btn-${slot.key}" data-slot="${slot.key}" data-label="${slot.label}" style="width:100%;padding:12px;background:linear-gradient(135deg,${slotColor},#2272e8);border:none;border-radius:9px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">
+          📤 送出${slot.key === 'slot1' ? '時段一' : '時段二'}回報
+        </button>`;
+
+      container.appendChild(card);
+
+      // 綁定上傳事件
+      const area = card.querySelector(`#ai-area-${slot.key}`);
+      const fileInput = card.querySelector(`#ai-file-${slot.key}`);
+      const preview = card.querySelector(`#ai-prev-${slot.key}`);
+      const hint = card.querySelector(`#ai-hint-${slot.key}`);
+
+      area.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+        hint.style.display = 'none';
+      });
+
+      const submitBtn = card.querySelector(`#ai-btn-${slot.key}`);
+      submitBtn.addEventListener('click', async () => {
+        const errEl = card.querySelector(`#ai-err-${slot.key}`);
+        errEl.style.display = 'none';
+        if (!fileInput.files[0]) { errEl.textContent = '請上傳截圖'; errEl.style.display = 'block'; return; }
+        submitBtn.textContent = '送出中...'; submitBtn.disabled = true;
+        try {
+          const base64 = await compressImage(fileInput.files[0]);
+          const note = card.querySelector(`#ai-note-${slot.key}`).value.trim();
+          const reviewId = `${currentUID}_ai_${slot.key}_${today}`;
+          await fsUpdate(`ai_reviews/${reviewId}`, {
+            uid: currentUID, date: today,
+            slotKey: slot.key, slotName: slot.label, slotLabel: slot.key === 'slot1' ? '時段一' : '時段二',
+            note, imageBase64: base64,
+            status: 'pending', createdAt: new Date().toISOString()
+          });
+          showToast(`✅ ${slot.key === 'slot1' ? '時段一' : '時段二'}已回報！`);
+          loadAiTaskHistory();
+          renderAiSlots();
+        } catch(e) {
+          errEl.textContent = '送出失敗：' + e.message; errEl.style.display = 'block';
+          submitBtn.textContent = `📤 送出${slot.key === 'slot1' ? '時段一' : '時段二'}回報`;
+          submitBtn.disabled = false;
+        }
+      });
+      continue;
+    }
+    container.appendChild(card);
   }
-  btn.textContent = '📤 送出回報登記等候審核'; btn.disabled = false;
-});
+}
 
 document.querySelector('[data-tab="tab-ai"]').addEventListener('click', () => {
-  if (currentUID) loadAiTaskHistory();
+  if (currentUID) { loadAiTaskHistory(); renderAiSlots(); }
+});
+
+// ── 發票上傳 ──
+document.getElementById('invoice-upload-area').addEventListener('click', () => {
+  document.getElementById('invoice-file-input').click();
+});
+document.getElementById('invoice-file-input').addEventListener('change', () => {
+  const file = document.getElementById('invoice-file-input').files[0];
+  if (!file) return;
+  const preview = document.getElementById('invoice-preview');
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = 'block';
+  document.getElementById('invoice-upload-hint').style.display = 'none';
 });
 
 // ── 修改密碼 ──
