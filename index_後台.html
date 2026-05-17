@@ -212,6 +212,28 @@ textarea { resize: vertical; min-height: 100px; }
     </div>
     <div class="card">
       <h4>👥 會員管理</h4>
+
+      <!-- 篩選列 -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center">
+        <select id="filter-staff" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer">
+          <option value="">👤 全部員工</option>
+        </select>
+        <select id="filter-group" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer">
+          <option value="">🏠 全部群組狀態</option>
+          <option value="in">在群</option>
+          <option value="out">已退群</option>
+          <option value="lost">失聯</option>
+        </select>
+        <select id="filter-pay" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer">
+          <option value="">💰 全部領款狀態</option>
+          <option value="wait">待領款</option>
+          <option value="paid">已領款</option>
+          <option value="none">未領款</option>
+        </select>
+        <span id="filter-count" style="font-size:12px;color:var(--muted);margin-left:4px"></span>
+        <button id="filter-reset-btn" class="btn btn-sm" style="margin-left:auto;font-size:12px;padding:6px 12px">重置篩選</button>
+      </div>
+
       <div class="member-table-wrap">
         <table class="member-table">
           <thead>
@@ -478,27 +500,76 @@ function initAdmin() {
 }
 
 // ── 會員列表（含群組狀態、任務、獎金、領款、備註）──
+let _allMemberDocs = [];
+let _ytTaskMap = {};
+
 async function loadAdminMembers() {
   const list = document.getElementById('admin-member-list');
   list.innerHTML = '<tr><td colspan="10" style="color:var(--muted);text-align:center;padding:20px">載入中...</td></tr>';
   try {
-    const [memberDocs, ytTaskDocs] = await Promise.all([
+    const [memberDocs, ytTaskDocs, staffDocs] = await Promise.all([
       fsList('members'),
-      fsList('yt_tasks')
+      fsList('yt_tasks'),
+      fsList('customers')
     ]);
-    const ytTaskMap = {};
-    ytTaskDocs.forEach(({ id, data: t }) => { ytTaskMap[id] = t.name; });
+    _ytTaskMap = {};
+    ytTaskDocs.forEach(({ id, data: t }) => { _ytTaskMap[id] = t.name; });
+    _allMemberDocs = memberDocs;
 
-    list.innerHTML = '';
-    if (!memberDocs.length) {
-      list.innerHTML = '<tr><td colspan="10" style="color:var(--muted);text-align:center;padding:20px">尚無會員</td></tr>';
-      return;
-    }
+    // 更新員工篩選下拉
+    const filterStaff = document.getElementById('filter-staff');
+    const prev = filterStaff.value;
+    filterStaff.innerHTML = '<option value="">👤 全部員工</option>';
+    staffDocs.forEach(({ data: s }) => {
+      const opt = document.createElement('option');
+      opt.value = s.name; opt.textContent = s.name;
+      filterStaff.appendChild(opt);
+    });
+    // 加入備註中有但不在員工名單的名稱
+    const knownStaff = new Set(staffDocs.map(s => s.data.name));
+    memberDocs.forEach(({ data: d }) => {
+      if (d.note && !knownStaff.has(d.note)) {
+        knownStaff.add(d.note);
+        const opt = document.createElement('option');
+        opt.value = d.note; opt.textContent = d.note;
+        filterStaff.appendChild(opt);
+      }
+    });
+    if (prev) filterStaff.value = prev;
 
-    const today = todayStr();
+    renderFilteredMembers();
+  } catch(e) {
+    const list = document.getElementById('admin-member-list');
+    list.innerHTML = `<tr><td colspan="10" style="color:var(--red);text-align:center;padding:20px">載入失敗：${e.message}</td></tr>`;
+  }
+}
 
-    memberDocs.forEach(({ id: uid, data: d }) => {
-      // 任務名稱 & 狀態（今日 yt 任務）
+function renderFilteredMembers() {
+  const list = document.getElementById('admin-member-list');
+  const filterStaff = document.getElementById('filter-staff').value;
+  const filterGroup = document.getElementById('filter-group').value;
+  const filterPay   = document.getElementById('filter-pay').value;
+  const today = todayStr();
+
+  let filtered = _allMemberDocs.filter(({ data: d }) => {
+    if (filterStaff && d.note !== filterStaff) return false;
+    if (filterGroup && (d.groupStatus || 'in') !== filterGroup) return false;
+    if (filterPay   && (d.payStatus   || 'wait') !== filterPay)  return false;
+    return true;
+  });
+
+  const countEl = document.getElementById('filter-count');
+  countEl.textContent = `共 ${filtered.length} 位`;
+
+  list.innerHTML = '';
+  if (!filtered.length) {
+    list.innerHTML = '<tr><td colspan="10" style="color:var(--muted);text-align:center;padding:20px">無符合條件的會員</td></tr>';
+    return;
+  }
+
+  const ytTaskMap = _ytTaskMap;
+
+  filtered.forEach(({ id: uid, data: d }) => {
       const ytReviews = d.ytReviews || {};
       const ytTasks   = d.ytTasks   || {};
       let taskNames = [], taskStatus = 'none';
@@ -516,23 +587,17 @@ async function loadAdminMembers() {
       else if (taskStatus === 'done') statusHtml = '<span class="review-status pending">⏳ 待審核</span>';
       else statusHtml = '<span style="color:var(--muted);font-size:12px">—</span>';
 
-      // 群組狀態
       const grp = d.groupStatus || 'in';
       const grpMap = { in: ['st-in','在群'], out: ['st-out','已退群'], lost: ['st-lost','失聯'] };
       const [grpCls, grpLabel] = grpMap[grp] || grpMap.in;
 
-      // 領款狀態
       const pay = d.payStatus || 'wait';
       const payMap = { wait: ['st-wait','待領款'], paid: ['st-paid','已領款'], none: ['st-none','未領款'] };
       const [payCls, payLabel] = payMap[pay] || payMap.wait;
 
-      // 已領金額
       const bonus = d.bonus || 0;
-
-      // 備註
       const note = d.note || '';
 
-      // 簽到天數 & 連續天數
       const checkins = d.checkins || {};
       const totalDays = Object.keys(checkins).filter(k => checkins[k]).length;
       let streak = 0;
@@ -597,11 +662,20 @@ async function loadAdminMembers() {
       tr.querySelector('.btn-red').addEventListener('click', () => deleteMember(uid));
       list.appendChild(tr);
     });
-  } catch(e) {
-    showToast('讀取失敗：' + e.message, true);
-    list.innerHTML = '<tr><td colspan="10" style="color:var(--red);text-align:center;padding:20px">讀取失敗</td></tr>';
-  }
 }
+
+// 篩選事件綁定（只綁一次）
+(function bindFilters() {
+  ['filter-staff','filter-group','filter-pay'].forEach(id => {
+    document.getElementById(id).addEventListener('change', renderFilteredMembers);
+  });
+  document.getElementById('filter-reset-btn').addEventListener('click', () => {
+    document.getElementById('filter-staff').value = '';
+    document.getElementById('filter-group').value = '';
+    document.getElementById('filter-pay').value = '';
+    renderFilteredMembers();
+  });
+})();
 
 async function deleteMember(uid) {
   if (!confirm(`確定刪除 ${uid}？`)) return;
