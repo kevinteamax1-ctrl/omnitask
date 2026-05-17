@@ -442,11 +442,30 @@ function initAdmin() {
     reviewList.addEventListener('click', async (e) => {
       const btn = e.target.closest('[data-action]');
       if (!btn || btn.disabled) return;
-      btn.disabled = true;
-      btn.closest('.review-actions').querySelectorAll('button').forEach(b => b.disabled = true);
       const { action, rid, uid, tid, date } = btn.dataset;
-      if (action === 'approve') await approveReview(rid, uid, tid, date);
-      if (action === 'reject')  await rejectReview(rid, uid, tid, date);
+      if (action === 'approve') {
+        btn.disabled = true;
+        btn.closest('.review-actions').querySelectorAll('button').forEach(b => b.disabled = true);
+        await approveReview(rid, uid, tid, date);
+      }
+      if (action === 'reject') {
+        // 開彈窗填原因
+        const modal = document.getElementById('reject-modal');
+        modal.style.display = 'flex';
+        document.getElementById('reject-reason-input').value = '';
+        document.getElementById('reject-reason-input').focus();
+        document.getElementById('reject-confirm-btn').onclick = async () => {
+          const reason = document.getElementById('reject-reason-input').value.trim();
+          if (!reason) { alert('請填寫拒絕原因'); return; }
+          modal.style.display = 'none';
+          btn.disabled = true;
+          btn.closest('.review-actions').querySelectorAll('button').forEach(b => b.disabled = true);
+          await rejectReview(rid, uid, tid, date, reason);
+        };
+        document.getElementById('reject-cancel-btn').onclick = () => {
+          modal.style.display = 'none';
+        };
+      }
     });
   }
 
@@ -906,21 +925,25 @@ async function approveReview(reviewId, uid, taskId, date) {
   }
 }
 
-async function rejectReview(reviewId, uid, taskId, date) {
+async function rejectReview(reviewId, uid, taskId, date, reason) {
   const btn = document.querySelector(`#actions-${reviewId} .btn-red`);
   if (btn) { btn.textContent = '處理中...'; btn.disabled = true; }
   try {
-    await fsSet(`pending_reviews/${reviewId}`, { status: 'rejected' });
+    await fsSet(`pending_reviews/${reviewId}`, { status: 'rejected', rejectReason: reason });
 
     if (taskId) {
       const memberData = await fsGet(`members/${uid}`);
       const ytReviews  = (memberData && memberData.ytReviews) || {};
       if (!ytReviews[taskId]) ytReviews[taskId] = {};
       ytReviews[taskId][date] = 'rejected';
-      await fsSet(`members/${uid}`, { ytReviews });
+      // 把原因也存到會員資料
+      const ytRejectReasons = (memberData && memberData.ytRejectReasons) || {};
+      if (!ytRejectReasons[taskId]) ytRejectReasons[taskId] = {};
+      ytRejectReasons[taskId][date] = reason;
+      await fsSet(`members/${uid}`, { ytReviews, ytRejectReasons });
     }
 
-    showToast(`🚫 已拒絕，前台顯示重新上傳提示`);
+    showToast(`🚫 已拒絕，原因已通知前台`);
     loadReviews();
   } catch(e) {
     showToast('操作失敗：' + e.message, true);
@@ -1070,5 +1093,18 @@ async function loadMemberStats() {
   }
 }
 </script>
+<!-- 拒絕原因彈窗 -->
+<div id="reject-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:24px;max-width:420px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.3)">
+    <div style="font-weight:700;font-size:16px;color:var(--red);margin-bottom:14px">❌ 填寫拒絕原因</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:10px">此原因將顯示給前台會員查看</div>
+    <textarea id="reject-reason-input" placeholder="例：截圖不清楚、未按讚訂閱、截圖與影片不符..." style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.9);border:1px solid var(--border2);border-radius:9px;color:#333;font-size:13px;font-family:inherit;resize:vertical;min-height:90px;outline:none;box-sizing:border-box"></textarea>
+    <div style="display:flex;gap:10px;margin-top:14px">
+      <button id="reject-cancel-btn" class="btn" style="flex:1;background:var(--surface2);color:var(--muted)">取消</button>
+      <button id="reject-confirm-btn" class="btn btn-red" style="flex:1">確認拒絕</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
