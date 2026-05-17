@@ -205,6 +205,7 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
     <button class="tab-btn active" data-tab="tab-checkin">📅 簽到</button>
     <button class="tab-btn" data-tab="tab-news">🏦 幣託介紹</button>
     <button class="tab-btn" data-tab="tab-tasks">📋 任務</button>
+    <button class="tab-btn" data-tab="tab-setting">⚙️ 設定</button>
   </div>
 
   <!-- 簽到 TAB -->
@@ -371,8 +372,39 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
     </div>
   </div>
 
-  <!-- 任務 TAB -->
-  <div class="tab-pane" id="tab-tasks">
+  <!-- 設定 TAB -->
+  <div class="tab-pane" id="tab-setting">
+    <div style="max-width:420px;margin:0 auto;padding-top:8px">
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:22px 20px;margin-bottom:16px">
+        <div style="font-weight:700;font-size:15px;color:var(--text);margin-bottom:18px">🔐 修改密碼</div>
+
+        <div style="margin-bottom:14px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">目前密碼</div>
+          <input type="password" id="pw-current" placeholder="請輸入目前密碼" autocomplete="off"
+            style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+        </div>
+
+        <div style="margin-bottom:14px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">新密碼</div>
+          <input type="password" id="pw-new" placeholder="請輸入新密碼（至少6位）" autocomplete="off"
+            style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">確認新密碼</div>
+          <input type="password" id="pw-confirm" placeholder="再輸入一次新密碼" autocomplete="off"
+            style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+        </div>
+
+        <div id="pw-error" style="color:#e03f5e;font-size:13px;margin-bottom:12px;display:none"></div>
+
+        <button id="pw-save-btn"
+          style="width:100%;padding:13px;background:linear-gradient(135deg,#1655c0,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">
+          儲存新密碼
+        </button>
+      </div>
+    </div>
+  </div>
     <!-- 獎金卡 -->
     <div class="bonus-card" id="bonus-card" style="display:none">
       <div class="bonus-icon">💰</div>
@@ -442,6 +474,42 @@ async function fsList(col) {
   const snap = await getDocs(collection(db, col));
   return snap.docs.map(d => ({ id: d.id, data: d.data() }));
 }
+
+// ── 修改密碼 ──
+document.getElementById('pw-save-btn').addEventListener('click', async () => {
+  const errEl = document.getElementById('pw-error');
+  errEl.style.display = 'none';
+  const current = document.getElementById('pw-current').value.trim();
+  const newPw   = document.getElementById('pw-new').value.trim();
+  const confirm = document.getElementById('pw-confirm').value.trim();
+  if (!current || !newPw || !confirm) {
+    errEl.textContent = '請填寫所有欄位'; errEl.style.display = 'block'; return;
+  }
+  if (newPw.length < 6) {
+    errEl.textContent = '新密碼至少需要6位'; errEl.style.display = 'block'; return;
+  }
+  if (newPw !== confirm) {
+    errEl.textContent = '兩次輸入的新密碼不一致'; errEl.style.display = 'block'; return;
+  }
+  const btn = document.getElementById('pw-save-btn');
+  btn.textContent = '儲存中...'; btn.disabled = true;
+  try {
+    const data = await fsGet(`members/${currentUID}`);
+    if (!data || data.password !== current) {
+      errEl.textContent = '目前密碼錯誤'; errEl.style.display = 'block';
+      btn.textContent = '儲存新密碼'; btn.disabled = false; return;
+    }
+    await fsUpdate(`members/${currentUID}`, { password: newPw });
+    localStorage.setItem('saved_pass', newPw);
+    showToast('✅ 密碼已成功修改！');
+    document.getElementById('pw-current').value = '';
+    document.getElementById('pw-new').value = '';
+    document.getElementById('pw-confirm').value = '';
+  } catch(e) {
+    errEl.textContent = '儲存失敗：' + e.message; errEl.style.display = 'block';
+  }
+  btn.textContent = '儲存新密碼'; btn.disabled = false;
+});
 
 // ── 新聞抓取 ──
 // 使用 allorigins 代理抓 Google News RSS（繁中科技/財經）
