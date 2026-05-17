@@ -246,7 +246,7 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
         <span style="font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;background:linear-gradient(135deg,var(--green),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent" id="global-bonus-amount">0</span>
         <span style="font-size:11px;color:var(--muted)">元｜累積任務獎金</span>
       </div>
-      <div style="font-size:10px;color:var(--muted);margin-top:1px">YT任務 + 店家任務 合計</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:1px">YT任務 + 店家任務 + AI任務 合計</div>
     </div>
     <button id="global-withdraw-btn" style="background:linear-gradient(135deg,#00b894,var(--green));border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:700;padding:8px 14px;cursor:pointer;font-family:inherit;flex-shrink:0;white-space:nowrap">申請領款</button>
   </div>
@@ -254,8 +254,9 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
   <div class="tabs">
     <button class="tab-btn active" data-tab="tab-checkin">📅 簽到</button>
     <button class="tab-btn" data-tab="tab-news">🏦 幣託介紹</button>
-    <button class="tab-btn" data-tab="tab-tasks">📋 任務</button>
+    <button class="tab-btn" data-tab="tab-tasks">📋 YT任務</button>
     <button class="tab-btn" data-tab="tab-store">🏪 店家任務</button>
+    <button class="tab-btn" data-tab="tab-ai">🤖 AI任務</button>
     <button class="tab-btn" data-tab="tab-setting">⚙️ 設定</button>
   </div>
 
@@ -656,6 +657,70 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
     </div><!-- end store-form-section -->
   </div>
 
+  <!-- AI任務 TAB -->
+  <div class="tab-pane" id="tab-ai">
+
+    <!-- 說明 banner -->
+    <div style="background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(0,144,255,0.08));border:1px solid rgba(124,58,237,0.25);border-radius:16px;padding:18px 16px;margin-bottom:14px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#7c3aed,#2272e8,#00e5a0)"></div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+        <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#2272e8);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 4px 16px rgba(124,58,237,0.35)">🤖</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:var(--text)">AI數據推行任務</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">掌握熱勢 × 參與數據 × 回報任務</div>
+        </div>
+      </div>
+      <div style="background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--text);line-height:1.8">
+        📢 參與本輪AI數據任務，完成後回報截圖與登記，管理員確認後即入帳獎勵。
+      </div>
+    </div>
+
+    <!-- 我的AI任務紀錄 -->
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">📋 我的 AI 任務紀錄</div>
+      <div id="ai-task-history">載入中...</div>
+    </div>
+
+    <!-- 回報表單 -->
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:18px 16px;margin-bottom:16px">
+      <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:2px">📝 AI數據任務回報登記</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:16px">上傳截圖並確認登記，等候管理員審核</div>
+
+      <div style="margin-bottom:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">任務日期</div>
+        <input type="date" id="ai-date" style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;font-size:14px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit">
+      </div>
+
+      <div style="margin-bottom:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">任務名稱／本輪主題</div>
+        <input type="text" id="ai-task-name" placeholder="例：本輪AI數據任務" autocomplete="off" style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;font-size:14px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit">
+      </div>
+
+      <div style="margin-bottom:16px">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">上傳截圖（任務完成畫面）</div>
+        <div class="upload-area" id="ai-upload-area" style="cursor:pointer">
+          <input type="file" accept="image/*" id="ai-file-input" style="display:none">
+          <div class="upload-area-hint" id="ai-upload-hint">
+            <div class="uicon">📸</div>
+            <div>點擊上傳任務截圖</div>
+            <div style="font-size:10px;margin-top:3px;color:var(--muted)">請上傳清晰的任務完成截圖</div>
+          </div>
+          <img class="upload-preview" id="ai-preview" alt="預覽" style="display:none">
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">✍️ 備註（選填）</div>
+        <textarea id="ai-note" placeholder="可填寫本次任務的補充說明..." rows="3" style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+
+      <div id="ai-form-error" style="color:#e03f5e;font-size:13px;margin-bottom:10px;display:none"></div>
+      <button id="ai-submit-btn" style="width:100%;padding:14px;background:linear-gradient(135deg,#7c3aed,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">
+        📤 送出回報登記等候審核
+      </button>
+    </div>
+  </div>
+
   <!-- 設定 TAB -->
   <div class="tab-pane" id="tab-setting">
     <div style="max-width:420px;margin:0 auto;padding-top:8px">
@@ -697,7 +762,7 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       <div id="withdraw-pending-notice" style="display:none;color:#ffc800;font-size:12px;margin-bottom:10px">⏳ 已有一筆申請待審核，請等管理員確認後再申請。</div>
       <button id="withdraw-submit-btn" style="width:100%;padding:12px;background:linear-gradient(135deg,#00b894,var(--green));border:none;border-radius:9px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">送出申請</button>
     </div>
-    <div class="section-title">▶️ YT 任務</div>
+    <div class="section-title">▶️ YT 影音任務</div>
     <!-- YT任務插圖 -->
     <div style="background:linear-gradient(135deg,rgba(255,0,0,0.06),rgba(0,144,255,0.06));border:1px solid rgba(255,0,0,0.15);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px">
       <svg viewBox="0 0 50 50" width="50" height="50" style="flex-shrink:0" xmlns="http://www.w3.org/2000/svg">
@@ -864,6 +929,88 @@ document.getElementById('store-submit-btn').addEventListener('click', async () =
 // 切到店家任務分頁時載入紀錄
 document.querySelector('[data-tab="tab-store"]').addEventListener('click', () => {
   if (currentUID) loadStoreHistory();
+});
+
+// ── AI 任務 ──
+document.getElementById('ai-date').value = todayStr();
+
+document.getElementById('ai-upload-area').addEventListener('click', () => {
+  document.getElementById('ai-file-input').click();
+});
+
+document.getElementById('ai-file-input').addEventListener('change', () => {
+  const file = document.getElementById('ai-file-input').files[0];
+  if (!file) return;
+  const preview = document.getElementById('ai-preview');
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = 'block';
+  document.getElementById('ai-upload-hint').style.display = 'none';
+});
+
+async function loadAiTaskHistory() {
+  const el = document.getElementById('ai-task-history');
+  try {
+    const docs = await fsList('ai_reviews');
+    const mine = docs.filter(({ data: d }) => d.uid === currentUID)
+                     .sort((a, b) => new Date(b.data.createdAt) - new Date(a.data.createdAt));
+    if (!mine.length) {
+      el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:12px;font-size:13px">尚無任務紀錄</div>';
+      return;
+    }
+    el.innerHTML = mine.map(({ data: d }) => {
+      const statusMap = {
+        pending:  ['#ffc800', '⏳ 審核中'],
+        approved: ['var(--green)', '✅ 已通過'],
+        rejected: ['var(--red)', '❌ 已拒絕']
+      };
+      const [col, label] = statusMap[d.status] || statusMap.pending;
+      return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;margin-bottom:8px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--text)">${d.taskName || 'AI數據任務'}</div>
+          <div style="font-size:11px;color:var(--muted)">${d.date}</div>
+        </div>
+        <span style="font-size:12px;font-weight:700;color:${col}">${label}${d.status==='approved'&&d.reward?' +'+d.reward+'元':''}</span>
+      </div>`;
+    }).join('');
+  } catch(e) { el.innerHTML = ''; }
+}
+
+document.getElementById('ai-submit-btn').addEventListener('click', async () => {
+  const errEl = document.getElementById('ai-form-error');
+  errEl.style.display = 'none';
+  const date     = document.getElementById('ai-date').value;
+  const taskName = document.getElementById('ai-task-name').value.trim();
+  const fileInput = document.getElementById('ai-file-input');
+  const note     = document.getElementById('ai-note').value.trim();
+
+  if (!date || !taskName) { errEl.textContent = '請填寫任務日期與任務名稱'; errEl.style.display = 'block'; return; }
+  if (!fileInput.files[0]) { errEl.textContent = '請上傳任務截圖'; errEl.style.display = 'block'; return; }
+
+  const btn = document.getElementById('ai-submit-btn');
+  btn.textContent = '送出中...'; btn.disabled = true;
+  try {
+    const base64 = await compressImage(fileInput.files[0]);
+    const reviewId = `${currentUID}_ai_${Date.now()}`;
+    await fsUpdate(`ai_reviews/${reviewId}`, {
+      uid: currentUID, date, taskName, note,
+      imageBase64: base64,
+      status: 'pending', createdAt: new Date().toISOString()
+    });
+    showToast('✅ AI任務已回報，等候審核！');
+    document.getElementById('ai-task-name').value = '';
+    document.getElementById('ai-note').value = '';
+    document.getElementById('ai-preview').style.display = 'none';
+    document.getElementById('ai-upload-hint').style.display = 'flex';
+    fileInput.value = '';
+    loadAiTaskHistory();
+  } catch(e) {
+    errEl.textContent = '送出失敗：' + e.message; errEl.style.display = 'block';
+  }
+  btn.textContent = '📤 送出回報登記等候審核'; btn.disabled = false;
+});
+
+document.querySelector('[data-tab="tab-ai"]').addEventListener('click', () => {
+  if (currentUID) loadAiTaskHistory();
 });
 
 // ── 修改密碼 ──
