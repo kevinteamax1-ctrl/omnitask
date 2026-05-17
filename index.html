@@ -178,6 +178,42 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
         </div>
       </div>
       <h2>會員簽到平台</h2>
+      <!-- 裝飾插圖 -->
+      <svg viewBox="0 0 320 90" style="width:100%;max-width:320px;margin:10px auto 0;display:block;opacity:0.85" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0090ff"/><stop offset="100%" stop-color="#00e5a0"/></linearGradient>
+          <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1655c0"/><stop offset="100%" stop-color="#0090ff"/></linearGradient>
+        </defs>
+        <!-- 星星裝飾 -->
+        <circle cx="20" cy="20" r="2" fill="#00c8ff" opacity="0.7"/>
+        <circle cx="300" cy="15" r="3" fill="#00e5a0" opacity="0.6"/>
+        <circle cx="160" cy="8" r="1.5" fill="#fff" opacity="0.5"/>
+        <circle cx="260" cy="40" r="2" fill="#0090ff" opacity="0.6"/>
+        <circle cx="50" cy="60" r="1.5" fill="#00e5a0" opacity="0.5"/>
+        <!-- 手機圖示 -->
+        <rect x="120" y="10" width="36" height="60" rx="6" fill="url(#lg2)" opacity="0.9"/>
+        <rect x="124" y="15" width="28" height="42" rx="3" fill="#0a0f1e"/>
+        <circle cx="138" cy="63" r="2.5" fill="#00c8ff" opacity="0.8"/>
+        <!-- 螢幕內容 -->
+        <rect x="127" y="19" width="22" height="3" rx="1.5" fill="#0090ff" opacity="0.8"/>
+        <rect x="127" y="25" width="16" height="2" rx="1" fill="#334466"/>
+        <rect x="127" y="30" width="19" height="2" rx="1" fill="#334466"/>
+        <rect x="127" y="35" width="14" height="2" rx="1" fill="#334466"/>
+        <rect x="127" y="42" width="22" height="8" rx="3" fill="url(#lg1)" opacity="0.9"/>
+        <text x="138" y="48" text-anchor="middle" font-size="4" fill="#fff" font-family="sans-serif">簽到</text>
+        <!-- 勾選圓 -->
+        <circle cx="185" cy="40" r="22" fill="url(#lg1)" opacity="0.15"/>
+        <circle cx="185" cy="40" r="17" fill="none" stroke="url(#lg1)" stroke-width="2" opacity="0.5"/>
+        <text x="185" y="46" text-anchor="middle" font-size="18" fill="url(#lg1)">✓</text>
+        <!-- 獎勵圖示 -->
+        <circle cx="82" cy="42" r="18" fill="#1a2a4a"/>
+        <text x="82" y="49" text-anchor="middle" font-size="20">💰</text>
+        <!-- 連線虛線 -->
+        <line x1="100" y1="42" x2="118" y2="42" stroke="#0090ff" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
+        <line x1="156" y1="42" x2="168" y2="42" stroke="#00e5a0" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
+        <!-- 底部文字 -->
+        <text x="160" y="83" text-anchor="middle" font-size="8" fill="#334466" font-family="sans-serif" letter-spacing="1">完成任務 · 累積收益 · 每日簽到</text>
+      </svg>
     </div>
     <div class="auth-card">
       <h1>🔐 會員登入</h1>
@@ -233,6 +269,23 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
 
     <button class="checkin-btn" id="checkin-btn">📡 立即簽到</button>
     <p style="color:var(--muted);font-size:10px;text-align:center;letter-spacing:.5px">⚠️ 只能簽今天，不能補簽</p>
+
+    <!-- 簽到插圖 banner -->
+    <div style="margin-top:14px;background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;overflow:hidden;position:relative">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#005aff,#00e5a0)"></div>
+      <svg viewBox="0 0 70 70" width="70" height="70" style="flex-shrink:0" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1655c0"/><stop offset="100%" stop-color="#00c8ff"/></linearGradient></defs>
+        <circle cx="35" cy="35" r="32" fill="url(#cg)" opacity="0.15"/>
+        <circle cx="35" cy="35" r="26" fill="none" stroke="url(#cg)" stroke-width="2" opacity="0.4"/>
+        <text x="35" y="43" text-anchor="middle" font-size="28">📅</text>
+        <circle cx="52" cy="18" r="8" fill="#00e5a0" opacity="0.9"/>
+        <text x="52" y="22" text-anchor="middle" font-size="9" fill="#fff">✓</text>
+      </svg>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--text)">每日簽到累積天數</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.6">持續簽到可累積連續天數獎勵<br>週日不開放，記得每天打卡！</div>
+      </div>
+    </div>
 
     <!-- 幣託一條 banner，點進去跳幣託介紹頁 -->
     <div style="margin-top:18px;margin-bottom:6px">
@@ -378,6 +431,45 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
 
     <!-- 說明區 -->
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:18px 16px;margin-bottom:14px">
+      <!-- 店家插圖 header -->
+      <svg viewBox="0 0 340 100" style="width:100%;max-width:340px;margin:0 auto 14px;display:block" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1655c0"/><stop offset="100%" stop-color="#2272e8"/></linearGradient>
+          <linearGradient id="sg2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#00b894"/><stop offset="100%" stop-color="#00e5a0"/></linearGradient>
+        </defs>
+        <!-- 店面圖 -->
+        <rect x="100" y="28" width="80" height="55" rx="4" fill="url(#sg1)" opacity="0.9"/>
+        <rect x="95" y="20" width="90" height="14" rx="3" fill="#0090ff"/>
+        <!-- 招牌 -->
+        <rect x="112" y="25" width="56" height="8" rx="2" fill="#fff" opacity="0.2"/>
+        <!-- 門 -->
+        <rect x="126" y="55" width="24" height="28" rx="3" fill="#0a1a3a"/>
+        <circle cx="148" cy="70" r="1.5" fill="#00c8ff"/>
+        <!-- 窗戶 -->
+        <rect x="108" y="40" width="18" height="14" rx="2" fill="#fff" opacity="0.25"/>
+        <rect x="154" y="40" width="18" height="14" rx="2" fill="#fff" opacity="0.25"/>
+        <!-- 遮陽棚條紋 -->
+        <rect x="95" y="20" width="12" height="14" rx="0" fill="#005aff" opacity="0.5"/>
+        <rect x="119" y="20" width="12" height="14" fill="#005aff" opacity="0.5"/>
+        <rect x="143" y="20" width="12" height="14" fill="#005aff" opacity="0.5"/>
+        <rect x="167" y="20" width="12" height="14" fill="#005aff" opacity="0.5"/>
+        <!-- 地點標記 -->
+        <circle cx="200" cy="30" r="12" fill="#ff5f7e" opacity="0.9"/>
+        <text x="200" y="35" text-anchor="middle" font-size="12">📍</text>
+        <!-- 金幣 -->
+        <circle cx="240" cy="60" r="16" fill="#ffd700" opacity="0.15"/>
+        <circle cx="240" cy="60" r="12" fill="none" stroke="#ffd700" stroke-width="1.5" opacity="0.5"/>
+        <text x="240" y="65" text-anchor="middle" font-size="14">💰</text>
+        <!-- 箭頭連線 -->
+        <path d="M183 55 Q210 48 228 55" stroke="#00e5a0" stroke-width="1.5" fill="none" stroke-dasharray="4,3" opacity="0.7"/>
+        <!-- 左側裝飾 -->
+        <circle cx="60" cy="50" r="20" fill="url(#sg1)" opacity="0.12"/>
+        <text x="60" y="57" text-anchor="middle" font-size="22">🏪</text>
+        <!-- 右側裝飾 -->
+        <text x="295" y="55" text-anchor="middle" font-size="22">✅</text>
+        <!-- 底部標語 -->
+        <text x="170" y="92" text-anchor="middle" font-size="8.5" fill="#334466" font-family="sans-serif" letter-spacing="1">探店體驗 · 填寫回饋 · 入帳 700元</text>
+      </svg>
       <div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:3px">🏪 店家實境收益任務</div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:16px">真實探店 × 真誠回饋 × 共享成長</div>
 
@@ -588,7 +680,18 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       <button id="withdraw-submit-btn" style="width:100%;padding:12px;background:linear-gradient(135deg,#00b894,var(--green));border:none;border-radius:9px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">送出申請</button>
     </div>
     <div class="section-title">▶️ YT 任務</div>
-    <p style="color:var(--muted);font-size:11px;margin-bottom:10px">每部影片完成後各自上傳截圖與心得等候審核，通過即入帳 <strong style="color:var(--green)">100元</strong></p>
+    <!-- YT任務插圖 -->
+    <div style="background:linear-gradient(135deg,rgba(255,0,0,0.06),rgba(0,144,255,0.06));border:1px solid rgba(255,0,0,0.15);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px">
+      <svg viewBox="0 0 50 50" width="50" height="50" style="flex-shrink:0" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="8" width="46" height="32" rx="8" fill="#ff0000" opacity="0.9"/>
+        <polygon points="20,18 35,25 20,32" fill="#fff"/>
+        <rect x="10" y="44" width="30" height="3" rx="1.5" fill="#334466"/>
+      </svg>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--text)">觀看 YouTube 影片賺取獎勵</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">每部影片上傳截圖與心得，通過審核即入帳 <strong style="color:var(--green)">100元</strong></div>
+      </div>
+    </div>
     <div id="yt-slots-list"></div>
   </div>
 </div>
