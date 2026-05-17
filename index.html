@@ -719,9 +719,10 @@ async function renderTasks() {
   try {
     const today = todayStr();
     const memberData = await fsGet(`members/${currentUID}`);
-    const ytTasks    = (memberData && memberData.ytTasks)    || {};
-    const ytReviews  = (memberData && memberData.ytReviews)  || {}; // { taskId: { date: 'pending'|'approved'|'rejected' } }
-    const bonus      = (memberData && memberData.bonus)      || 0;
+    const ytTasks         = (memberData && memberData.ytTasks)         || {};
+    const ytReviews       = (memberData && memberData.ytReviews)       || {};
+    const ytRejectReasons = (memberData && memberData.ytRejectReasons) || {};
+    const bonus           = (memberData && memberData.bonus)           || 0;
 
     // 獎金卡
     document.getElementById('bonus-card').style.display = 'flex';
@@ -759,6 +760,7 @@ async function renderTasks() {
       section.className = 'slot-section';
 
       const canUpload = !isDone && reviewStatus !== 'pending';
+      const rejectReason = reviewStatus === 'rejected' ? ((ytRejectReasons[taskId] && ytRejectReasons[taskId][today]) || '') : '';
       const uploadHTML = canUpload ? `
         <div class="upload-area" id="upload-area-${taskId}">
           <input type="file" accept="image/*" id="file-input-${taskId}">
@@ -771,7 +773,7 @@ async function renderTasks() {
         </div>
         <textarea id="comment-${taskId}" placeholder="✍️ 請輸入觀看心得（至少10字）..." style="width:100%;margin-top:10px;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(0,144,255,0.3);border-radius:9px;color:var(--text);font-size:13px;font-family:inherit;resize:vertical;min-height:80px;outline:none;box-sizing:border-box"></textarea>
         <button class="upload-submit-btn" id="submit-btn-${taskId}">📤 送出截圖與心得等候審核</button>
-        ${reviewStatus === 'rejected' ? '<div style="color:var(--red);font-size:11px;margin-top:6px;text-align:center">⚠️ 截圖或心得不符，請重新上傳</div>' : ''}
+        ${rejectReason ? `<div style="background:rgba(255,95,126,0.08);border:1px solid rgba(255,95,126,0.3);border-radius:9px;padding:10px 14px;margin-top:8px"><div style="color:var(--red);font-size:12px;font-weight:700;margin-bottom:4px">⚠️ 拒絕原因</div><div style="color:#c0392b;font-size:13px">${rejectReason}</div></div>` : '<div style="color:var(--red);font-size:11px;margin-top:6px;text-align:center">⚠️ 截圖或心得不符，請重新上傳</div>'}
       ` : '';
 
       section.innerHTML = `
