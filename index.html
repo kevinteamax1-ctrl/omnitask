@@ -237,6 +237,20 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
     <span class="top-badge" id="member-uid-badge"></span>
     <button class="logout-btn" id="logout-btn">登出</button>
   </div>
+
+  <!-- 累積獎金 固定顯示在所有分頁上方 -->
+  <div id="global-bonus-bar" style="display:none;background:linear-gradient(135deg,rgba(0,229,160,0.12),rgba(0,144,255,0.08));border-bottom:1px solid rgba(0,229,160,0.25);padding:10px 18px;display:none;align-items:center;gap:12px;position:sticky;top:52px;z-index:90;backdrop-filter:blur(12px)">
+    <div style="font-size:18px">💰</div>
+    <div style="flex:1">
+      <div style="display:flex;align-items:baseline;gap:6px">
+        <span style="font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;background:linear-gradient(135deg,var(--green),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent" id="global-bonus-amount">0</span>
+        <span style="font-size:11px;color:var(--muted)">元｜累積任務獎金</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:1px">YT任務 + 店家任務 合計</div>
+    </div>
+    <button id="global-withdraw-btn" style="background:linear-gradient(135deg,#00b894,var(--green));border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:700;padding:8px 14px;cursor:pointer;font-family:inherit;flex-shrink:0;white-space:nowrap">申請領款</button>
+  </div>
+
   <div class="tabs">
     <button class="tab-btn active" data-tab="tab-checkin">📅 簽到</button>
     <button class="tab-btn" data-tab="tab-news">🏦 幣託介紹</button>
@@ -557,7 +571,19 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       <div id="store-task-history" style="font-size:13px;color:var(--muted);text-align:center;padding:12px">載入中...</div>
     </div>
 
+    <!-- 冷卻提示（送出後7天內顯示） -->
+    <div id="store-cooldown-notice" style="display:none;background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.3);border-radius:14px;padding:18px 16px;margin-bottom:14px;text-align:center">
+      <div style="font-size:28px;margin-bottom:8px">⏳</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">本週任務已完成</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:10px" id="store-cooldown-msg"></div>
+      <div style="background:rgba(255,193,7,0.1);border-radius:10px;padding:10px 14px;display:inline-block">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:3px">下次可送出時間</div>
+        <div style="font-size:14px;font-weight:700;color:#d4a017" id="store-next-date"></div>
+      </div>
+    </div>
+
     <!-- 回饋表單 -->
+    <div id="store-form-section">
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:18px 16px;margin-bottom:16px">
       <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:2px">📝 店家實境任務回饋表</div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:16px">完整填寫後送出，等候審核通過入帳 700 元</div>
@@ -627,6 +653,7 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
         📤 送出回饋表等候審核
       </button>
     </div>
+    </div><!-- end store-form-section -->
   </div>
 
   <!-- 設定 TAB -->
@@ -662,15 +689,6 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       </div>
     </div>
   </div>
-    <!-- 獎金卡 -->
-    <div class="bonus-card" id="bonus-card" style="display:none">
-      <div class="bonus-icon">💰</div>
-      <div style="flex:1">
-        <div class="bonus-amount" id="bonus-amount">0</div>
-        <div class="bonus-label">累積 YT 任務獎金（元）</div>
-      </div>
-      <button id="withdraw-toggle-btn" style="background:linear-gradient(135deg,#00b894,var(--green));border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:700;padding:8px 14px;cursor:pointer;font-family:inherit;flex-shrink:0">申請領款</button>
-    </div>
     <!-- 申請領款面板 -->
     <div id="withdraw-panel" style="display:none;background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.25);border-radius:14px;padding:16px;margin-bottom:14px">
       <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px">💸 申請領款</div>
@@ -746,21 +764,66 @@ async function fsList(col) {
 // ── 店家任務 ──
 async function loadStoreHistory() {
   const el = document.getElementById('store-task-history');
+  const formEl = document.getElementById('store-form-section');
+  const submitBtn = document.getElementById('store-submit-btn');
   try {
     const docs = await fsList('store_reviews');
     const mine = docs.filter(({ data: d }) => d.uid === currentUID);
-    if (!mine.length) { el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:8px">尚無任務紀錄</div>'; return; }
-    el.innerHTML = mine.map(({ data: d }) => {
-      const statusMap = { pending: ['#ffc800','⏳ 審核中'], approved: ['#0f9','✅ 已通過'], rejected: ['#f55','❌ 已拒絕'] };
-      const [col, label] = statusMap[d.status] || statusMap.pending;
-      return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;margin-bottom:8px">
-        <div>
-          <div style="font-size:13px;font-weight:700;color:#fff">${d.storeName}</div>
-          <div style="font-size:11px;color:var(--muted)">${d.date}</div>
-        </div>
-        <span style="font-size:12px;font-weight:700;color:${col}">${label}${d.status==='approved'?' +700元':''}</span>
-      </div>`;
-    }).join('');
+
+    // 找最新一筆（不管狀態）
+    const sorted = mine.sort((a, b) => new Date(b.data.createdAt) - new Date(a.data.createdAt));
+    const latest = sorted[0];
+
+    // 計算下次可送出時間
+    let nextAvailable = null;
+    let cooldownMsg = '';
+    if (latest) {
+      const lastDate = new Date(latest.data.createdAt);
+      nextAvailable = new Date(lastDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const now = new Date();
+      if (now < nextAvailable) {
+        const diff = nextAvailable - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        cooldownMsg = `還需等待 ${days} 天 ${hours} 小時`;
+      }
+    }
+
+    // 顯示紀錄
+    if (!mine.length) {
+      el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:8px">尚無任務紀錄</div>';
+    } else {
+      el.innerHTML = sorted.map(({ data: d }) => {
+        const statusMap = {
+          pending:  ['#ffc800', '⏳ 審核中'],
+          approved: ['var(--green)', '✅ 已通過'],
+          rejected: ['var(--red)', '❌ 已拒絕']
+        };
+        const [col, label] = statusMap[d.status] || statusMap.pending;
+        return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">${d.storeName}</div>
+            <div style="font-size:11px;color:var(--muted)">${d.date} 送出</div>
+          </div>
+          <span style="font-size:12px;font-weight:700;color:${col}">${label}${d.status==='approved'?' +700元':''}</span>
+        </div>`;
+      }).join('');
+    }
+
+    // 控制表單顯示
+    if (cooldownMsg) {
+      // 冷卻中，隱藏表單，顯示倒數
+      formEl.style.display = 'none';
+      document.getElementById('store-cooldown-notice').style.display = 'block';
+      document.getElementById('store-cooldown-msg').textContent = cooldownMsg;
+      const nextStr = nextAvailable.toLocaleDateString('zh-TW', { month: 'long', day: 'numeric' }) +
+                      ' ' + nextAvailable.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('store-next-date').textContent = nextStr;
+    } else {
+      formEl.style.display = 'block';
+      document.getElementById('store-cooldown-notice').style.display = 'none';
+    }
+
   } catch(e) { el.innerHTML = ''; }
 }
 
@@ -789,7 +852,6 @@ document.getElementById('store-submit-btn').addEventListener('click', async () =
       status: 'pending', createdAt: new Date().toISOString()
     });
     showToast('✅ 回饋表已送出，等候審核！');
-    // 清空表單
     document.getElementById('store-name').value = '';
     [1,2,3,4,5,6,7,8].forEach(n => document.getElementById(`store-q${n}`).value = '');
     loadStoreHistory();
@@ -1122,8 +1184,8 @@ async function renderTasks() {
     const bonus           = (memberData && memberData.bonus)           || 0;
 
     // 獎金卡
-    document.getElementById('bonus-card').style.display = 'flex';
-    document.getElementById('bonus-amount').textContent = bonus;
+    document.getElementById('global-bonus-bar').style.display = 'flex';
+    document.getElementById('global-bonus-amount').textContent = bonus;
 
 
     // YT 任務 — 每部影片各自上傳截圖
@@ -1209,7 +1271,7 @@ async function renderTasks() {
 }
 
 // ── 申請領款 ──────────────────────────────────────
-document.getElementById('withdraw-toggle-btn').addEventListener('click', async () => {
+document.getElementById('global-withdraw-btn').addEventListener('click', async () => {
   const panel = document.getElementById('withdraw-panel');
   const isOpen = panel.style.display !== 'none';
   if (!isOpen) {
