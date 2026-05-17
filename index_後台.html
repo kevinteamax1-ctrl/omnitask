@@ -160,6 +160,7 @@ textarea { resize: vertical; min-height: 100px; }
     <button class="admin-tab-btn active" data-pane="pane-quick">⚡ 快速登記</button>
     <button class="admin-tab-btn" data-pane="pane-withdraw">💸 領款申請 <span id="withdraw-badge" style="display:none;background:#ffc800;color:#000;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:4px">0</span></button>
     <button class="admin-tab-btn" data-pane="pane-review">🔍 截圖審核 <span id="review-badge" style="display:none;background:#ff5f7e;color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:4px">0</span></button>
+    <button class="admin-tab-btn" data-pane="pane-store-review">🏪 店家審核 <span id="store-badge" style="display:none;background:#ff5f7e;color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:4px">0</span></button>
     <button class="admin-tab-btn" data-pane="pane-members">👥 會員</button>
     <button class="admin-tab-btn" data-pane="pane-tasks">📋 任務</button>
     <button class="admin-tab-btn" data-pane="pane-stats">📊 統計</button>
@@ -295,6 +296,14 @@ textarea { resize: vertical; min-height: 100px; }
       <h4>🔍 待審核截圖</h4>
       <div id="review-loading" style="color:var(--muted);text-align:center;padding:20px">載入中...</div>
       <div id="review-list"></div>
+    </div>
+  </div>
+
+  <div class="admin-pane" id="pane-store-review">
+    <div class="card">
+      <h4>🏪 店家任務審核</h4>
+      <div id="store-review-loading" style="color:var(--muted);text-align:center;padding:20px">載入中...</div>
+      <div id="store-review-list"></div>
     </div>
   </div>
 
@@ -447,6 +456,14 @@ function initAdmin() {
   loadYtTasks();
   loadCustomers();
   renderQuickRegister();
+  updateStoreBadge();
+
+  // 切到店家審核 tab 自動刷新
+  document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+    if (btn.dataset.pane === 'pane-store-review') {
+      btn.addEventListener('click', loadStoreReviews);
+    }
+  });
   loadMemberStats();
   loadReviews();
   loadWithdrawRequests();
@@ -698,7 +715,104 @@ async function deleteMember(uid) {
 }
 
 // ── 新增單一會員 ──
-// ── 客戶名單 ──
+// ── 店家任務審核 ──
+async function updateStoreBadge() {
+  try {
+    const docs = await fsList('store_reviews');
+    const pending = docs.filter(({ data: d }) => d.status === 'pending').length;
+    const badge = document.getElementById('store-badge');
+    if (pending > 0) { badge.textContent = pending; badge.style.display = 'inline'; }
+    else badge.style.display = 'none';
+  } catch(e) {}
+}
+
+async function loadStoreReviews() {
+  const loading = document.getElementById('store-review-loading');
+  const list    = document.getElementById('store-review-list');
+  loading.style.display = 'block';
+  list.innerHTML = '';
+  try {
+    const docs = await fsList('store_reviews');
+    const pending = docs.filter(({ data: d }) => d.status === 'pending');
+    loading.style.display = 'none';
+    if (!pending.length) {
+      list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:30px">目前無待審核的店家回饋</div>';
+      return;
+    }
+    pending.forEach(({ id, data: r }) => {
+      const card = document.createElement('div');
+      card.style.cssText = 'background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:18px;margin-bottom:16px';
+      const qs = [
+        ['接待服務整體感受', r.q1],
+        ['店內環境與氛圍', r.q2],
+        ['印象最深刻的地方', r.q3],
+        ['商品／服務實際感受', r.q4],
+        ['店內動線與整體安排', r.q5],
+        ['是否願意再次回訪', r.q6],
+        ['如何推薦給朋友', r.q7],
+        ['其他建議', r.q8],
+      ];
+      card.innerHTML = `
+        <div style="font-size:15px;font-weight:800;color:var(--accent2);margin-bottom:4px">${r.uid}</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:14px">🏪 ${r.storeName} ／ 📅 ${r.date} ／ 送出：${r.createdAt ? r.createdAt.slice(0,16).replace('T',' ') : ''}</div>
+        ${qs.map(([q,a],i)=>`
+          <div style="margin-bottom:10px">
+            <div style="font-size:11px;font-weight:700;color:var(--accent2);margin-bottom:3px">${i+1}️⃣ ${q}</div>
+            <div style="font-size:13px;color:var(--text);background:rgba(0,0,0,0.15);border-radius:8px;padding:8px 12px;line-height:1.7">${a || '（未填寫）'}</div>
+          </div>`).join('')}
+        <div style="display:flex;gap:10px;margin-top:14px" id="store-actions-${id}">
+          <button class="btn btn-green" style="flex:1" data-sid="${id}" data-uid="${r.uid}" data-action="approve">✅ 通過 +700元</button>
+          <button class="btn btn-red"   style="flex:1" data-sid="${id}" data-uid="${r.uid}" data-action="reject">❌ 拒絕</button>
+        </div>`;
+      list.appendChild(card);
+    });
+
+    list.addEventListener('click', async (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn || btn.disabled) return;
+      const { action, sid, uid } = btn.dataset;
+      btn.closest(`#store-actions-${sid}`).querySelectorAll('button').forEach(b => b.disabled = true);
+
+      if (action === 'approve') {
+        btn.textContent = '處理中...';
+        try {
+          await fsSet(`store_reviews/${sid}`, { status: 'approved' });
+          const memberData = await fsGet(`members/${uid}`);
+          const newBonus = ((memberData && memberData.bonus) || 0) + 700;
+          await fsSet(`members/${uid}`, { bonus: newBonus });
+          showToast(`✅ 已通過，入帳 700 元（累積 ${newBonus} 元）`);
+          loadStoreReviews(); updateStoreBadge();
+        } catch(e) { showToast('操作失敗：' + e.message, true); }
+      }
+
+      if (action === 'reject') {
+        const modal = document.getElementById('reject-modal');
+        modal.style.display = 'flex';
+        document.getElementById('reject-reason-input').value = '';
+        document.getElementById('reject-confirm-btn').onclick = async () => {
+          const reason = document.getElementById('reject-reason-input').value;
+          if (!reason) { alert('請選擇拒絕原因'); return; }
+          modal.style.display = 'none';
+          try {
+            await fsSet(`store_reviews/${sid}`, { status: 'rejected', rejectReason: reason });
+            showToast('🚫 已拒絕');
+            loadStoreReviews(); updateStoreBadge();
+          } catch(e) { showToast('操作失敗：' + e.message, true); }
+        };
+        document.getElementById('reject-cancel-btn').onclick = () => {
+          modal.style.display = 'none';
+          btn.closest(`#store-actions-${sid}`).querySelectorAll('button').forEach(b => b.disabled = false);
+        };
+      }
+    }, { once: true });
+
+  } catch(e) {
+    loading.style.display = 'none';
+    list.innerHTML = `<div style="color:var(--red);text-align:center;padding:20px">載入失敗：${e.message}</div>`;
+  }
+}
+
+
 async function loadCustomers() {
   const docs = await fsList('customers');
   const select = document.getElementById('customer-select');
