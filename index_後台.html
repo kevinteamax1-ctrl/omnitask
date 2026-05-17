@@ -161,6 +161,7 @@ textarea { resize: vertical; min-height: 100px; }
     <button class="admin-tab-btn" data-pane="pane-withdraw">💸 領款申請 <span id="withdraw-badge" style="display:none;background:#ffc800;color:#000;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:4px">0</span></button>
     <button class="admin-tab-btn" data-pane="pane-review">🔍 截圖審核 <span id="review-badge" style="display:none;background:#ff5f7e;color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:4px">0</span></button>
     <button class="admin-tab-btn" data-pane="pane-store-review">🏪 店家審核 <span id="store-badge" style="display:none;background:#ff5f7e;color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:4px">0</span></button>
+    <button class="admin-tab-btn" data-pane="pane-ai-review">🤖 AI任務審核 <span id="ai-badge" style="display:none;background:#7c3aed;color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:4px">0</span></button>
     <button class="admin-tab-btn" data-pane="pane-members">👥 會員</button>
     <button class="admin-tab-btn" data-pane="pane-tasks">📋 任務</button>
     <button class="admin-tab-btn" data-pane="pane-stats">📊 統計</button>
@@ -304,6 +305,14 @@ textarea { resize: vertical; min-height: 100px; }
       <h4>🏪 店家任務審核</h4>
       <div id="store-review-loading" style="color:var(--muted);text-align:center;padding:20px">載入中...</div>
       <div id="store-review-list"></div>
+    </div>
+  </div>
+
+  <div class="admin-pane" id="pane-ai-review">
+    <div class="card">
+      <h4>🤖 AI任務審核</h4>
+      <div id="ai-review-loading" style="color:var(--muted);text-align:center;padding:20px">載入中...</div>
+      <div id="ai-review-list"></div>
     </div>
   </div>
 
@@ -457,12 +466,11 @@ function initAdmin() {
   loadCustomers();
   renderQuickRegister();
   updateStoreBadge();
+  updateAiBadge();
 
-  // 切到店家審核 tab 自動刷新
   document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-    if (btn.dataset.pane === 'pane-store-review') {
-      btn.addEventListener('click', loadStoreReviews);
-    }
+    if (btn.dataset.pane === 'pane-store-review') btn.addEventListener('click', loadStoreReviews);
+    if (btn.dataset.pane === 'pane-ai-review') btn.addEventListener('click', loadAiReviews);
   });
   loadMemberStats();
   loadReviews();
@@ -812,6 +820,93 @@ async function loadStoreReviews() {
   }
 }
 
+
+// ── AI 任務審核 ──
+async function updateAiBadge() {
+  try {
+    const docs = await fsList('ai_reviews');
+    const pending = docs.filter(({ data: d }) => d.status === 'pending').length;
+    const badge = document.getElementById('ai-badge');
+    if (pending > 0) { badge.textContent = pending; badge.style.display = 'inline'; }
+    else badge.style.display = 'none';
+  } catch(e) {}
+}
+
+async function loadAiReviews() {
+  const loading = document.getElementById('ai-review-loading');
+  const list    = document.getElementById('ai-review-list');
+  loading.style.display = 'block';
+  list.innerHTML = '';
+  try {
+    const docs = await fsList('ai_reviews');
+    const pending = docs.filter(({ data: d }) => d.status === 'pending');
+    loading.style.display = 'none';
+    if (!pending.length) {
+      list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:30px">目前無待審核的 AI 任務</div>';
+      return;
+    }
+    pending.forEach(({ id, data: r }) => {
+      const card = document.createElement('div');
+      card.style.cssText = 'background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:18px;margin-bottom:16px';
+      card.innerHTML = `
+        <div style="font-size:15px;font-weight:800;color:var(--accent2);margin-bottom:4px">${r.uid}</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px">🤖 ${r.taskName || 'AI數據任務'} ／ 📅 ${r.date} ／ 送出：${r.createdAt ? r.createdAt.slice(0,16).replace('T',' ') : ''}</div>
+        ${r.imageBase64 ? `<img src="${r.imageBase64}" style="width:100%;max-width:400px;border-radius:10px;margin-bottom:12px;display:block">` : ''}
+        ${r.note ? `<div style="background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.2);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);margin-bottom:12px"><span style="font-size:11px;font-weight:700;color:#7c3aed;display:block;margin-bottom:3px">✍️ 備註</span>${r.note}</div>` : ''}
+        <div style="margin-bottom:10px">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:5px">入帳金額（元）</div>
+          <input type="number" id="ai-reward-${id}" placeholder="例：180" min="1" style="padding:8px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:14px;width:140px;outline:none;font-family:inherit">
+        </div>
+        <div style="display:flex;gap:10px" id="ai-actions-${id}">
+          <button class="btn btn-green" style="flex:1" data-aid="${id}" data-uid="${r.uid}" data-action="approve">✅ 通過並入帳</button>
+          <button class="btn btn-red"   style="flex:1" data-aid="${id}" data-uid="${r.uid}" data-action="reject">❌ 拒絕</button>
+        </div>`;
+      list.appendChild(card);
+    });
+
+    list.addEventListener('click', async (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn || btn.disabled) return;
+      const { action, aid, uid } = btn.dataset;
+      btn.closest(`#ai-actions-${aid}`).querySelectorAll('button').forEach(b => b.disabled = true);
+      if (action === 'approve') {
+        const reward = parseInt(document.getElementById(`ai-reward-${aid}`).value) || 0;
+        if (!reward) { showToast('請填寫入帳金額', true); btn.closest(`#ai-actions-${aid}`).querySelectorAll('button').forEach(b => b.disabled = false); return; }
+        btn.textContent = '處理中...';
+        try {
+          await fsSet(`ai_reviews/${aid}`, { status: 'approved', reward });
+          const memberData = await fsGet(`members/${uid}`);
+          const newBonus = ((memberData && memberData.bonus) || 0) + reward;
+          await fsSet(`members/${uid}`, { bonus: newBonus });
+          showToast(`✅ 已通過，入帳 ${reward} 元（累積 ${newBonus} 元）`);
+          loadAiReviews(); updateAiBadge();
+        } catch(e) { showToast('操作失敗：' + e.message, true); }
+      }
+      if (action === 'reject') {
+        const modal = document.getElementById('reject-modal');
+        modal.style.display = 'flex';
+        document.getElementById('reject-reason-input').value = '';
+        document.getElementById('reject-confirm-btn').onclick = async () => {
+          const reason = document.getElementById('reject-reason-input').value;
+          if (!reason) { alert('請選擇拒絕原因'); return; }
+          modal.style.display = 'none';
+          try {
+            await fsSet(`ai_reviews/${aid}`, { status: 'rejected', rejectReason: reason });
+            showToast('🚫 已拒絕');
+            loadAiReviews(); updateAiBadge();
+          } catch(e) { showToast('操作失敗：' + e.message, true); }
+        };
+        document.getElementById('reject-cancel-btn').onclick = () => {
+          modal.style.display = 'none';
+          btn.closest(`#ai-actions-${aid}`).querySelectorAll('button').forEach(b => b.disabled = false);
+        };
+      }
+    }, { once: true });
+  } catch(e) {
+    loading.style.display = 'none';
+    list.innerHTML = `<div style="color:var(--red);text-align:center;padding:20px">載入失敗：${e.message}</div>`;
+  }
+}
 
 async function loadCustomers() {
   const docs = await fsList('customers');
