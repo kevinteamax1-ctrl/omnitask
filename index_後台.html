@@ -276,6 +276,16 @@ textarea { resize: vertical; min-height: 100px; }
       <h4>📋 現有YT影片任務</h4>
       <div id="admin-yt-task-list"></div>
     </div>
+    <div class="card">
+      <h4>🤖 AI數據任務 今日時段設定</h4>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px">設定後前台會員即可看到今日時段並上傳截圖，清空即代表該時段尚未公告。</p>
+      <label>時段一 名稱／說明</label>
+      <input type="text" id="ai-slot1-input" placeholder="例：早場 09:00 — 數據任務A" autocomplete="off">
+      <label>時段二 名稱／說明</label>
+      <input type="text" id="ai-slot2-input" placeholder="例：晚場 21:00 — 數據任務B" autocomplete="off">
+      <button class="btn btn-primary" style="width:100%;margin-top:8px" id="save-ai-slots-btn">💾 儲存今日時段</button>
+      <div id="ai-slot-status" style="font-size:12px;color:var(--muted);text-align:center;margin-top:8px"></div>
+    </div>
   </div>
 
   <div class="admin-pane" id="pane-stats">
@@ -467,10 +477,12 @@ function initAdmin() {
   renderQuickRegister();
   updateStoreBadge();
   updateAiBadge();
+  loadAiSlotConfig();
 
   document.querySelectorAll('.admin-tab-btn').forEach(btn => {
     if (btn.dataset.pane === 'pane-store-review') btn.addEventListener('click', loadStoreReviews);
     if (btn.dataset.pane === 'pane-ai-review') btn.addEventListener('click', loadAiReviews);
+    if (btn.dataset.pane === 'pane-tasks') btn.addEventListener('click', loadAiSlotConfig);
   });
   loadMemberStats();
   loadReviews();
@@ -820,6 +832,33 @@ async function loadStoreReviews() {
   }
 }
 
+
+// ── AI 時段設定 ──
+async function loadAiSlotConfig() {
+  const config = await fsGet('ai_config/today');
+  if (config) {
+    document.getElementById('ai-slot1-input').value = config.slot1 || '';
+    document.getElementById('ai-slot2-input').value = config.slot2 || '';
+  }
+}
+
+document.getElementById('save-ai-slots-btn').addEventListener('click', async () => {
+  const slot1 = document.getElementById('ai-slot1-input').value.trim();
+  const slot2 = document.getElementById('ai-slot2-input').value.trim();
+  const btn = document.getElementById('save-ai-slots-btn');
+  const status = document.getElementById('ai-slot-status');
+  btn.textContent = '儲存中...'; btn.disabled = true;
+  try {
+    await fsSet('ai_config/today', { slot1, slot2, updatedAt: new Date().toISOString() });
+    status.textContent = '✅ 已儲存！前台會員即可看到今日時段';
+    status.style.color = 'var(--green)';
+    showToast('✅ AI時段已更新');
+  } catch(e) {
+    status.textContent = '❌ 儲存失敗：' + e.message;
+    status.style.color = 'var(--red)';
+  }
+  btn.textContent = '💾 儲存今日時段'; btn.disabled = false;
+});
 
 // ── AI 任務審核 ──
 async function updateAiBadge() {
@@ -1171,8 +1210,8 @@ async function loadReviews() {
           </div>
           <span class="review-status pending">⏳ 待審核</span>
         </div>
-        <img class="review-img" src="${r.imageBase64 || ''}" alt="截圖">
-        ${r.comment ? `<div style="background:rgba(0,144,255,0.06);border:1px solid rgba(0,144,255,0.2);border-radius:9px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--text);line-height:1.7"><span style="font-size:11px;font-weight:700;color:var(--accent2);display:block;margin-bottom:4px">✍️ 觀看心得</span>${r.comment}</div>` : '<div style="color:var(--muted);font-size:12px;margin-bottom:12px">（未填寫心得）</div>'}
+        ${r.imageBase64 ? `<img src="${r.imageBase64}" style="width:100%;max-width:400px;border-radius:10px;margin-bottom:12px;display:block">` : ''}
+        ${r.invoiceBase64 ? `<div style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;color:#d4a017;margin-bottom:5px">🧾 發票</div><img src="${r.invoiceBase64}" style="width:100%;max-width:300px;border-radius:10px;display:block"></div>` : ''}
         <div class="review-actions" id="actions-${id}">
           <button class="btn btn-green" data-action="approve" data-rid="${id}" data-uid="${r.uid}" data-tid="${r.taskId || ''}" data-date="${r.date || ''}">✅ 通過 +100元</button>
           <button class="btn btn-red"   data-action="reject"  data-rid="${id}" data-uid="${r.uid}" data-tid="${r.taskId || ''}" data-date="${r.date || ''}">❌ 拒絕</button>
