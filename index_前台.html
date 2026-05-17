@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OmniTask 任鏈科技 × clickworker 會員系統</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Orbitron:wght@700;900&display=swap');
+
+:root {
+  --bg: #eef2f7;
+  --surface: rgba(255,255,255,0.92);
+  --surface2: rgba(240,245,252,0.97);
+  --border: rgba(100,140,200,0.18);
+  --border2: rgba(80,130,210,0.28);
+  --accent: #2272e8;
+  --accent2: #1a9fd4;
+  --accent3: #1655c0;
+  --green: #0aab6e;
+  --red: #e03f5e;
+  --text: #1a2540;
+  --muted: #7a90b0;
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse at 20% 50%, rgba(34,114,232,0.07) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(26,159,212,0.06) 0%, transparent 50%); pointer-events: none; }
+body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(100,140,200,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(100,140,200,0.06) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; }
+
+/* AUTH */
+#auth-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; position: relative; z-index: 1; padding: 20px; }
+.auth-wrap { width: 100%; max-width: 400px; }
+.brand-header { text-align: center; margin-bottom: 28px; }
+.brand-logo-box { display: inline-flex; align-items: center; gap: 10px; background: rgba(0,144,255,0.08); border: 1px solid var(--border2); border-radius: 14px; padding: 10px 20px; margin-bottom: 14px; box-shadow: 0 0 30px rgba(0,144,255,0.15); }
+.brand-dot { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.brand-name { font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 700; color: var(--accent3); letter-spacing: 1px; }
+.brand-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.brand-header h2 { font-size: 13px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+.auth-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 22px; padding: 36px 32px; backdrop-filter: blur(20px); box-shadow: 0 0 60px rgba(0,100,255,0.12), 0 8px 32px rgba(30,70,160,0.1); position: relative; overflow: hidden; }
+.auth-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent); }
+.auth-card h1 { font-size: 18px; font-weight: 700; color: var(--accent2); margin-bottom: 6px; text-align: center; letter-spacing: 1px; }
+.auth-card > p { color: var(--muted); font-size: 13px; margin-bottom: 26px; text-align: center; }
+.field-label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 7px; margin-top: 16px; }
+.auth-card input { width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.8); border: 1px solid var(--border2); border-radius: 11px; color: var(--text); font-size: 15px; outline: none; font-family: inherit; transition: border-color .2s, box-shadow .2s; }
+.auth-card input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,144,255,0.15); }
+.auth-card input::placeholder { color: rgba(85,119,170,0.7); }
+.auth-login-btn { width: 100%; padding: 14px; margin-top: 22px; background: linear-gradient(135deg, var(--accent3), var(--accent), var(--accent2)); border: none; border-radius: 11px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 1px; box-shadow: 0 4px 24px rgba(0,144,255,0.4); transition: transform .15s; }
+.auth-login-btn:hover { transform: translateY(-1px); }
+.auth-login-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
+#auth-error { color: var(--red); font-size: 13px; margin-top: 12px; text-align: center; min-height: 20px; }
+
+/* APP */
+#member-app { display: none; position: relative; z-index: 1; }
+.top-bar { display: flex; align-items: center; justify-content: space-between; padding: 0 18px; height: 52px; background: rgba(255,255,255,0.95); border-bottom: 1px solid var(--border2); backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 100; }
+.top-bar-brand { display: flex; align-items: center; gap: 8px; }
+.top-bar-brand .tb-dot { width: 26px; height: 26px; border-radius: 7px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 13px; }
+.top-bar-brand h2 { font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 700; color: var(--accent3); }
+.top-badge { background: linear-gradient(135deg, var(--accent3), var(--accent)); color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+.logout-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 7px; font-size: 11px; cursor: pointer; font-family: inherit; transition: all .2s; }
+.logout-btn:hover { border-color: var(--red); color: var(--red); }
+
+.tabs { display: flex; background: rgba(240,245,252,0.9); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
+.tab-btn { flex: 1; padding: 11px 8px; text-align: center; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; transition: all .2s; font-family: inherit; }
+.tab-btn.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+
+.tab-pane { display: none; padding: 14px 14px; }
+.tab-pane.active { display: block; }
+
+/* COMPACT STATS */
+.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 12px; text-align: center; backdrop-filter: blur(10px); position: relative; overflow: hidden; }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+.stat-card .num { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.stat-card .lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+/* COMPACT CALENDAR */
+.cal-wrap { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; padding: 12px; margin-bottom: 12px; backdrop-filter: blur(10px); }
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cal-header h3 { font-size: 13px; font-weight: 700; color: var(--accent2); letter-spacing: .5px; }
+.cal-nav { background: transparent; border: 1px solid var(--border2); color: var(--accent2); padding: 3px 10px; border-radius: 7px; cursor: pointer; font-size: 14px; transition: all .2s; }
+.cal-nav:hover { background: rgba(0,144,255,0.15); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-day-label { text-align: center; font-size: 9px; color: var(--muted); padding: 2px 0; font-weight: 700; }
+.cal-day { height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 11px; font-weight: 500; position: relative; background: rgba(10,25,55,0.5); border: 1px solid rgba(0,100,255,0.06); cursor: default; transition: all .2s; }
+.cal-day.empty { background: transparent; border-color: transparent; }
+.cal-day.today { border-color: var(--accent); color: var(--accent2); font-weight: 700; }
+.cal-day.checked { background: linear-gradient(135deg, rgba(0,229,160,0.3), rgba(0,229,160,0.12)); color: var(--green); font-weight: 700; border-color: rgba(0,229,160,0.5); }
+.cal-day.checked::after { content: '✓'; font-size: 6px; position: absolute; bottom: 1px; }
+.cal-day.can-checkin { cursor: pointer; border-color: var(--accent); animation: calPulse 2s infinite; }
+@keyframes calPulse { 0%,100% { border-color: var(--accent); box-shadow: 0 0 4px rgba(0,144,255,0.3); } 50% { border-color: var(--accent2); box-shadow: 0 0 10px rgba(0,200,255,0.5); } }
+
+.checkin-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, #00b894, #00e5a0); border: none; border-radius: 11px; color: #fff; font-size: 15px; font-weight: 900; cursor: pointer; font-family: inherit; letter-spacing: 1px; box-shadow: 0 4px 20px rgba(0,229,160,0.35); transition: transform .15s; margin-bottom: 6px; }
+.checkin-btn:hover { transform: translateY(-1px); }
+.checkin-btn:disabled { background: rgba(15,28,60,0.8); color: var(--muted); cursor: default; box-shadow: none; transform: none; }
+
+/* NEWS SECTION */
+.section-title { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin: 16px 0 8px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border2), transparent); }
+
+.news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.news-card { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; overflow: hidden; cursor: pointer; transition: border-color .2s, transform .2s; text-decoration: none; display: block; }
+.news-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.news-card-img { width: 100%; height: 80px; object-fit: cover; display: block; background: rgba(0,40,100,0.5); }
+.news-card-img-placeholder { width: 100%; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 28px; background: linear-gradient(135deg, rgba(0,40,100,0.6), rgba(0,20,60,0.8)); }
+.news-card-body { padding: 8px 10px; }
+.news-card-tag { font-size: 9px; font-weight: 700; color: var(--accent2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.news-card-title { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.news-card-time { font-size: 9px; color: var(--muted); margin-top: 4px; }
+
+.news-list-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-bottom: 7px; display: flex; gap: 10px; align-items: flex-start; cursor: pointer; transition: border-color .2s; text-decoration: none; }
+.news-list-item:hover { border-color: var(--accent); }
+.news-list-icon { font-size: 20px; flex-shrink: 0; width: 36px; height: 36px; background: rgba(0,40,100,0.5); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.news-list-text .tag { font-size: 9px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+.news-list-text .title { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.4; margin-top: 2px; }
+.news-list-text .time { font-size: 9px; color: var(--muted); margin-top: 3px; }
+
+.news-loading { text-align: center; color: var(--muted); font-size: 12px; padding: 20px; }
+.news-error { text-align: center; color: var(--muted); font-size: 11px; padding: 10px; }
+
+/* TASK CARDS */
+.task-card { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 12px 14px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+.task-card .task-name { font-size: 13px; font-weight: 600; }
+.task-card .task-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.task-status { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.task-status.done { background: rgba(0,229,160,0.12); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
+.task-status.pending { background: rgba(0,144,255,0.08); color: var(--muted); border: 1px solid var(--border); }
+.yt-watch-btn { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; background: linear-gradient(135deg, #c00, #ff4444); color: #fff; border: none; cursor: pointer; font-family: inherit; text-decoration: none; transition: transform .15s, box-shadow .15s; box-shadow: 0 2px 10px rgba(255,50,50,0.3); white-space: nowrap; }
+.yt-watch-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(255,50,50,0.45); }
+.yt-task-card { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 12px 14px; margin-bottom: 8px; }
+
+/* 獎金卡 */
+.bonus-card { background: linear-gradient(135deg, rgba(0,229,160,0.1), rgba(0,144,255,0.08)); border: 1px solid rgba(0,229,160,0.3); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; }
+.bonus-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--green), var(--accent2)); }
+.bonus-icon { font-size: 28px; flex-shrink: 0; }
+.bonus-amount { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--green), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+.bonus-label { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+/* 時段卡 */
+.slot-section { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; padding: 14px; margin-bottom: 12px; position: relative; overflow: hidden; }
+.slot-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #c00, #ff4444, #ff6b6b); }
+.slot-label { font-size: 11px; font-weight: 800; color: var(--accent2); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+.slot-badge { padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+.slot-badge.approved { background: rgba(0,229,160,0.15); color: var(--green); border: 1px solid rgba(0,229,160,0.4); }
+.slot-badge.pending  { background: rgba(255,200,0,0.1); color: #ffc800; border: 1px solid rgba(255,200,0,0.3); }
+.slot-badge.rejected { background: rgba(255,95,126,0.12); color: var(--red); border: 1px solid rgba(255,95,126,0.3); }
+.slot-badge.todo     { background: rgba(0,144,255,0.08); color: var(--muted); border: 1px solid var(--border); }
+
+/* 上傳區 */
+.upload-area { border: 2px dashed rgba(0,144,255,0.3); border-radius: 10px; padding: 14px; text-align: center; margin-top: 10px; position: relative; cursor: pointer; transition: all .2s; }
+.upload-area:hover { border-color: var(--accent); background: rgba(0,144,255,0.05); }
+.upload-area input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.upload-area-hint { font-size: 12px; color: var(--muted); pointer-events: none; }
+.upload-area-hint .uicon { font-size: 22px; margin-bottom: 4px; }
+.upload-preview { width: 100%; max-height: 150px; object-fit: cover; border-radius: 8px; margin-top: 8px; display: none; }
+.upload-submit-btn { width: 100%; padding: 10px; margin-top: 8px; background: linear-gradient(135deg, #005aff, #0090ff); border: none; border-radius: 9px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; display: none; transition: transform .15s; box-shadow: 0 3px 12px rgba(0,144,255,0.35); }
+.upload-submit-btn:hover { transform: translateY(-1px); }
+.upload-submit-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
+
+.toast { position: fixed; bottom: 24px; left: 50%; background: linear-gradient(135deg, #00b894, var(--green)); color: #fff; padding: 11px 24px; border-radius: 30px; font-weight: 700; font-size: 13px; opacity: 0; transition: opacity .3s, transform .3s; z-index: 9999; pointer-events: none; box-shadow: 0 4px 20px rgba(0,229,160,0.4); transform: translateX(-50%) translateY(10px); }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.error { background: linear-gradient(135deg, #c0392b, var(--red)); color: #fff; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="brand-header">
+      <div class="brand-logo-box">
+        <div class="brand-dot">⚡</div>
+        <div>
+          <div class="brand-name">OmniTask 任鏈科技</div>
+          <div class="brand-sub">× clickworker 聯名系統</div>
+        </div>
+      </div>
+      <h2>會員簽到平台</h2>
+    </div>
+    <div class="auth-card">
+      <h1>🔐 會員登入</h1>
+      <p>請輸入你的會員編號與密碼</p>
+      <span class="field-label">會員編號</span>
+      <input id="uid-input" type="text" placeholder="例：U12345 或 12345" autocomplete="off">
+      <span class="field-label">密碼</span>
+      <input id="pass-input" type="password" placeholder="請輸入密碼">
+      <button class="auth-login-btn" id="login-btn">登 入</button>
+      <div id="auth-error"></div>
+    </div>
+  </div>
+</div>
+
+<div id="member-app">
+  <div class="top-bar">
+    <div class="top-bar-brand">
+      <div class="tb-dot">⚡</div>
+      <h2>OmniTask</h2>
+    </div>
+    <span class="top-badge" id="member-uid-badge"></span>
+    <button class="logout-btn" id="logout-btn">登出</button>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="tab-checkin">📅 簽到</button>
+    <button class="tab-btn" data-tab="tab-news">🏦 幣託介紹</button>
+    <button class="tab-btn" data-tab="tab-tasks">📋 任務</button>
+  </div>
+
+  <!-- 簽到 TAB -->
+  <div class="tab-pane active" id="tab-checkin">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="num" id="stat-total">0</div>
+        <div class="lbl">累積簽到天數</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-streak">0</div>
+        <div class="lbl">連續天數</div>
+      </div>
+    </div>
+
+    <div class="cal-wrap">
+      <div class="cal-header">
+        <button class="cal-nav" id="cal-prev">‹</button>
+        <h3 id="cal-month-label"></h3>
+        <button class="cal-nav" id="cal-next">›</button>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+
+    <button class="checkin-btn" id="checkin-btn">📡 立即簽到</button>
+    <p style="color:var(--muted);font-size:10px;text-align:center;letter-spacing:.5px">⚠️ 只能簽今天，不能補簽</p>
+
+    <!-- 幣託一條 banner，點進去跳幣託介紹頁 -->
+    <div style="margin-top:18px;margin-bottom:6px">
+      <button onclick="document.querySelectorAll('.tab-btn')[1].click()" style="width:100%;background:linear-gradient(135deg,rgba(0,30,80,0.95),rgba(0,15,50,0.98));border:1px solid rgba(0,144,255,0.35);border-radius:14px;padding:12px 16px;cursor:pointer;text-align:left;position:relative;overflow:hidden;transition:border-color .2s,transform .2s" onmouseover="this.style.borderColor='rgba(0,200,255,0.6)';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='rgba(0,144,255,0.35)';this.style.transform='none'">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#005aff,#0090ff,#00c8ff,#00e5a0)"></div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#0050c8,#0090ff);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 2px 12px rgba(0,144,255,0.4)">🏦</div>
+          <div style="flex:1;text-align:left">
+            <div style="font-size:14px;font-weight:800;color:#00c8ff;letter-spacing:.5px">幣託 BitoPro</div>
+            <div style="font-size:11px;color:#5577aa;margin-top:2px">什麼是幣託？安全性・好處介紹 →</div>
+          </div>
+          <div style="color:#5577aa;font-size:18px">›</div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- 幣託介紹 TAB -->
+  <div class="tab-pane" id="tab-news">
+    <!-- 頂部 Banner -->
+    <div style="background: linear-gradient(135deg, rgba(0,40,100,0.8), rgba(0,20,60,0.95)); border: 1px solid var(--border2); border-radius: 16px; padding: 20px 18px 16px; margin-bottom: 14px; position: relative; overflow: hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#005aff,#0090ff,#00c8ff,#00e5a0)"></div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#0050c8,#0090ff);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 4px 16px rgba(0,144,255,0.4)">🏦</div>
+        <div>
+          <div style="font-size:18px;font-weight:900;color: var(--accent3); font-weight:900; letter-spacing:1px">幣託 BitoPro</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">台灣合法加密貨幣交易所・企業資金流轉工具</div>
+        </div>
+      </div>
+      <p style="font-size:13px;color:#99bbdd;line-height:1.7">幣託（BitoPro）是台灣最早取得金管會登記的合法加密貨幣交易平台之一，專為個人與企業提供安全、快速的數位資產管理服務。</p>
+    </div>
+
+    <!-- 什麼是加密貨幣？ -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px">
+      <div style="font-size:12px;font-weight:800;color:var(--accent2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">💡 新手必看：什麼是 USDT？</div>
+      <p style="font-size:13px;color:#aaccee;line-height:1.8;margin-bottom:10px">USDT（泰達幣）是一種「穩定幣」，1 USDT ≈ 1 美元，價格不像比特幣那樣大漲大跌，非常適合用於跨境轉帳與企業出金。</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:20px;margin-bottom:4px">💵</div>
+          <div style="font-size:11px;font-weight:700;color:var(--green)">穩定不波動</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">1 USDT ≈ 1 USD</div>
+        </div>
+        <div style="background:rgba(0,144,255,0.08);border:1px solid rgba(0,144,255,0.2);border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:20px;margin-bottom:4px">⚡</div>
+          <div style="font-size:11px;font-weight:700;color:var(--accent2)">即時到帳</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">無需等待銀行處理</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 為什麼選幣託 -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px">
+      <div style="font-size:12px;font-weight:800;color:var(--accent2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">🏆 為什麼選擇幣託？</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(0,90,255,0.3),rgba(0,144,255,0.15));border:1px solid rgba(0,144,255,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🏛️</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">台灣合法登記平台</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.6">已於金融監督管理委員會完成虛擬資產服務業者（VASP）登記，是台灣少數合規的交易所之一。</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(0,90,255,0.3),rgba(0,144,255,0.15));border:1px solid rgba(0,144,255,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">💸</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">降低跨境手續費</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.6">傳統銀行電匯動輒數百元手續費，透過 USDT 出金大幅節省成本，適合企業大額資金流轉。</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(0,90,255,0.3),rgba(0,144,255,0.15));border:1px solid rgba(0,144,255,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📊</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">資產透明可追蹤</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.6">所有交易紀錄均可在帳戶中查詢，資金流向清晰，方便財務管理與對帳。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 出金流程 -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px">
+      <div style="font-size:12px;font-weight:800;color:var(--accent2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">📤 出金流程（超簡單 3 步驟）</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:12px;background:rgba(34,114,232,0.06);border-radius:10px;padding:12px">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0">1</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text)">下載 BitoPro App</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">官方網站或 App Store / Google Play 下載，請只透過官方管道，勿使用第三方連結</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;background:rgba(34,114,232,0.06);border-radius:10px;padding:12px">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0">2</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text)">完成身分驗證（KYC）</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">依指示上傳身分證件，確保帳戶安全與合規，通常數分鐘至數小時內完成審核</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;background:rgba(34,114,232,0.06);border-radius:10px;padding:12px">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0">3</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text)">綁定為資產接收帳戶</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">完成後即可作為 OmniTask 任鏈科技公司出金的 USDT 接收地址</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 安全提示 -->
+    <div style="background:linear-gradient(135deg,rgba(255,95,126,0.08),rgba(255,95,126,0.04));border:1px solid rgba(255,95,126,0.25);border-radius:14px;padding:16px;margin-bottom:10px">
+      <div style="font-size:12px;font-weight:800;color:#ff8fa3;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🔒 安全機制說明</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="color:var(--green);font-size:14px">✓</span>
+          <span style="font-size:12px;color:#aaccee">僅建議透過<strong style="color:var(--text)">官方平台</strong>下載 App 或前往官網</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="color:var(--green);font-size:14px">✓</span>
+          <span style="font-size:12px;color:#aaccee">請勿透過<strong style="color:var(--text)">第三方連結</strong>或不明網站登入帳戶</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="color:var(--green);font-size:14px">✓</span>
+          <span style="font-size:12px;color:#aaccee">啟用<strong style="color:var(--text)">雙重驗證（2FA）</strong>，增加帳戶安全層級</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="color:var(--green);font-size:14px">✓</span>
+          <span style="font-size:12px;color:#aaccee">定期確認登入紀錄，發現異常立即聯繫客服</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OmniTask 合作說明 -->
+    <div style="background:linear-gradient(135deg,rgba(0,229,160,0.08),rgba(0,144,255,0.06));border:1px solid rgba(0,229,160,0.25);border-radius:14px;padding:16px;margin-bottom:6px">
+      <div style="font-size:12px;font-weight:800;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🎁 OmniTask 任鏈科技 × 幣託</div>
+      <p style="font-size:12px;color:#aaccee;line-height:1.8">新用戶完成幣託身份驗證（KYC）後，即可獲得 <strong style="color:var(--green)">OmniTask 任鏈科技專屬活動獎勵</strong>。詳情請洽助理，把握機會！</p>
+    </div>
+
+    <div style="text-align:center;margin-top:14px;margin-bottom:4px">
+      <a href="https://www.bitopro.com" target="_blank" rel="noopener" style="display:inline-block;padding:12px 32px;background:linear-gradient(135deg,var(--accent3),var(--accent),var(--accent2));border-radius:30px;color:#fff;font-size:13px;font-weight:800;text-decoration:none;letter-spacing:1px;box-shadow:0 4px 20px rgba(0,144,255,0.4)">前往幣託官網 →</a>
+    </div>
+  </div>
+
+  <!-- 任務 TAB -->
+  <div class="tab-pane" id="tab-tasks">
+    <!-- 獎金卡 -->
+    <div class="bonus-card" id="bonus-card" style="display:none">
+      <div class="bonus-icon">💰</div>
+      <div style="flex:1">
+        <div class="bonus-amount" id="bonus-amount">0</div>
+        <div class="bonus-label">累積 YT 任務獎金（元）</div>
+      </div>
+      <button id="withdraw-toggle-btn" style="background:linear-gradient(135deg,#00b894,var(--green));border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:700;padding:8px 14px;cursor:pointer;font-family:inherit;flex-shrink:0">申請領款</button>
+    </div>
+    <!-- 申請領款面板 -->
+    <div id="withdraw-panel" style="display:none;background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.25);border-radius:14px;padding:16px;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px">💸 申請領款</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">請至平台提領後，在此登記金額，管理員確認後將從獎金扣除。</div>
+      <input type="number" id="withdraw-amount" min="1" placeholder="輸入申請金額（元）" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(0,229,160,0.35);border-radius:9px;color:var(--text);font-size:15px;outline:none;font-family:inherit;margin-bottom:10px">
+      <div id="withdraw-pending-notice" style="display:none;color:#ffc800;font-size:12px;margin-bottom:10px">⏳ 已有一筆申請待審核，請等管理員確認後再申請。</div>
+      <button id="withdraw-submit-btn" style="width:100%;padding:12px;background:linear-gradient(135deg,#00b894,var(--green));border:none;border-radius:9px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">送出申請</button>
+    </div>
+    <div class="section-title">▶️ YT 任務</div>
+    <p style="color:var(--muted);font-size:11px;margin-bottom:10px">每部影片完成後各自上傳截圖與心得等候審核，通過即入帳 <strong style="color:var(--green)">100元</strong></p>
+    <div id="yt-slots-list"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyATOrj7upNj0Oa1Bf1LpXpdM8mRYVKbNfU",
+  authDomain: "member-checkin-35dbe.firebaseapp.com",
+  projectId: "member-checkin-35dbe",
+  storageBucket: "member-checkin-35dbe.firebasestorage.app",
+  messagingSenderId: "192670308422",
+  appId: "1:192670308422:web:0e272c14358e1a1b5a1247",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const isSunday = () => new Date().getDay() === 0;
+const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const dateStr  = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
+let currentUID = null;
+
+function showToast(msg, err = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast' + (err ? ' error' : '');
+  void t.offsetWidth; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+async function fsGet(path) {
+  const parts = path.split('/');
+  const snap = await getDoc(doc(db, parts[0], parts[1]));
+  return snap.exists() ? snap.data() : null;
+}
+async function fsUpdate(path, data) {
+  const parts = path.split('/');
+  await setDoc(doc(db, parts[0], parts[1]), data, { merge: true });
+}
+async function fsList(col) {
+  const snap = await getDocs(collection(db, col));
+  return snap.docs.map(d => ({ id: d.id, data: d.data() }));
+}
+
+// ── 新聞抓取 ──
+// 使用 allorigins 代理抓 Google News RSS（繁中科技/財經）
+const RSS_SOURCES = [
+  { url: 'https://news.google.com/rss/search?q=科技+AI&hl=zh-TW&gl=TW&ceid=TW:zh-Hant', tag: 'AI 科技', icon: '🤖' },
+  { url: 'https://news.google.com/rss/search?q=財經+股市&hl=zh-TW&gl=TW&ceid=TW:zh-Hant', tag: '財經', icon: '💹' },
+  { url: 'https://news.google.com/rss/search?q=人才+科技業&hl=zh-TW&gl=TW&ceid=TW:zh-Hant', tag: '人才', icon: '👔' },
+];
+
+async function fetchRSS(rssUrl) {
+  const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
+  const res = await fetch(proxy);
+  const json = await res.json();
+  const xml = new DOMParser().parseFromString(json.contents, 'text/xml');
+  const items = [...xml.querySelectorAll('item')].slice(0, 6);
+  return items.map(item => ({
+    title: item.querySelector('title')?.textContent || '',
+    link:  item.querySelector('link')?.textContent || '#',
+    pubDate: item.querySelector('pubDate')?.textContent || '',
+    thumbnail: '',
+  }));
+}
+
+function timeAgo(dateStr) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor(diff / 60000);
+  if (h > 24) return Math.floor(h/24) + ' 天前';
+  if (h > 0) return h + ' 小時前';
+  return m + ' 分鐘前';
+}
+
+function newsCardHTML(item, tag, icon) {
+  const title = item.title || '';
+  const link  = item.link || '#';
+  const time  = item.pubDate ? timeAgo(item.pubDate) : '';
+  const thumb = item.thumbnail || item.enclosure?.link || '';
+  return `
+    <a class="news-card" href="${link}" target="_blank" rel="noopener">
+      ${thumb
+        ? `<img class="news-card-img" src="${thumb}" onerror="this.parentNode.querySelector('.news-card-img-placeholder').style.display='flex';this.style.display='none'" loading="lazy">`
+        : ''}
+      <div class="news-card-img-placeholder" style="${thumb ? 'display:none' : ''}">${icon}</div>
+      <div class="news-card-body">
+        <div class="news-card-tag">${tag}</div>
+        <div class="news-card-title">${title}</div>
+        <div class="news-card-time">${time}</div>
+      </div>
+    </a>`;
+}
+
+function newsListHTML(item, tag, icon) {
+  const title = item.title || '';
+  const link  = item.link || '#';
+  const time  = item.pubDate ? timeAgo(item.pubDate) : '';
+  return `
+    <a class="news-list-item" href="${link}" target="_blank" rel="noopener">
+      <div class="news-list-icon">${icon}</div>
+      <div class="news-list-text">
+        <div class="tag">${tag}</div>
+        <div class="title">${title}</div>
+        <div class="time">${time}</div>
+      </div>
+    </a>`;
+}
+
+async function loadNews() {
+  // 首頁預覽（簽到頁）
+  const previewEl = document.getElementById('news-preview');
+  // 新聞頁大圖
+  const featuredEl = document.getElementById('news-featured');
+  const aiEl = document.getElementById('news-ai');
+  const industryEl = document.getElementById('news-industry');
+
+  try {
+    const [src0, src1, src2] = await Promise.allSettled(RSS_SOURCES.map(s => fetchRSS(s.url)));
+
+    const items0 = src0.status === 'fulfilled' ? src0.value : [];
+    const items1 = src1.status === 'fulfilled' ? src1.value : [];
+    const items2 = src2.status === 'fulfilled' ? src2.value : [];
+
+    // 簽到頁預覽：前3則清單
+    const previewItems = [...items0.slice(0,2), ...items2.slice(0,1)];
+    if (previewItems.length) {
+      previewEl.innerHTML = previewItems.map(it => newsListHTML(it, '科技', RSS_SOURCES[0].icon)).join('');
+    } else {
+      previewEl.innerHTML = '<div class="news-error">暫無資料，請稍後再試</div>';
+    }
+
+    // 大圖卡（新聞頁頂部）
+    const featured = [...items2.slice(0,2), ...items0.slice(0,2)];
+    if (featured.length) {
+      featuredEl.innerHTML = featured.map((it, i) => {
+        const src = i < 2 ? RSS_SOURCES[2] : RSS_SOURCES[0];
+        return newsCardHTML(it, src.tag, src.icon);
+      }).join('');
+    } else {
+      featuredEl.innerHTML = '<div class="news-error">暫無資料</div>';
+    }
+
+    // AI 與人才（數位時代）
+    if (items1.length) {
+      aiEl.innerHTML = items1.slice(0,4).map(it => newsListHTML(it, RSS_SOURCES[1].tag, RSS_SOURCES[1].icon)).join('');
+    } else {
+      aiEl.innerHTML = '<div class="news-error">暫無資料</div>';
+    }
+
+    // 產業即時（科技新聞）
+    if (items0.length) {
+      industryEl.innerHTML = items0.slice(2,6).map(it => newsListHTML(it, RSS_SOURCES[0].tag, RSS_SOURCES[0].icon)).join('');
+    } else {
+      industryEl.innerHTML = '<div class="news-error">暫無資料</div>';
+    }
+
+  } catch(e) {
+    featuredEl.innerHTML = '<div class="news-error">新聞載入失敗，請稍後再試</div>';
+    previewEl.innerHTML = '';
+  }
+}
+
+// ── 登入 ──
+document.getElementById('login-btn').addEventListener('click', doLogin);
+document.getElementById('uid-input').addEventListener('keydown', e => e.key === 'Enter' && doLogin());
+document.getElementById('pass-input').addEventListener('keydown', e => e.key === 'Enter' && doLogin());
+
+async function doLogin() {
+  const uid  = document.getElementById('uid-input').value.trim().toUpperCase();
+  const pass = document.getElementById('pass-input').value.trim();
+  const errEl = document.getElementById('auth-error');
+  const btn = document.getElementById('login-btn');
+  errEl.textContent = '';
+  if (!uid) { errEl.textContent = '請輸入會員編號'; return; }
+  if (!pass) { errEl.textContent = '請輸入密碼'; return; }
+  btn.textContent = '連線中...'; btn.disabled = true;
+  try {
+    await signInAnonymously(auth);
+    const fullUID = uid.startsWith('U') ? uid : 'U' + uid;
+    const data = await fsGet(`members/${fullUID}`);
+    if (!data) { errEl.textContent = '找不到此會員編號'; btn.textContent = '登 入'; btn.disabled = false; return; }
+    if (data.password !== pass) { errEl.textContent = '密碼錯誤'; btn.textContent = '登 入'; btn.disabled = false; return; }
+    currentUID = fullUID;
+    localStorage.setItem('omni_uid', fullUID);
+    localStorage.setItem('omni_pass', pass);
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('member-app').style.display = 'block';
+    document.getElementById('member-uid-badge').textContent = fullUID;
+    initMember();
+  } catch(e) {
+    errEl.textContent = '連線錯誤：' + e.message;
+    btn.textContent = '登 入'; btn.disabled = false;
+  }
+}
+
+// ── 自動登入（重整不跳出）──
+(async () => {
+  const savedUID  = localStorage.getItem('omni_uid');
+  const savedPass = localStorage.getItem('omni_pass');
+  if (savedUID && savedPass) {
+    // 先隱藏登入畫面，避免重整時閃現
+    document.getElementById('auth-screen').style.display = 'none';
+    try {
+      await signInAnonymously(auth);
+      const data = await fsGet(`members/${savedUID}`);
+      if (data && data.password === savedPass) {
+        currentUID = savedUID;
+        document.getElementById('member-app').style.display = 'block';
+        document.getElementById('member-uid-badge').textContent = savedUID;
+        initMember();
+        return;
+      }
+    } catch(_) {}
+    localStorage.removeItem('omni_uid');
+    localStorage.removeItem('omni_pass');
+    document.getElementById('auth-screen').style.display = 'flex';
+  }
+})();
+
+let calYear, calMonth;
+
+function initMember() {
+  const now = new Date(); calYear = now.getFullYear(); calMonth = now.getMonth();
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  }));
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    localStorage.removeItem('omni_uid');
+    localStorage.removeItem('omni_pass');
+    location.reload();
+  });
+  renderCalendar();
+  renderTasks();
+  loadNews();
+}
+
+async function markYtDone(ytId, today) {
+  try {
+    const data = await fsGet(`members/${currentUID}`);
+    const ytTasks = (data && data.ytTasks) || {};
+    if (!ytTasks[ytId]) ytTasks[ytId] = {};
+    ytTasks[ytId][today] = true;
+    await fsUpdate(`members/${currentUID}`, { ytTasks });
+    showToast('✅ YT任務完成！');
+    renderTasks();
+  } catch(e) {
+    showToast('標記失敗：' + e.message, true);
+  }
+}
+async function renderCalendar() {
+  try {
+    const data = await fsGet(`members/${currentUID}`);
+    const checkins = (data && data.checkins) || {};
+    const today = todayStr();
+    const totalCheckins = Object.keys(checkins).filter(k => checkins[k]).length;
+    let streak = 0, d = new Date(today);
+    while (checkins[dateStr(d)]) { streak++; d.setDate(d.getDate() - 1); }
+    document.getElementById('stat-total').textContent = totalCheckins;
+    document.getElementById('stat-streak').textContent = streak;
+    document.getElementById('cal-month-label').textContent = `${calYear}年${calMonth+1}月`;
+
+    const firstDay = new Date(calYear, calMonth, 1);
+    const lastDay  = new Date(calYear, calMonth+1, 0);
+    const startDow = firstDay.getDay();
+    const grid = document.getElementById('cal-grid');
+    grid.innerHTML = '';
+    ['日','一','二','三','四','五','六'].forEach(d => {
+      const el = document.createElement('div'); el.className = 'cal-day-label'; el.textContent = d; grid.appendChild(el);
+    });
+    for (let i = 0; i < startDow; i++) {
+      const el = document.createElement('div'); el.className = 'cal-day empty'; grid.appendChild(el);
+    }
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+      const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      const dow = new Date(calYear, calMonth, day).getDay();
+      const isSun = dow === 0;
+      const el = document.createElement('div'); el.className = 'cal-day'; el.textContent = day;
+      if (isSun) { el.style.opacity = '0.3'; el.style.color = 'var(--muted)'; }
+      if (!isSun && checkins[ds]) el.classList.add('checked');
+      if (ds === today) { el.classList.add('today'); if (!checkins[ds] && !isSun) el.classList.add('can-checkin'); }
+      grid.appendChild(el);
+    }
+    const btn = document.getElementById('checkin-btn');
+    const todayIsSunday = new Date().getDay() === 0;
+    if (todayIsSunday) { btn.textContent = '🚫 週日不開放簽到'; btn.disabled = true; }
+    else if (checkins[today]) { btn.textContent = '✅ 今日已簽到'; btn.disabled = true; }
+    else { btn.textContent = '📡 立即簽到'; btn.disabled = false; btn.onclick = () => doCheckin(today); }
+    document.getElementById('cal-prev').onclick = () => { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar(); };
+    document.getElementById('cal-next').onclick = () => { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar(); };
+  } catch(e) {
+    showToast('載入失敗：' + e.message, true);
+  }
+}
+
+async function doCheckin(today) {
+  const btn = document.getElementById('checkin-btn');
+  if (new Date().getDay() === 0) { showToast('週日不開放簽到', true); return; }
+  btn.textContent = '簽到中...'; btn.disabled = true;
+  try {
+    const data = await fsGet(`members/${currentUID}`);
+    const checkins = (data && data.checkins) || {};
+    if (checkins[today]) { showToast('今日已簽到', true); renderCalendar(); return; }
+    checkins[today] = true;
+    await fsUpdate(`members/${currentUID}`, { checkins, lastCheckin: today });
+    showToast('✅ 簽到成功！');
+    renderCalendar();
+  } catch(e) {
+    showToast('簽到失敗：' + e.message, true);
+    btn.textContent = '📡 立即簽到'; btn.disabled = false;
+  }
+}
+
+async function renderTasks() {
+  try {
+    const today = todayStr();
+    const memberData = await fsGet(`members/${currentUID}`);
+    const ytTasks    = (memberData && memberData.ytTasks)    || {};
+    const ytReviews  = (memberData && memberData.ytReviews)  || {}; // { taskId: { date: 'pending'|'approved'|'rejected' } }
+    const bonus      = (memberData && memberData.bonus)      || 0;
+
+    // 獎金卡
+    document.getElementById('bonus-card').style.display = 'flex';
+    document.getElementById('bonus-amount').textContent = bonus;
+
+
+    // YT 任務 — 每部影片各自上傳截圖
+    const ytDocs = await fsList('yt_tasks');
+    const ytEl = document.getElementById('yt-slots-list');
+    ytEl.innerHTML = '';
+
+    if (isSunday()) {
+      ytEl.innerHTML = '<div class="task-card"><div class="task-name" style="color:var(--muted)">📅 今日（週日）無 YT 任務</div></div>';
+      return;
+    }
+    if (!ytDocs.length) {
+      ytEl.innerHTML = '<div class="task-card"><div class="task-name" style="color:var(--muted)">目前沒有 YT 影片任務</div></div>';
+      return;
+    }
+
+    ytDocs.forEach(({ id: taskId, data: t }, idx) => {
+      // 每2部自動分時段標籤顯示用
+      const slotNum = Math.floor(idx / 2) + 1;
+      // reviewStatus 以 ytReviews 為主（後台審核寫入）
+      const reviewStatus = (ytReviews[taskId] && ytReviews[taskId][today]) || null;
+      // isDone = 後台已通過（ytReviews approved）
+      const isDone = reviewStatus === 'approved';
+
+      let badgeClass = 'todo', badgeText = '未上傳';
+      if (isDone)                          { badgeClass = 'approved'; badgeText = '✅ 已通過'; }
+      else if (reviewStatus === 'pending') { badgeClass = 'pending';  badgeText = '⏳ 審核中'; }
+      else if (reviewStatus === 'rejected'){ badgeClass = 'rejected'; badgeText = '❌ 已拒絕'; }
+
+      const section = document.createElement('div');
+      section.className = 'slot-section';
+
+      const canUpload = !isDone && reviewStatus !== 'pending';
+      const uploadHTML = canUpload ? `
+        <div class="upload-area" id="upload-area-${taskId}">
+          <input type="file" accept="image/*" id="file-input-${taskId}">
+          <div class="upload-area-hint">
+            <div class="uicon">📸</div>
+            <div>上傳截圖（按讚＋訂閱）</div>
+            <div style="font-size:10px;margin-top:3px">送出後等候審核，通過入帳 <strong style="color:var(--green)">100元</strong></div>
+          </div>
+          <img class="upload-preview" id="preview-${taskId}" alt="預覽">
+        </div>
+        <textarea id="comment-${taskId}" placeholder="✍️ 請輸入觀看心得（至少10字）..." style="width:100%;margin-top:10px;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(0,144,255,0.3);border-radius:9px;color:var(--text);font-size:13px;font-family:inherit;resize:vertical;min-height:80px;outline:none;box-sizing:border-box"></textarea>
+        <button class="upload-submit-btn" id="submit-btn-${taskId}">📤 送出截圖與心得等候審核</button>
+        ${reviewStatus === 'rejected' ? '<div style="color:var(--red);font-size:11px;margin-top:6px;text-align:center">⚠️ 截圖或心得不符，請重新上傳</div>' : ''}
+      ` : '';
+
+      section.innerHTML = `
+        <div class="slot-label">
+          <span>時段${slotNum} ▶️ ${t.name}</span>
+          <span class="slot-badge ${badgeClass}">${badgeText}</span>
+        </div>
+        ${t.url ? `<a class="yt-watch-btn" href="${t.url}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:${canUpload?'10px':'0'}">▶ 前往觀看</a>` : ''}
+        ${uploadHTML}
+      `;
+
+      ytEl.appendChild(section);
+
+      if (!canUpload) return;
+
+      const fileInput = document.getElementById(`file-input-${taskId}`);
+      const preview   = document.getElementById(`preview-${taskId}`);
+      const submitBtn = document.getElementById(`submit-btn-${taskId}`);
+
+      fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+        submitBtn.style.display = 'block';
+      });
+
+      submitBtn.addEventListener('click', () => {
+        const comment = document.getElementById(`comment-${taskId}`);
+        uploadScreenshot(taskId, t.name, fileInput, submitBtn, comment);
+      });
+    });
+  } catch(e) {
+    showToast('載入任務失敗：' + e.message, true);
+  }
+}
+
+// ── 申請領款 ──────────────────────────────────────
+document.getElementById('withdraw-toggle-btn').addEventListener('click', async () => {
+  const panel = document.getElementById('withdraw-panel');
+  const isOpen = panel.style.display !== 'none';
+  if (!isOpen) {
+    // 檢查是否已有待審核申請
+    try {
+      const reqs = await fsList('withdrawal_requests');
+      const hasPending = reqs.some(r => r.data.uid === currentUID && r.data.status === 'pending');
+      document.getElementById('withdraw-pending-notice').style.display = hasPending ? 'block' : 'none';
+      document.getElementById('withdraw-submit-btn').disabled = hasPending;
+    } catch(e) {}
+  }
+  panel.style.display = isOpen ? 'none' : 'block';
+});
+
+document.getElementById('withdraw-submit-btn').addEventListener('click', async () => {
+  const amt = parseInt(document.getElementById('withdraw-amount').value);
+  if (!amt || amt <= 0) { showToast('請輸入有效金額', true); return; }
+
+  const memberData = await fsGet(`members/${currentUID}`);
+  const bonus = (memberData && memberData.bonus) || 0;
+  if (amt > bonus) { showToast(`金額超過獎金餘額（$${bonus}）`, true); return; }
+
+  const btn = document.getElementById('withdraw-submit-btn');
+  btn.textContent = '送出中...'; btn.disabled = true;
+  try {
+    const reqId = `wr_${currentUID}_${Date.now()}`;
+    await fsUpdate(`withdrawal_requests/${reqId}`, {
+      uid: currentUID,
+      amount: amt,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+    });
+    showToast('✅ 申請已送出，等待管理員確認');
+    document.getElementById('withdraw-panel').style.display = 'none';
+    document.getElementById('withdraw-amount').value = '';
+  } catch(e) {
+    showToast('送出失敗：' + e.message, true);
+    btn.textContent = '送出申請'; btn.disabled = false;
+  }
+});
+
+// 壓縮圖片為 base64
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const MAX = 800;
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+        else       { w = Math.round(w * MAX / h); h = MAX; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL('image/jpeg', 0.7));
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+async function uploadScreenshot(taskId, taskName, fileInput, submitBtn, commentEl) {
+  const file = fileInput.files[0];
+  if (!file) { showToast('請先選擇截圖', true); return; }
+  const comment = commentEl ? commentEl.value.trim() : '';
+  if (comment.length < 10) { showToast('請輸入至少10字的觀看心得', true); return; }
+  submitBtn.textContent = '壓縮中...'; submitBtn.disabled = true;
+  try {
+    const today    = todayStr();
+    const base64   = await compressImage(file);
+    const reviewId = `${currentUID}_${taskId}_${today}`;
+
+    // 存截圖與心得到 pending_reviews
+    await fsUpdate(`pending_reviews/${reviewId}`, {
+      uid:         currentUID,
+      taskId,
+      taskName,
+      date:        today,
+      imageBase64: base64,
+      comment:     comment,
+      status:      'pending',
+      createdAt:   new Date().toISOString(),
+    });
+
+    // 更新會員 ytReviews 狀態
+    const data      = await fsGet(`members/${currentUID}`);
+    const ytReviews = (data && data.ytReviews) || {};
+    if (!ytReviews[taskId]) ytReviews[taskId] = {};
+    ytReviews[taskId][today] = 'pending';
+    await fsUpdate(`members/${currentUID}`, { ytReviews });
+
+    showToast('✅ 截圖與心得已送出，等候審核！');
+    renderTasks();
+  } catch(e) {
+    showToast('上傳失敗：' + e.message, true);
+    submitBtn.textContent = '📤 送出截圖與心得等候審核';
+    submitBtn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OmniTask 管理後台</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Orbitron:wght@700;900&display=swap');
+
+:root {
+  --bg: #eef2f7;
+  --surface: rgba(255,255,255,0.95);
+  --surface2: rgba(240,245,252,0.97);
+  --border: rgba(100,140,200,0.18);
+  --border2: rgba(80,130,210,0.28);
+  --accent: #2272e8;
+  --accent2: #1a9fd4;
+  --accent3: #1655c0;
+  --glow: rgba(34,114,232,0.25);
+  --green: #0aab6e;
+  --red: #e03f5e;
+  --text: #1a2540;
+  --muted: #7a90b0;
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse at 20% 50%, rgba(34,114,232,0.07) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(26,159,212,0.05) 0%, transparent 50%); pointer-events: none; }
+body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(100,140,200,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(100,140,200,0.06) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; }
+
+#auth-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; position: relative; z-index: 1; padding: 20px; }
+.auth-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 22px; padding: 36px 32px; backdrop-filter: blur(20px); box-shadow: 0 0 60px rgba(0,100,255,0.12), 0 8px 32px rgba(30,70,160,0.1); position: relative; overflow: hidden; width: 100%; max-width: 380px; }
+.auth-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent); }
+.auth-card h1 { font-size: 18px; font-weight: 700; color: var(--accent2); margin-bottom: 6px; text-align: center; letter-spacing: 1px; }
+.auth-card > p { color: var(--muted); font-size: 13px; margin-bottom: 26px; text-align: center; }
+.field-label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 7px; margin-top: 16px; }
+.auth-card input { width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.8); border: 1px solid var(--border2); border-radius: 11px; color: var(--text); font-size: 15px; outline: none; font-family: inherit; transition: border-color .2s, box-shadow .2s; }
+.auth-card input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,144,255,0.15); }
+.auth-card input::placeholder { color: rgba(85,119,170,0.7); }
+.auth-login-btn { width: 100%; padding: 14px; margin-top: 22px; background: linear-gradient(135deg, var(--accent3), var(--accent), var(--accent2)); border: none; border-radius: 11px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 1px; box-shadow: 0 4px 24px rgba(0,144,255,0.4); transition: transform .15s, box-shadow .15s; }
+.auth-login-btn:hover { transform: translateY(-1px); }
+.auth-login-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
+#auth-error { color: var(--red); font-size: 13px; margin-top: 12px; text-align: center; display: none; }
+
+#admin-app { display: none; position: relative; z-index: 1; }
+.top-bar { display: flex; align-items: center; justify-content: space-between; padding: 0 18px; height: 58px; background: rgba(255,255,255,0.95); border-bottom: 1px solid var(--border2); backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 100; }
+.top-bar-brand { display: flex; align-items: center; gap: 8px; }
+.top-bar-brand .tb-dot { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.top-bar-brand h2 { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; color: var(--accent3); }
+.top-badge { background: linear-gradient(135deg, var(--accent3), var(--accent)); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.logout-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 5px 12px; border-radius: 8px; font-size: 11px; cursor: pointer; font-family: inherit; transition: all .2s; }
+.logout-btn:hover { border-color: var(--red); color: var(--red); }
+
+.admin-tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px 16px; background: rgba(240,245,252,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
+.admin-tab-btn { padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all .2s; font-family: inherit; }
+.admin-tab-btn.active { background: linear-gradient(135deg, var(--accent3), var(--accent)); color: #fff; border-color: var(--accent); box-shadow: 0 0 14px rgba(0,144,255,0.35); }
+
+.admin-pane { display: none; padding: 20px 16px; }
+.admin-pane.active { display: block; }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 14px; backdrop-filter: blur(10px); position: relative; overflow: hidden; }
+.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--border2), transparent); }
+.card h4 { font-size: 14px; font-weight: 700; margin-bottom: 16px; color: var(--accent2); letter-spacing: .5px; display: flex; align-items: center; gap: 8px; }
+
+label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
+input[type=text], input[type=password], textarea { width: 100%; padding: 11px 14px; background: rgba(248,251,255,0.9); border: 1px solid var(--border2); border-radius: 9px; color: var(--text); font-size: 14px; outline: none; margin-bottom: 12px; font-family: inherit; transition: border-color .2s; }
+input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,144,255,0.12); }
+input::placeholder, textarea::placeholder { color: rgba(85,119,170,0.6); }
+textarea { resize: vertical; min-height: 100px; }
+
+.btn { padding: 11px 20px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: transform .15s; font-family: inherit; }
+.btn:hover { transform: translateY(-1px); }
+.btn:disabled { opacity: 0.6; cursor: default; transform: none; }
+.btn-primary { background: linear-gradient(135deg, var(--accent3), var(--accent), var(--accent2)); color: #fff; box-shadow: 0 4px 16px rgba(0,144,255,0.35); }
+.btn-green { background: linear-gradient(135deg, #00b894, var(--green)); color: #fff; box-shadow: 0 4px 16px rgba(0,229,160,0.3); }
+.btn-red { background: var(--red); color: #fff; }
+.btn-sm { padding: 6px 12px; font-size: 11px; }
+
+.member-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(0,100,255,0.08); }
+.member-row:last-child { border-bottom: none; }
+.member-uid { font-weight: 700; font-size: 14px; color: var(--accent2); }
+.member-info { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.result-box { background: rgba(0,229,160,0.06); border: 1px solid rgba(0,229,160,0.2); border-radius: 9px; padding: 12px 14px; font-size: 13px; color: var(--green); margin-top: 10px; display: none; white-space: pre-wrap; line-height: 1.8; }
+
+.section-title { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border2), transparent); }
+
+.quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.quick-item { padding: 13px 10px; background: rgba(248,251,255,0.9); border: 1px solid var(--border2); border-radius: 11px; cursor: pointer; text-align: center; font-size: 13px; font-weight: 600; font-family: inherit; transition: all .2s; color: var(--muted); }
+.quick-item:hover { border-color: var(--accent); color: var(--accent2); }
+.quick-item.selected { border-color: var(--accent); color: var(--accent2); background: rgba(0,144,255,0.1); box-shadow: 0 0 12px rgba(0,144,255,0.2); }
+
+.toast { position: fixed; bottom: 28px; left: 50%; background: linear-gradient(135deg, #00b894, var(--green)); color: #fff; padding: 12px 26px; border-radius: 30px; font-weight: 700; font-size: 14px; opacity: 0; transition: opacity .3s, transform .3s; z-index: 9999; pointer-events: none; box-shadow: 0 4px 20px rgba(0,229,160,0.4); transform: translateX(-50%) translateY(10px); }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.error { background: linear-gradient(135deg, #c0392b, var(--red)); color: #fff; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* 會員管理表格 */
+.member-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.member-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 620px; }
+.member-table th { padding: 10px 10px; text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border2); white-space: nowrap; }
+.member-table td { padding: 11px 10px; border-bottom: 1px solid rgba(0,100,255,0.07); vertical-align: middle; }
+.member-table tr:last-child td { border-bottom: none; }
+.member-table tr:hover td { background: rgba(0,100,255,0.04); }
+.mtd-uid { font-weight: 700; font-size: 14px; color: var(--accent2); white-space: nowrap; }
+.mtd-bonus { font-weight: 700; color: var(--green); white-space: nowrap; }
+.status-tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; cursor: pointer; transition: opacity .15s; }
+.status-tag:hover { opacity: .8; }
+.st-in   { background: rgba(0,229,160,0.12); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
+.st-out  { background: rgba(255,95,126,0.12); color: var(--red); border: 1px solid rgba(255,95,126,0.3); }
+.st-lost { background: rgba(255,200,0,0.12); color: #ffc800; border: 1px solid rgba(255,200,0,0.3); }
+.st-paid { background: rgba(0,229,160,0.12); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
+.st-wait { background: rgba(255,200,0,0.12); color: #ffc800; border: 1px solid rgba(255,200,0,0.3); }
+.st-none { background: rgba(85,119,170,0.1); color: var(--muted); border: 1px solid var(--border); }
+.note-input { background: transparent; border: none; border-bottom: 1px dashed var(--border2); color: var(--text); font-size: 12px; font-family: inherit; outline: none; width: 90px; padding: 2px 4px; transition: border-color .2s; }
+.note-input:focus { border-bottom-color: var(--accent); }
+.note-input::placeholder { color: var(--muted); }
+
+/* 審核卡 */
+.review-card { background: rgba(248,251,255,0.9); border: 1px solid var(--border2); border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+.review-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
+.review-uid { font-size: 15px; font-weight: 800; color: var(--accent2); }
+.review-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.review-img { width: 100%; max-height: 220px; object-fit: contain; border-radius: 10px; background: rgba(0,0,0,0.3); margin-bottom: 12px; display: block; }
+.review-actions { display: flex; gap: 8px; }
+.review-actions .btn { flex: 1; padding: 10px; font-size: 13px; }
+.review-status { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.review-status.pending  { background: rgba(255,200,0,0.12); color: #ffc800; border: 1px solid rgba(255,200,0,0.3); }
+.review-status.approved { background: rgba(0,229,160,0.12); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
+.review-status.rejected { background: rgba(255,95,126,0.12); color: var(--red); border: 1px solid rgba(255,95,126,0.3); }
+</style>
+</head>
+<body>
+
+<div id="auth-screen">
+  <div class="auth-card">
+    <h1>⚙️ 管理員登入</h1>
+    <p>請輸入管理員密碼</p>
+    <span class="field-label">密碼</span>
+    <input id="pass-input" type="password" placeholder="請輸入密碼">
+    <button class="auth-login-btn" id="login-btn">登 入</button>
+    <div id="auth-error"></div>
+  </div>
+</div>
+
+<div id="admin-app">
+  <div class="top-bar">
+    <div class="top-bar-brand">
+      <div class="tb-dot">⚙️</div>
+      <h2>管理後台</h2>
+    </div>
+    <span class="top-badge">ADMIN</span>
+    <button class="logout-btn" id="admin-logout-btn">登出</button>
+  </div>
+  <div class="admin-tabs">
+    <button class="admin-tab-btn active" data-pane="pane-quick">⚡ 快速登記</button>
+    <button class="admin-tab-btn" data-pane="pane-withdraw">💸 領款申請 <span id="withdraw-badge" style="display:none;background:#ffc800;color:#000;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:4px">0</span></button>
+    <button class="admin-tab-btn" data-pane="pane-review">🔍 截圖審核 <span id="review-badge" style="display:none;background:#ff5f7e;color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:4px">0</span></button>
+    <button class="admin-tab-btn" data-pane="pane-members">👥 會員</button>
+    <button class="admin-tab-btn" data-pane="pane-tasks">📋 任務</button>
+    <button class="admin-tab-btn" data-pane="pane-stats">📊 統計</button>
+    <button class="admin-tab-btn" data-pane="pane-settings">🔒 設定</button>
+  </div>
+
+  <div class="admin-pane active" id="pane-quick">
+    <div class="card">
+      <h4>⚡ 快速幫會員登記</h4>
+      <label>會員編號</label>
+      <input type="text" id="quick-uid" placeholder="例：12345 或 U12345" autocomplete="off">
+      <div class="section-title" style="margin:0 0 10px">YT 時段</div>
+      <div class="quick-grid" id="quick-yt-grid"></div>
+      <button class="btn btn-green" style="width:100%;margin-top:18px" id="quick-register-btn">✅ 確認登記</button>
+    </div>
+  </div>
+
+  <div class="admin-pane" id="pane-members">
+    <div class="card">
+      <h4>➕ 新增會員</h4>
+      <label>會員編號（如 U12345）</label>
+      <input type="text" id="new-uid" placeholder="U12345" autocomplete="off">
+      <label>密碼（預設 123456）</label>
+      <input type="text" id="new-pw" placeholder="123456" autocomplete="off">
+      <button class="btn btn-primary" id="add-member-btn">新增會員</button>
+    </div>
+    <div class="card">
+      <h4>📥 批次匯入</h4>
+      <label>每行一個5碼數字（不含U）</label>
+      <textarea id="batch-input" placeholder="12345&#10;67890&#10;11111"></textarea>
+      <button class="btn btn-primary" id="batch-import-btn">開始匯入</button>
+      <div class="result-box" id="batch-result"></div>
+    </div>
+    <div class="card">
+      <h4>👥 會員管理</h4>
+      <div class="member-table-wrap">
+        <table class="member-table">
+          <thead>
+            <tr>
+              <th>編號</th>
+              <th>群組狀態</th>
+              <th>任務名稱</th>
+              <th>任務狀態</th>
+              <th>已領金額</th>
+              <th>領款狀態</th>
+              <th>簽到天數</th>
+              <th>連續天數</th>
+              <th>備註</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="admin-member-list"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-pane" id="pane-tasks">
+    <div class="card">
+      <h4>▶️ 新增YT影片任務</h4>
+      <label>YT影片一 名稱</label>
+      <input type="text" id="yt-name1" placeholder="例：YT影片一" autocomplete="off">
+      <label>YT影片一 連結</label>
+      <input type="text" id="yt-url1" placeholder="https://youtu.be/..." autocomplete="off">
+      <label>YT影片二 名稱</label>
+      <input type="text" id="yt-name2" placeholder="例：YT影片二" autocomplete="off">
+      <label>YT影片二 連結</label>
+      <input type="text" id="yt-url2" placeholder="https://youtu.be/..." autocomplete="off">
+      <button class="btn btn-primary" style="width:100%;margin-top:4px" id="add-yt-btn">新增YT影片任務</button>
+    </div>
+    <div class="card">
+      <h4>📋 現有YT影片任務</h4>
+      <div id="admin-yt-task-list"></div>
+    </div>
+  </div>
+
+  <div class="admin-pane" id="pane-stats">
+    <div class="card">
+      <h4>📊 會員簽到統計排行</h4>
+      <div id="stats-list"></div>
+    </div>
+  </div>
+
+  <div class="admin-pane" id="pane-withdraw">
+    <div class="card">
+      <h4>💸 領款申請清單</h4>
+      <div id="withdraw-list"><div style="color:var(--muted);text-align:center;padding:20px">載入中...</div></div>
+    </div>
+  </div>
+
+  <div class="admin-pane" id="pane-review">
+    <div class="card">
+      <h4>🔍 待審核截圖</h4>
+      <div id="review-loading" style="color:var(--muted);text-align:center;padding:20px">載入中...</div>
+      <div id="review-list"></div>
+    </div>
+  </div>
+
+  <div class="admin-pane" id="pane-settings">
+    <div class="card">
+      <h4>🔒 修改管理員密碼</h4>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:14px">修改後需重新上傳檔案才會生效</p>
+      <label>新密碼（至少4位）</label>
+      <input type="password" id="new-pass" placeholder="新密碼" autocomplete="off">
+      <label>確認新密碼</label>
+      <input type="password" id="new-pass2" placeholder="再輸入一次" autocomplete="off">
+      <button class="btn btn-primary" id="change-pass-btn" style="width:100%">顯示新密碼</button>
+      <div class="result-box" id="pass-result"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyATOrj7upNj0Oa1Bf1LpXpdM8mRYVKbNfU",
+  authDomain: "member-checkin-35dbe.firebaseapp.com",
+  projectId: "member-checkin-35dbe",
+  storageBucket: "member-checkin-35dbe.firebasestorage.app",
+  messagingSenderId: "192670308422",
+  appId: "1:192670308422:web:0e272c14358e1a1b5a1247",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// ── App constants ──
+const ADMIN_PASS = '51686069';
+const isSunday = () => new Date().getDay() === 0;
+const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const dateStr  = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
+// ── Firestore helpers ──
+async function fsGet(path) {
+  const parts = path.split('/');
+  const ref = doc(db, parts[0], parts[1]);
+  const snap = await getDoc(ref);
+  return snap.exists() ? snap.data() : null;
+}
+
+async function fsSet(path, data) {
+  const parts = path.split('/');
+  await setDoc(doc(db, parts[0], parts[1]), data, { merge: true });
+}
+
+async function fsUpdate(path, data) {
+  return fsSet(path, data);
+}
+
+async function fsDelete(path) {
+  const parts = path.split('/');
+  await deleteDoc(doc(db, parts[0], parts[1]));
+}
+
+async function fsList(col) {
+  const snap = await getDocs(collection(db, col));
+  return snap.docs.map(d => ({ id: d.id, data: d.data() }));
+}
+
+// ── Toast ──
+function showToast(msg, err = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (err ? ' error' : '');
+  void t.offsetWidth;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── 登入 ──
+document.getElementById('login-btn').addEventListener('click', doLogin);
+document.getElementById('pass-input').addEventListener('keydown', e => e.key === 'Enter' && doLogin());
+
+async function doLogin() {
+  const pass = document.getElementById('pass-input').value.trim();
+  const errEl = document.getElementById('auth-error');
+  if (pass === ADMIN_PASS) {
+    errEl.style.display = 'none';
+    const btn = document.getElementById('login-btn');
+    btn.textContent = '連線中...'; btn.disabled = true;
+    try {
+      await signInAnonymously(auth);
+      localStorage.setItem('omni_admin', '1');
+      document.getElementById('auth-screen').style.display = 'none';
+      document.getElementById('admin-app').style.display = 'block';
+      initAdmin();
+    } catch(e) {
+      errEl.textContent = '連線失敗：' + e.message;
+      errEl.style.display = 'block';
+      btn.textContent = '登 入'; btn.disabled = false;
+    }
+  } else {
+    errEl.textContent = '密碼錯誤';
+    errEl.style.display = 'block';
+  }
+}
+
+// ── 後台自動登入 ──
+(async () => {
+  if (localStorage.getItem('omni_admin') === '1') {
+    // 先隱藏登入畫面，避免重整時閃現
+    document.getElementById('auth-screen').style.display = 'none';
+    try {
+      await signInAnonymously(auth);
+      document.getElementById('admin-app').style.display = 'block';
+      initAdmin();
+    } catch(_) {
+      localStorage.removeItem('omni_admin');
+      document.getElementById('auth-screen').style.display = 'flex';
+    }
+  }
+})();
+
+// ── Admin init ──
+function initAdmin() {
+  document.getElementById('admin-logout-btn').addEventListener('click', () => {
+    localStorage.removeItem('omni_admin');
+    location.reload();
+  });
+  document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.pane).classList.add('active');
+  }));
+
+  document.getElementById('change-pass-btn').addEventListener('click', () => {
+    const nw = document.getElementById('new-pass').value.trim();
+    const nw2 = document.getElementById('new-pass2').value.trim();
+    if (!nw || nw.length < 4) { showToast('新密碼至少4位', true); return; }
+    if (nw !== nw2) { showToast('兩次輸入不一致', true); return; }
+    const r = document.getElementById('pass-result');
+    r.style.display = 'block';
+    r.textContent = `新密碼：${nw}\n\n請將 admin.html 裡的 ADMIN_PASS 改成上面的值，重新上傳即可生效。`;
+  });
+
+  loadAdminMembers();
+  loadYtTasks();
+  renderQuickRegister();
+  loadMemberStats();
+  loadReviews();
+  loadWithdrawRequests();
+
+  // 每次切到領款 tab 自動刷新
+  document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+    if (btn.dataset.pane === 'pane-withdraw') {
+      btn.addEventListener('click', loadWithdrawRequests);
+    }
+  });
+
+  // 事件委派：通過/拒絕（_bound flag 確保只綁一次，防 initAdmin 重複呼叫疊加）
+  const reviewList = document.getElementById('review-list');
+  if (!reviewList._bound) {
+    reviewList._bound = true;
+    reviewList.addEventListener('click', async (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn || btn.disabled) return;
+      btn.disabled = true;
+      btn.closest('.review-actions').querySelectorAll('button').forEach(b => b.disabled = true);
+      const { action, rid, uid, tid, date } = btn.dataset;
+      if (action === 'approve') await approveReview(rid, uid, tid, date);
+      if (action === 'reject')  await rejectReview(rid, uid, tid, date);
+    });
+  }
+
+  // 每次切到審核 tab 自動刷新
+  document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+    if (btn.dataset.pane === 'pane-review') {
+      btn.addEventListener('click', loadReviews);
+    }
+  });
+}
+
+// ── 會員列表（含群組狀態、任務、獎金、領款、備註）──
+async function loadAdminMembers() {
+  const list = document.getElementById('admin-member-list');
+  list.innerHTML = '<tr><td colspan="10" style="color:var(--muted);text-align:center;padding:20px">載入中...</td></tr>';
+  try {
+    const [memberDocs, ytTaskDocs] = await Promise.all([
+      fsList('members'),
+      fsList('yt_tasks')
+    ]);
+    const ytTaskMap = {};
+    ytTaskDocs.forEach(({ id, data: t }) => { ytTaskMap[id] = t.name; });
+
+    list.innerHTML = '';
+    if (!memberDocs.length) {
+      list.innerHTML = '<tr><td colspan="10" style="color:var(--muted);text-align:center;padding:20px">尚無會員</td></tr>';
+      return;
+    }
+
+    const today = todayStr();
+
+    memberDocs.forEach(({ id: uid, data: d }) => {
+      // 任務名稱 & 狀態（今日 yt 任務）
+      const ytReviews = d.ytReviews || {};
+      const ytTasks   = d.ytTasks   || {};
+      let taskNames = [], taskStatus = 'none';
+      Object.keys(ytTaskMap).forEach(tid => {
+        const todayStatus = ytReviews[tid] && ytReviews[tid][today];
+        if (todayStatus === 'approved' || (ytTasks[tid] && ytTasks[tid][today])) {
+          taskNames.push(ytTaskMap[tid]);
+          taskStatus = todayStatus || 'done';
+        }
+      });
+      const taskLabel = taskNames.length ? taskNames.join('、') : '—';
+      let statusHtml;
+      if (taskStatus === 'approved') statusHtml = '<span class="review-status approved">✅ 已通過</span>';
+      else if (taskStatus === 'rejected') statusHtml = '<span class="review-status rejected">❌ 拒絕</span>';
+      else if (taskStatus === 'done') statusHtml = '<span class="review-status pending">⏳ 待審核</span>';
+      else statusHtml = '<span style="color:var(--muted);font-size:12px">—</span>';
+
+      // 群組狀態
+      const grp = d.groupStatus || 'in';
+      const grpMap = { in: ['st-in','在群'], out: ['st-out','已退群'], lost: ['st-lost','失聯'] };
+      const [grpCls, grpLabel] = grpMap[grp] || grpMap.in;
+
+      // 領款狀態
+      const pay = d.payStatus || 'wait';
+      const payMap = { wait: ['st-wait','待領款'], paid: ['st-paid','已領款'], none: ['st-none','未領款'] };
+      const [payCls, payLabel] = payMap[pay] || payMap.wait;
+
+      // 已領金額
+      const bonus = d.bonus || 0;
+
+      // 備註
+      const note = d.note || '';
+
+      // 簽到天數 & 連續天數
+      const checkins = d.checkins || {};
+      const totalDays = Object.keys(checkins).filter(k => checkins[k]).length;
+      let streak = 0;
+      const dt = new Date(today);
+      while (checkins[dateStr(dt)]) { streak++; dt.setDate(dt.getDate() - 1); }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="mtd-uid">${uid}</td>
+        <td>
+          <span class="status-tag ${grpCls}" data-uid="${uid}" data-field="groupStatus" data-val="${grp}">${grpLabel}</span>
+        </td>
+        <td style="font-size:12px;max-width:120px;word-break:break-all">${taskLabel}</td>
+        <td>${statusHtml}</td>
+        <td class="mtd-bonus">$${bonus}</td>
+        <td>
+          <span class="status-tag ${payCls}" data-uid="${uid}" data-field="payStatus" data-val="${pay}">${payLabel}</span>
+        </td>
+        <td style="text-align:center;font-weight:700;color:var(--accent2)">${totalDays}</td>
+        <td style="text-align:center;font-weight:700;color:var(--green)">${streak}</td>
+        <td>
+          <input class="note-input" type="text" value="${note.replace(/"/g,'&quot;')}" placeholder="備註" data-uid="${uid}">
+        </td>
+        <td>
+          <button class="btn btn-red btn-sm" data-uid="${uid}">刪除</button>
+        </td>`;
+
+      // 群組狀態點擊循環
+      tr.querySelector('[data-field="groupStatus"]').addEventListener('click', async (e) => {
+        const el = e.currentTarget;
+        const cycle = { in: 'out', out: 'lost', lost: 'in' };
+        const next = cycle[el.dataset.val] || 'in';
+        const [cls, label] = grpMap[next];
+        el.className = `status-tag ${cls}`;
+        el.textContent = label;
+        el.dataset.val = next;
+        await fsSet(`members/${uid}`, { groupStatus: next });
+        showToast(`${uid} 群組狀態 → ${label}`);
+      });
+
+      // 領款狀態點擊循環
+      tr.querySelector('[data-field="payStatus"]').addEventListener('click', async (e) => {
+        const el = e.currentTarget;
+        const cycle = { wait: 'paid', paid: 'none', none: 'wait' };
+        const next = cycle[el.dataset.val] || 'wait';
+        const [cls, label] = payMap[next];
+        el.className = `status-tag ${cls}`;
+        el.textContent = label;
+        el.dataset.val = next;
+        await fsSet(`members/${uid}`, { payStatus: next });
+        showToast(`${uid} 領款狀態 → ${label}`);
+      });
+
+      // 備註失焦儲存
+      tr.querySelector('.note-input').addEventListener('blur', async (e) => {
+        const val = e.target.value.trim();
+        await fsSet(`members/${uid}`, { note: val });
+        showToast(`${uid} 備註已儲存`);
+      });
+
+      // 刪除按鈕
+      tr.querySelector('.btn-red').addEventListener('click', () => deleteMember(uid));
+      list.appendChild(tr);
+    });
+  } catch(e) {
+    showToast('讀取失敗：' + e.message, true);
+    list.innerHTML = '<tr><td colspan="10" style="color:var(--red);text-align:center;padding:20px">讀取失敗</td></tr>';
+  }
+}
+
+async function deleteMember(uid) {
+  if (!confirm(`確定刪除 ${uid}？`)) return;
+  try {
+    await fsDelete(`members/${uid}`);
+    showToast('已刪除');
+    loadAdminMembers();
+  } catch(e) {
+    showToast('刪除失敗：' + e.message, true);
+  }
+}
+
+// ── 新增單一會員 ──
+document.getElementById('add-member-btn').addEventListener('click', async () => {
+  const uidRaw = document.getElementById('new-uid').value.trim().toUpperCase();
+  const pw = document.getElementById('new-pw').value.trim() || '123456';
+  if (!uidRaw) { showToast('請輸入會員編號', true); return; }
+  const uid = uidRaw.startsWith('U') ? uidRaw : 'U' + uidRaw;
+  const btn = document.getElementById('add-member-btn');
+  btn.textContent = '新增中...'; btn.disabled = true;
+  try {
+    const existing = await fsGet(`members/${uid}`);
+    if (existing) { showToast('此編號已存在', true); btn.textContent = '新增會員'; btn.disabled = false; return; }
+    await fsSet(`members/${uid}`, {
+      password: pw,
+      checkins: {},
+      clickTasks: {},
+      ytTasks: {}
+    });
+    showToast(`✅ 已新增 ${uid}`);
+    document.getElementById('new-uid').value = '';
+    document.getElementById('new-pw').value = '';
+    loadAdminMembers();
+  } catch(e) {
+    showToast('新增失敗：' + e.message, true);
+  }
+  btn.textContent = '新增會員'; btn.disabled = false;
+});
+
+// ── 批次匯入 ──
+document.getElementById('batch-import-btn').addEventListener('click', async () => {
+  const raw = document.getElementById('batch-input').value.trim();
+  if (!raw) { showToast('請輸入編號清單', true); return; }
+  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+  let ok = 0, skip = 0, fail = 0;
+  const resultEl = document.getElementById('batch-result');
+  resultEl.style.display = 'block';
+  resultEl.textContent = '匯入中...';
+  const btn = document.getElementById('batch-import-btn');
+  btn.disabled = true;
+  for (const line of lines) {
+    const digits = line.replace(/\D/g, '');
+    if (!digits) { fail++; continue; }
+    const uid = 'U' + digits.padStart(5, '0');
+    try {
+      const existing = await fsGet(`members/${uid}`);
+      if (existing) { skip++; continue; }
+      await fsSet(`members/${uid}`, { password: '123456', checkins: {}, clickTasks: {}, ytTasks: {} });
+      ok++;
+    } catch(e) { fail++; }
+  }
+  resultEl.textContent = `✅ 新增 ${ok} 位\n⏭ 跳過 ${skip} 位（已存在）${fail ? `\n❌ 失敗 ${fail} 位` : ''}`;
+  btn.disabled = false;
+  loadAdminMembers();
+});
+
+// ── YT 影片任務管理 ──
+async function loadYtTasks() {
+  try {
+    const docs = await fsList('yt_tasks');
+    const list = document.getElementById('admin-yt-task-list');
+    list.innerHTML = '';
+    if (!docs.length) { list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px">尚無YT任務</div>'; return; }
+    docs.forEach(({ id, data: t }) => {
+      const row = document.createElement('div');
+      row.className = 'member-row';
+      row.innerHTML = `
+        <div style="flex:1;min-width:0">
+          <div class="member-uid">▶️ ${t.name}</div>
+          <div class="member-info" style="word-break:break-all">${t.url || '無連結'}</div>
+        </div>
+        <button class="btn btn-red btn-sm" style="margin-left:8px;flex-shrink:0">刪除</button>`;
+      row.querySelector('button').addEventListener('click', () => deleteYtTask(id));
+      list.appendChild(row);
+    });
+  } catch(e) {
+    showToast('讀取YT任務失敗：' + e.message, true);
+  }
+}
+
+async function deleteYtTask(id) {
+  if (!confirm('確定刪除此YT任務？')) return;
+  try {
+    await fsDelete(`yt_tasks/${id}`);
+    showToast('已刪除YT任務');
+    loadYtTasks();
+    renderQuickRegister();
+  } catch(e) {
+    showToast('刪除失敗：' + e.message, true);
+  }
+}
+
+document.getElementById('add-yt-btn').addEventListener('click', async () => {
+  const name1 = document.getElementById('yt-name1').value.trim();
+  const url1  = document.getElementById('yt-url1').value.trim();
+  const name2 = document.getElementById('yt-name2').value.trim();
+  const url2  = document.getElementById('yt-url2').value.trim();
+  if (!name1 || !url1 || !name2 || !url2) { showToast('請填寫兩部影片的名稱與連結', true); return; }
+  const btn = document.getElementById('add-yt-btn');
+  btn.textContent = '新增中...'; btn.disabled = true;
+  try {
+    const ts = Date.now();
+    await fsSet(`yt_tasks/yt_${ts}_1`, { name: name1, url: url1, createdAt: new Date().toISOString() });
+    await fsSet(`yt_tasks/yt_${ts}_2`, { name: name2, url: url2, createdAt: new Date().toISOString() });
+    showToast('✅ 已新增兩部YT任務');
+    document.getElementById('yt-name1').value = '';
+    document.getElementById('yt-url1').value = '';
+    document.getElementById('yt-name2').value = '';
+    document.getElementById('yt-url2').value = '';
+    loadYtTasks();
+    renderQuickRegister();
+  } catch(e) {
+    showToast('新增失敗：' + e.message, true);
+  }
+  btn.textContent = '新增YT影片任務'; btn.disabled = false;
+});
+
+// ── 快速登記 ──
+async function renderQuickRegister() {
+  const ytGrid = document.getElementById('quick-yt-grid');
+  ytGrid.innerHTML = '';
+  if (!isSunday()) {
+    try {
+      const ytDocs = await fsList('yt_tasks');
+      if (!ytDocs.length) {
+        ytGrid.innerHTML = '<div style="color:var(--muted);font-size:13px">尚無YT影片任務</div>';
+      } else {
+        ytDocs.forEach(({ id, data: t }) => {
+          const el = document.createElement('div');
+          el.className = 'quick-item'; el.dataset.id = id; el.dataset.type = 'yt';
+          el.textContent = t.name;
+          el.onclick = () => el.classList.toggle('selected');
+          ytGrid.appendChild(el);
+        });
+      }
+    } catch(e) { ytGrid.innerHTML = '<div style="color:var(--muted);font-size:13px">讀取失敗</div>'; }
+  } else {
+    ytGrid.innerHTML = '<div style="color:var(--muted);font-size:13px">今日（週日）無YT任務</div>';
+  }
+}
+
+document.getElementById('quick-register-btn').addEventListener('click', async () => {
+  const uidRaw = document.getElementById('quick-uid').value.trim().toUpperCase();
+  if (!uidRaw) { showToast('請輸入會員編號', true); return; }
+  const uid = uidRaw.startsWith('U') ? uidRaw : 'U' + uidRaw;
+  const today = todayStr();
+  const selected = document.querySelectorAll('#quick-yt-grid .selected');
+  if (!selected.length) { showToast('請選擇要登記的項目', true); return; }
+
+  const btn = document.getElementById('quick-register-btn');
+  btn.textContent = '登記中...'; btn.disabled = true;
+  try {
+    const data = await fsGet(`members/${uid}`);
+    if (!data) { showToast(`找不到 ${uid}`, true); btn.textContent = '✅ 確認登記'; btn.disabled = false; return; }
+    const clickTasks = data.clickTasks || {};
+    const ytTasks = data.ytTasks || {};
+
+    selected.forEach(el => {
+      const id = el.dataset.id, type = el.dataset.type;
+      if (type === 'click') {
+        if (!clickTasks[id]) clickTasks[id] = {};
+        clickTasks[id][today] = true;
+      } else {
+        if (!ytTasks[id]) ytTasks[id] = {};
+        ytTasks[id][today] = true;
+      }
+    });
+
+    await fsUpdate(`members/${uid}`, { clickTasks, ytTasks });
+    showToast(`✅ ${uid} 登記完成！`);
+    document.querySelectorAll('.quick-item.selected').forEach(el => el.classList.remove('selected'));
+    document.getElementById('quick-uid').value = '';
+  } catch(e) {
+    showToast('登記失敗：' + e.message, true);
+  }
+  btn.textContent = '✅ 確認登記'; btn.disabled = false;
+});
+
+// ── 截圖審核 ──────────────────────────────────────
+async function loadReviews() {
+  const loading = document.getElementById('review-loading');
+  const list    = document.getElementById('review-list');
+  const badge   = document.getElementById('review-badge');
+  loading.style.display = 'block';
+  list.innerHTML = '';
+  try {
+    const docs = await fsList('pending_reviews');
+    loading.style.display = 'none';
+
+    // 只顯示待審核（pending），通過/拒絕後自動消失
+    const pendingDocs = docs.filter(d => d.data.status === 'pending');
+
+    const pendingCount = pendingDocs.length;
+    if (pendingCount > 0) {
+      badge.textContent = pendingCount;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+
+    if (!pendingDocs.length) {
+      list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px">目前沒有待審核截圖 🎉</div>';
+      return;
+    }
+
+    pendingDocs.forEach(({ id, data: r }) => {
+      const card = document.createElement('div');
+      card.className = 'review-card';
+      card.id = `rcard-${id}`;
+
+      const videoLabel = r.taskName || (r.taskId ? `影片 ${r.taskId}` : (r.slot ? `時段 ${r.slot}` : id));
+
+      card.innerHTML = `
+        <div class="review-card-header">
+          <div>
+            <div class="review-uid">${r.uid}</div>
+            <div class="review-meta">▶️ ${videoLabel} ／ 📅 ${r.date || ''} ／ 送出：${r.createdAt ? r.createdAt.slice(0,16).replace('T',' ') : ''}</div>
+          </div>
+          <span class="review-status pending">⏳ 待審核</span>
+        </div>
+        <img class="review-img" src="${r.imageBase64 || ''}" alt="截圖">
+        ${r.comment ? `<div style="background:rgba(0,144,255,0.06);border:1px solid rgba(0,144,255,0.2);border-radius:9px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--text);line-height:1.7"><span style="font-size:11px;font-weight:700;color:var(--accent2);display:block;margin-bottom:4px">✍️ 觀看心得</span>${r.comment}</div>` : '<div style="color:var(--muted);font-size:12px;margin-bottom:12px">（未填寫心得）</div>'}
+        <div class="review-actions" id="actions-${id}">
+          <button class="btn btn-green" data-action="approve" data-rid="${id}" data-uid="${r.uid}" data-tid="${r.taskId || ''}" data-date="${r.date || ''}">✅ 通過 +100元</button>
+          <button class="btn btn-red"   data-action="reject"  data-rid="${id}" data-uid="${r.uid}" data-tid="${r.taskId || ''}" data-date="${r.date || ''}">❌ 拒絕</button>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  } catch(e) {
+    loading.style.display = 'none';
+    list.innerHTML = `<div style="color:var(--red);text-align:center;padding:20px">載入失敗：${e.message}</div>`;
+  }
+}
+
+async function approveReview(reviewId, uid, taskId, date) {
+  const btn = document.querySelector(`#actions-${reviewId} .btn-green`);
+  if (btn) { btn.textContent = '處理中...'; btn.disabled = true; }
+  try {
+    await fsSet(`pending_reviews/${reviewId}`, { status: 'approved' });
+
+    const memberData = await fsGet(`members/${uid}`);
+    const newBonus = ((memberData && memberData.bonus) || 0) + 100;
+    const updateData = { bonus: newBonus };
+
+    // 只有 taskId 有值才寫入（避免 Firestore 空 key 錯誤）
+    if (taskId) {
+      const ytTasks   = (memberData && memberData.ytTasks)   || {};
+      const ytReviews = (memberData && memberData.ytReviews) || {};
+      if (!ytTasks[taskId])   ytTasks[taskId]   = {};
+      if (!ytReviews[taskId]) ytReviews[taskId] = {};
+      ytTasks[taskId][date]   = true;
+      ytReviews[taskId][date] = 'approved';
+      updateData.ytTasks   = ytTasks;
+      updateData.ytReviews = ytReviews;
+    }
+
+    await fsSet(`members/${uid}`, updateData);
+    showToast(`✅ 已通過，入帳 100 元（累積 ${newBonus} 元）`);
+    loadReviews();
+  } catch(e) {
+    showToast('操作失敗：' + e.message, true);
+    if (btn) { btn.textContent = '✅ 通過 +100元'; btn.disabled = false; }
+  }
+}
+
+async function rejectReview(reviewId, uid, taskId, date) {
+  const btn = document.querySelector(`#actions-${reviewId} .btn-red`);
+  if (btn) { btn.textContent = '處理中...'; btn.disabled = true; }
+  try {
+    await fsSet(`pending_reviews/${reviewId}`, { status: 'rejected' });
+
+    if (taskId) {
+      const memberData = await fsGet(`members/${uid}`);
+      const ytReviews  = (memberData && memberData.ytReviews) || {};
+      if (!ytReviews[taskId]) ytReviews[taskId] = {};
+      ytReviews[taskId][date] = 'rejected';
+      await fsSet(`members/${uid}`, { ytReviews });
+    }
+
+    showToast(`🚫 已拒絕，前台顯示重新上傳提示`);
+    loadReviews();
+  } catch(e) {
+    showToast('操作失敗：' + e.message, true);
+    if (btn) { btn.textContent = '❌ 拒絕'; btn.disabled = false; }
+  }
+}
+
+// ── 領款申請 ──────────────────────────────────────
+async function loadWithdrawRequests() {
+  const list   = document.getElementById('withdraw-list');
+  const badge  = document.getElementById('withdraw-badge');
+  list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px">載入中...</div>';
+  try {
+    const docs = await fsList('withdrawal_requests');
+    const pending = docs.filter(d => d.data.status === 'pending');
+    const done    = docs.filter(d => d.data.status !== 'pending');
+
+    badge.textContent = pending.length;
+    badge.style.display = pending.length ? 'inline-block' : 'none';
+
+    list.innerHTML = '';
+
+    if (!docs.length) {
+      list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px">目前沒有申請 🎉</div>';
+      return;
+    }
+
+    // 待確認
+    if (pending.length) {
+      list.innerHTML += `<div class="section-title" style="margin:0 0 10px">⏳ 待確認（${pending.length} 筆）</div>`;
+      pending.forEach(({ id, data: r }) => {
+        const div = document.createElement('div');
+        div.className = 'review-card';
+        div.id = `wr-${id}`;
+        div.innerHTML = `
+          <div class="review-card-header">
+            <div>
+              <div class="review-uid">${r.uid}</div>
+              <div class="review-meta">申請金額：<strong style="color:var(--green);font-size:15px">$${r.amount}</strong> ／ ${r.createdAt ? r.createdAt.slice(0,16).replace('T',' ') : ''}</div>
+            </div>
+            <span class="review-status pending">⏳ 待確認</span>
+          </div>
+          <div class="review-actions">
+            <button class="btn btn-green" data-wid="${id}" data-uid="${r.uid}" data-amt="${r.amount}" data-action="confirm">✅ 確認發放，扣除 $${r.amount}</button>
+            <button class="btn btn-red"   data-wid="${id}" data-uid="${r.uid}" data-amt="${r.amount}" data-action="reject">❌ 拒絕</button>
+          </div>`;
+        list.appendChild(div);
+      });
+    }
+
+    // 已處理
+    if (done.length) {
+      list.innerHTML += `<div class="section-title" style="margin:16px 0 10px">✅ 已處理（最近 ${Math.min(done.length,20)} 筆）</div>`;
+      done.slice(-20).reverse().forEach(({ data: r }) => {
+        const isPaid = r.status === 'confirmed';
+        list.innerHTML += `
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,100,255,0.08)">
+            <div>
+              <div style="font-weight:700;color:var(--accent2)">${r.uid}</div>
+              <div style="font-size:11px;color:var(--muted)">$${r.amount} ／ ${r.confirmedAt ? r.confirmedAt.slice(0,16).replace('T',' ') : r.createdAt?.slice(0,16).replace('T',' ') || ''}</div>
+            </div>
+            <span class="review-status ${isPaid ? 'approved' : 'rejected'}">${isPaid ? '✅ 已發放' : '❌ 已拒絕'}</span>
+          </div>`;
+      });
+    }
+
+    // 事件委派
+    list.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const { action, wid, uid, amt } = btn.dataset;
+        btn.disabled = true;
+        if (action === 'confirm') await confirmWithdraw(wid, uid, parseInt(amt));
+        if (action === 'reject')  await rejectWithdraw(wid, uid);
+      });
+    });
+
+  } catch(e) {
+    list.innerHTML = `<div style="color:var(--red);text-align:center;padding:20px">讀取失敗：${e.message}</div>`;
+  }
+}
+
+async function confirmWithdraw(wid, uid, amount) {
+  try {
+    const memberData = await fsGet(`members/${uid}`);
+    const bonus = (memberData && memberData.bonus) || 0;
+    if (amount > bonus) {
+      showToast(`⚠️ ${uid} 獎金不足（餘額 $${bonus}）`, true);
+      loadWithdrawRequests();
+      return;
+    }
+    const newBonus = bonus - amount;
+    await fsSet(`members/${uid}`, { bonus: newBonus });
+    await fsSet(`withdrawal_requests/${wid}`, {
+      status: 'confirmed',
+      confirmedAt: new Date().toISOString(),
+      bonusAfter: newBonus,
+    });
+    showToast(`✅ 已確認發放 $${amount}，${uid} 剩餘 $${newBonus}`);
+    loadWithdrawRequests();
+    loadAdminMembers();
+  } catch(e) {
+    showToast('操作失敗：' + e.message, true);
+  }
+}
+
+async function rejectWithdraw(wid, uid) {
+  try {
+    await fsSet(`withdrawal_requests/${wid}`, {
+      status: 'rejected',
+      confirmedAt: new Date().toISOString(),
+    });
+    showToast(`🚫 已拒絕 ${uid} 的申請`);
+    loadWithdrawRequests();
+  } catch(e) {
+    showToast('操作失敗：' + e.message, true);
+  }
+}
+
+// ── 統計 ──
+async function loadMemberStats() {
+  try {
+    const docs = await fsList('members');
+    const list = document.getElementById('stats-list');
+    list.innerHTML = '';
+    const today = todayStr();
+    const members = [];
+    docs.forEach(({ id: uid, data: d }) => {
+      const checkins = d.checkins || {};
+      const total = Object.keys(checkins).filter(k => checkins[k]).length;
+      let streak = 0, dt = new Date(today);
+      while (checkins[dateStr(dt)]) { streak++; dt.setDate(dt.getDate() - 1); }
+      members.push({ uid, total, streak, checkedToday: !!checkins[today] });
+    });
+    members.sort((a, b) => b.total - a.total);
+    if (!members.length) { list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px">尚無資料</div>'; return; }
+    members.forEach((m, i) => {
+      list.innerHTML += `
+        <div class="member-row">
+          <div>
+            <div class="member-uid">#${i+1} ${m.uid} ${m.checkedToday ? '<span style="color:var(--green);font-size:10px;margin-left:6px">● 今日已簽</span>' : ''}</div>
+            <div class="member-info">累積 ${m.total} 天 ｜ 連續 ${m.streak} 天</div>
+          </div>
+        </div>`;
+    });
+  } catch(e) {
+    showToast('讀取統計失敗：' + e.message, true);
+  }
+}
+</script>
+</body>
+</html>
