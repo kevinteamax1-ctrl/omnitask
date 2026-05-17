@@ -434,13 +434,28 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       <div style="margin-bottom:8px">
         <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600">🍽️ 餐飲類</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px">
-          ${['火鍋','燒肉','韓式料理','日式料理','義式料理','早餐加盟','咖啡廳','手搖飲','酒吧/餐酒館','吃到飽','高級餐廳'].map(s=>`<span style="background:rgba(0,144,255,0.12);border:1px solid rgba(0,144,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#8ecfff">${s}</span>`).join('')}
+          <span style="background:rgba(0,144,255,0.12);border:1px solid rgba(0,144,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#8ecfff">火鍋</span>
+          <span style="background:rgba(0,144,255,0.12);border:1px solid rgba(0,144,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#8ecfff">燒肉</span>
+          <span style="background:rgba(0,144,255,0.12);border:1px solid rgba(0,144,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#8ecfff">韓式料理</span>
+          <span style="background:rgba(0,144,255,0.12);border:1px solid rgba(0,144,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#8ecfff">日式料理</span>
+          <span style="background:rgba(0,144,255,0.12);border:1px solid rgba(0,144,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#8ecfff">義式料理</span>
+          <span style="background:rgba(0,144,255,0.12);border:1px solid rgba(0,144,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#8ecfff">早餐加盟</span>
+          <span style="background:rgba(0,144,255,0.12);border:1px solid rgba(0,144,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#8ecfff">咖啡廳</span>
+          <span style="background:rgba(0,144,255,0.12);border:1px solid rgba(0,144,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#8ecfff">手搖飲</span>
+          <span style="background:rgba(0,144,255,0.12);border:1px solid rgba(0,144,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#8ecfff">酒吧/餐酒館</span>
+          <span style="background:rgba(0,144,255,0.12);border:1px solid rgba(0,144,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#8ecfff">吃到飽</span>
+          <span style="background:rgba(0,144,255,0.12);border:1px solid rgba(0,144,255,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#8ecfff">高級餐廳</span>
         </div>
       </div>
       <div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600">✨ 生活體驗類</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px">
-          ${['美容美甲','美髮沙龍','按摩SPA','健身房','寵物店','KTV'].map(s=>`<span style="background:rgba(0,229,160,0.10);border:1px solid rgba(0,229,160,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#6ee7c0">${s}</span>`).join('')}
+          <span style="background:rgba(0,229,160,0.10);border:1px solid rgba(0,229,160,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#6ee7c0">美容美甲</span>
+          <span style="background:rgba(0,229,160,0.10);border:1px solid rgba(0,229,160,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#6ee7c0">美髮沙龍</span>
+          <span style="background:rgba(0,229,160,0.10);border:1px solid rgba(0,229,160,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#6ee7c0">按摩SPA</span>
+          <span style="background:rgba(0,229,160,0.10);border:1px solid rgba(0,229,160,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#6ee7c0">健身房</span>
+          <span style="background:rgba(0,229,160,0.10);border:1px solid rgba(0,229,160,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#6ee7c0">寵物店</span>
+          <span style="background:rgba(0,229,160,0.10);border:1px solid rgba(0,229,160,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:#6ee7c0">KTV</span>
         </div>
       </div>
     </div>
@@ -468,21 +483,46 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       <div style="border-top:1px solid var(--border2);margin:14px 0 14px"></div>
       <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:12px">體驗回饋內容</div>
 
-      ${[
-        ['1','本次接待服務整體感受','例如：服務態度、專業介紹、親切程度、應對方式等'],
-        ['2','店內環境與氛圍體驗','例如：整潔度、舒適感、空間氣氛、音樂、燈光等'],
-        ['3','印象最深刻的地方','讓您加分或特別有感的細節'],
-        ['4','商品／服務的實際感受','例如：品質、效果、實用性、價格感受等'],
-        ['5','店內動線與整體安排','例如：等候流程、座位安排、空間規劃等'],
-        ['6','是否會願意再次回訪？原因是什麼？','請說明原因'],
-        ['7','如果推薦給朋友，您會怎麼介紹這間店？','請說明'],
-        ['8','其他建議或希望店家改善的地方','（選填）']
-      ].map(([n,q,hint])=>`
-        <div style="margin-bottom:14px">
-          <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:3px">${n}️⃣ ${q}</div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:5px">${hint}</div>
-          <textarea id="store-q${n}" placeholder="✍️ 回饋內容..." rows="3" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:13px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
-        </div>`).join('')}
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:3px">1️⃣ 本次接待服務整體感受</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:5px">例如：服務態度、專業介紹、親切程度、應對方式等</div>
+        <textarea id="store-q1" placeholder="✍️ 回饋內容..." rows="3" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:13px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:3px">2️⃣ 店內環境與氛圍體驗</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:5px">例如：整潔度、舒適感、空間氣氛、音樂、燈光等</div>
+        <textarea id="store-q2" placeholder="✍️ 回饋內容..." rows="3" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:13px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:3px">3️⃣ 印象最深刻的地方</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:5px">讓您加分或特別有感的細節</div>
+        <textarea id="store-q3" placeholder="✍️ 回饋內容..." rows="3" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:13px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:3px">4️⃣ 商品／服務的實際感受</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:5px">例如：品質、效果、實用性、價格感受等</div>
+        <textarea id="store-q4" placeholder="✍️ 回饋內容..." rows="3" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:13px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:3px">5️⃣ 店內動線與整體安排</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:5px">例如：等候流程、座位安排、空間規劃等</div>
+        <textarea id="store-q5" placeholder="✍️ 回饋內容..." rows="3" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:13px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:3px">6️⃣ 是否會願意再次回訪？原因是什麼？</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:5px">請說明原因</div>
+        <textarea id="store-q6" placeholder="✍️ 回饋內容..." rows="3" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:13px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:3px">7️⃣ 如果推薦給朋友，您會怎麼介紹這間店？</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:5px">請說明</div>
+        <textarea id="store-q7" placeholder="✍️ 回饋內容..." rows="3" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:13px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:3px">8️⃣ 其他建議或希望店家改善的地方</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:5px">（選填）</div>
+        <textarea id="store-q8" placeholder="✍️ 回饋內容..." rows="3" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:13px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
 
       <div id="store-form-error" style="color:#e03f5e;font-size:13px;margin-bottom:10px;display:none"></div>
       <button id="store-submit-btn" style="width:100%;padding:14px;background:linear-gradient(135deg,#1655c0,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">
