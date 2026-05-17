@@ -246,6 +246,7 @@ textarea { resize: vertical; min-height: 100px; }
               <th>領款狀態</th>
               <th>簽到天數</th>
               <th>連續天數</th>
+              <th>密碼</th>
               <th>備註</th>
               <th></th>
             </tr>
@@ -505,7 +506,7 @@ let _ytTaskMap = {};
 
 async function loadAdminMembers() {
   const list = document.getElementById('admin-member-list');
-  list.innerHTML = '<tr><td colspan="10" style="color:var(--muted);text-align:center;padding:20px">載入中...</td></tr>';
+  list.innerHTML = '<tr><td colspan="11" style="color:var(--muted);text-align:center;padding:20px">載入中...</td></tr>';
   try {
     const [memberDocs, ytTaskDocs, staffDocs] = await Promise.all([
       fsList('members'),
@@ -530,7 +531,7 @@ async function loadAdminMembers() {
     renderFilteredMembers();
   } catch(e) {
     const list = document.getElementById('admin-member-list');
-    list.innerHTML = `<tr><td colspan="10" style="color:var(--red);text-align:center;padding:20px">載入失敗：${e.message}</td></tr>`;
+    list.innerHTML = `<tr><td colspan="11" style="color:var(--red);text-align:center;padding:20px">載入失敗：${e.message}</td></tr>`;
   }
 }
 
@@ -553,7 +554,7 @@ function renderFilteredMembers() {
 
   list.innerHTML = '';
   if (!filtered.length) {
-    list.innerHTML = '<tr><td colspan="10" style="color:var(--muted);text-align:center;padding:20px">無符合條件的會員</td></tr>';
+    list.innerHTML = '<tr><td colspan="11" style="color:var(--muted);text-align:center;padding:20px">無符合條件的會員</td></tr>';
     return;
   }
 
@@ -594,6 +595,8 @@ function renderFilteredMembers() {
       const dt = new Date(today);
       while (checkins[dateStr(dt)]) { streak++; dt.setDate(dt.getDate() - 1); }
 
+      const pw = d.password || '—';
+
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td class="mtd-uid">${uid}</td>
@@ -608,6 +611,12 @@ function renderFilteredMembers() {
         </td>
         <td style="text-align:center;font-weight:700;color:var(--accent2)">${totalDays}</td>
         <td style="text-align:center;font-weight:700;color:var(--green)">${streak}</td>
+        <td style="min-width:130px">
+          <div style="display:flex;align-items:center;gap:5px">
+            <span class="pw-display" style="font-size:12px;color:var(--accent2);font-weight:600;letter-spacing:1px">${pw}</span>
+            <button class="btn btn-sm reset-pw-btn" data-uid="${uid}" style="font-size:11px;padding:3px 8px;background:rgba(0,144,255,0.15);border:1px solid rgba(0,144,255,0.3);color:var(--accent2);white-space:nowrap">重設</button>
+          </div>
+        </td>
         <td>
           <input class="note-input" type="text" value="${note.replace(/"/g,'&quot;')}" placeholder="備註" data-uid="${uid}">
         </td>
@@ -646,6 +655,16 @@ function renderFilteredMembers() {
         const val = e.target.value.trim();
         await fsSet(`members/${uid}`, { note: val });
         showToast(`${uid} 備註已儲存`);
+      });
+
+      // 重設密碼
+      tr.querySelector('.reset-pw-btn').addEventListener('click', async () => {
+        const newPw = prompt(`重設 ${uid} 的密碼\n（留空則重設為 123456）`);
+        if (newPw === null) return; // 按取消
+        const finalPw = newPw.trim() || '123456';
+        await fsSet(`members/${uid}`, { password: finalPw });
+        tr.querySelector('.pw-display').textContent = finalPw;
+        showToast(`✅ ${uid} 密碼已重設為：${finalPw}`);
       });
 
       // 刪除按鈕
