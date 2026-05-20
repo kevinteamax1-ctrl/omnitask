@@ -1447,9 +1447,10 @@ async function renderTasks() {
     ytDocs.forEach(({ id: taskId, data: t }, idx) => {
       // 每2部自動分時段標籤顯示用
       const slotNum = Math.floor(idx / 2) + 1;
-      // reviewStatus 以 ytReviews 為主（後台審核寫入）
-      const reviewStatus = (ytReviews[taskId] && ytReviews[taskId][today]) || null;
-      // isDone = 後台已通過（ytReviews approved）
+      // 檢查此影片是否曾經送出過（不限日期）
+      const taskHistory = ytReviews[taskId] || {};
+      const everStatus = Object.entries(taskHistory).sort((a,b)=>b[0].localeCompare(a[0]))[0];
+      const reviewStatus = everStatus ? everStatus[1] : null;
       const isDone = reviewStatus === 'approved';
 
       let badgeClass = 'todo', badgeText = '未上傳';
@@ -1460,8 +1461,10 @@ async function renderTasks() {
       const section = document.createElement('div');
       section.className = 'slot-section';
 
+      // 只要曾送出且非拒絕就不能再送
       const canUpload = !isDone && reviewStatus !== 'pending';
-      const rejectReason = reviewStatus === 'rejected' ? ((ytRejectReasons[taskId] && ytRejectReasons[taskId][today]) || '') : '';
+      const rejectDate = everStatus && everStatus[1] === 'rejected' ? everStatus[0] : today;
+      const rejectReason = reviewStatus === 'rejected' ? ((ytRejectReasons[taskId] && ytRejectReasons[taskId][rejectDate]) || '') : '';
       const uploadHTML = canUpload ? `
         <div class="upload-area" id="upload-area-${taskId}">
           <input type="file" accept="image/*" id="file-input-${taskId}">
@@ -1587,18 +1590,15 @@ async function uploadScreenshot(taskId, taskName, fileInput, submitBtn, commentE
   try {
     const today = todayStr();
 
-    // 防重複：先檢查目前狀態
+    // 防重複：檢查此影片是否曾經送出過（不限日期）
     const memberData = await fsGet(`members/${currentUID}`);
     const ytReviews  = (memberData && memberData.ytReviews) || {};
-    const currentStatus = (ytReviews[taskId] && ytReviews[taskId][today]) || null;
-    if (currentStatus === 'pending') {
-      showToast('此影片今日已送出，請等候審核結果', true);
-      submitBtn.textContent = '📤 送出截圖與心得等候審核';
-      submitBtn.disabled = false;
-      return;
-    }
-    if (currentStatus === 'approved') {
-      showToast('此影片今日已通過，無需重複送出', true);
+    const taskHistory = ytReviews[taskId] || {};
+    // 任何一天有 pending 或 approved 都不能再送
+    const hasEverSubmitted = Object.values(taskHistory).some(s => s === 'pending' || s === 'approved');
+    if (hasEverSubmitted) {
+      const isPending  = Object.values(taskHistory).some(s => s === 'pending');
+      showToast(isPending ? '此影片已送出，請等候審核結果' : '此影片已完成，不能重複送出', true);
       submitBtn.textContent = '📤 送出截圖與心得等候審核';
       submitBtn.disabled = false;
       renderTasks();
@@ -1620,7 +1620,6 @@ async function uploadScreenshot(taskId, taskName, fileInput, submitBtn, commentE
       createdAt:   new Date().toISOString(),
     });
 
-    // 更新會員 ytReviews 狀態
     if (!ytReviews[taskId]) ytReviews[taskId] = {};
     ytReviews[taskId][today] = 'pending';
     await fsUpdate(`members/${currentUID}`, { ytReviews });
