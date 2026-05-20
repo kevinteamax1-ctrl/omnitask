@@ -3,20 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OmniTask 管理後台</title>
+<title>OmniTask 任鏈科技 × clickworker 會員系統</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Orbitron:wght@700;900&display=swap');
 
 :root {
   --bg: #eef2f7;
-  --surface: rgba(255,255,255,0.95);
+  --surface: rgba(255,255,255,0.92);
   --surface2: rgba(240,245,252,0.97);
   --border: rgba(100,140,200,0.18);
   --border2: rgba(80,130,210,0.28);
   --accent: #2272e8;
   --accent2: #1a9fd4;
   --accent3: #1655c0;
-  --glow: rgba(34,114,232,0.25);
   --green: #0aab6e;
   --red: #e03f5e;
   --text: #1a2540;
@@ -25,11 +24,19 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
-body::before { content: ''; position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse at 20% 50%, rgba(34,114,232,0.07) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(26,159,212,0.05) 0%, transparent 50%); pointer-events: none; }
+body::before { content: ''; position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse at 20% 50%, rgba(34,114,232,0.07) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(26,159,212,0.06) 0%, transparent 50%); pointer-events: none; }
 body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(100,140,200,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(100,140,200,0.06) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; }
 
+/* AUTH */
 #auth-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; position: relative; z-index: 1; padding: 20px; }
-.auth-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 22px; padding: 36px 32px; backdrop-filter: blur(20px); box-shadow: 0 0 60px rgba(0,100,255,0.12), 0 8px 32px rgba(30,70,160,0.1); position: relative; overflow: hidden; width: 100%; max-width: 380px; }
+.auth-wrap { width: 100%; max-width: 400px; }
+.brand-header { text-align: center; margin-bottom: 28px; }
+.brand-logo-box { display: inline-flex; align-items: center; gap: 10px; background: rgba(0,144,255,0.08); border: 1px solid var(--border2); border-radius: 14px; padding: 10px 20px; margin-bottom: 14px; box-shadow: 0 0 30px rgba(0,144,255,0.15); }
+.brand-dot { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.brand-name { font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 700; color: var(--accent3); letter-spacing: 1px; }
+.brand-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.brand-header h2 { font-size: 13px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+.auth-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 22px; padding: 36px 32px; backdrop-filter: blur(20px); box-shadow: 0 0 60px rgba(0,100,255,0.12), 0 8px 32px rgba(30,70,160,0.1); position: relative; overflow: hidden; }
 .auth-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent); }
 .auth-card h1 { font-size: 18px; font-weight: 700; color: var(--accent2); margin-bottom: 6px; text-align: center; letter-spacing: 1px; }
 .auth-card > p { color: var(--muted); font-size: 13px; margin-bottom: 26px; text-align: center; }
@@ -37,315 +44,732 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
 .auth-card input { width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.8); border: 1px solid var(--border2); border-radius: 11px; color: var(--text); font-size: 15px; outline: none; font-family: inherit; transition: border-color .2s, box-shadow .2s; }
 .auth-card input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,144,255,0.15); }
 .auth-card input::placeholder { color: rgba(85,119,170,0.7); }
-.auth-login-btn { width: 100%; padding: 14px; margin-top: 22px; background: linear-gradient(135deg, var(--accent3), var(--accent), var(--accent2)); border: none; border-radius: 11px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 1px; box-shadow: 0 4px 24px rgba(0,144,255,0.4); transition: transform .15s, box-shadow .15s; }
+.auth-login-btn { width: 100%; padding: 14px; margin-top: 22px; background: linear-gradient(135deg, var(--accent3), var(--accent), var(--accent2)); border: none; border-radius: 11px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 1px; box-shadow: 0 4px 24px rgba(0,144,255,0.4); transition: transform .15s; }
 .auth-login-btn:hover { transform: translateY(-1px); }
 .auth-login-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
-#auth-error { color: var(--red); font-size: 13px; margin-top: 12px; text-align: center; display: none; }
+#auth-error { color: var(--red); font-size: 13px; margin-top: 12px; text-align: center; min-height: 20px; }
 
-#admin-app { display: none; position: relative; z-index: 1; }
-.top-bar { display: flex; align-items: center; justify-content: space-between; padding: 0 18px; height: 58px; background: rgba(255,255,255,0.95); border-bottom: 1px solid var(--border2); backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 100; }
+/* APP */
+#member-app { display: none; position: relative; z-index: 1; }
+.top-bar { display: flex; align-items: center; justify-content: space-between; padding: 0 18px; height: 52px; background: rgba(255,255,255,0.95); border-bottom: 1px solid var(--border2); backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 100; }
 .top-bar-brand { display: flex; align-items: center; gap: 8px; }
-.top-bar-brand .tb-dot { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 14px; }
-.top-bar-brand h2 { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; color: var(--accent3); }
-.top-badge { background: linear-gradient(135deg, var(--accent3), var(--accent)); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-.logout-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 5px 12px; border-radius: 8px; font-size: 11px; cursor: pointer; font-family: inherit; transition: all .2s; }
+.top-bar-brand .tb-dot { width: 26px; height: 26px; border-radius: 7px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 13px; }
+.top-bar-brand h2 { font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 700; color: var(--accent3); }
+.top-badge { background: linear-gradient(135deg, var(--accent3), var(--accent)); color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+.logout-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 7px; font-size: 11px; cursor: pointer; font-family: inherit; transition: all .2s; }
 .logout-btn:hover { border-color: var(--red); color: var(--red); }
 
-.admin-tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px 16px; background: rgba(240,245,252,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
-.admin-tab-btn { padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all .2s; font-family: inherit; }
-.admin-tab-btn.active { background: linear-gradient(135deg, var(--accent3), var(--accent)); color: #fff; border-color: var(--accent); box-shadow: 0 0 14px rgba(0,144,255,0.35); }
+.tabs { display: flex; background: rgba(240,245,252,0.9); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
+.tab-btn { flex: 1; padding: 11px 8px; text-align: center; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; transition: all .2s; font-family: inherit; }
+.tab-btn.active { color: var(--accent2); border-bottom-color: var(--accent2); }
 
-.admin-pane { display: none; padding: 20px 16px; }
-.admin-pane.active { display: block; }
+.tab-pane { display: none; padding: 14px 14px; }
+.tab-pane.active { display: block; }
 
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 14px; backdrop-filter: blur(10px); position: relative; overflow: hidden; }
-.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--border2), transparent); }
-.card h4 { font-size: 14px; font-weight: 700; margin-bottom: 16px; color: var(--accent2); letter-spacing: .5px; display: flex; align-items: center; gap: 8px; }
+/* COMPACT STATS */
+.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 12px; text-align: center; backdrop-filter: blur(10px); position: relative; overflow: hidden; }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+.stat-card .num { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.stat-card .lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
 
-label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
-input[type=text], input[type=password], textarea { width: 100%; padding: 11px 14px; background: rgba(248,251,255,0.9); border: 1px solid var(--border2); border-radius: 9px; color: var(--text); font-size: 14px; outline: none; margin-bottom: 12px; font-family: inherit; transition: border-color .2s; }
-input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,144,255,0.12); }
-input::placeholder, textarea::placeholder { color: rgba(85,119,170,0.6); }
-textarea { resize: vertical; min-height: 100px; }
+/* COMPACT CALENDAR */
+.cal-wrap { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; padding: 12px; margin-bottom: 12px; backdrop-filter: blur(10px); }
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cal-header h3 { font-size: 13px; font-weight: 700; color: var(--accent2); letter-spacing: .5px; }
+.cal-nav { background: transparent; border: 1px solid var(--border2); color: var(--accent2); padding: 3px 10px; border-radius: 7px; cursor: pointer; font-size: 14px; transition: all .2s; }
+.cal-nav:hover { background: rgba(0,144,255,0.15); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-day-label { text-align: center; font-size: 9px; color: var(--muted); padding: 2px 0; font-weight: 700; }
+.cal-day { height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 11px; font-weight: 500; position: relative; background: rgba(10,25,55,0.5); border: 1px solid rgba(0,100,255,0.06); cursor: default; transition: all .2s; }
+.cal-day.empty { background: transparent; border-color: transparent; }
+.cal-day.today { border-color: var(--accent); color: var(--accent2); font-weight: 700; }
+.cal-day.checked { background: linear-gradient(135deg, rgba(0,229,160,0.3), rgba(0,229,160,0.12)); color: var(--green); font-weight: 700; border-color: rgba(0,229,160,0.5); }
+.cal-day.checked::after { content: '✓'; font-size: 6px; position: absolute; bottom: 1px; }
+.cal-day.can-checkin { cursor: pointer; border-color: var(--accent); animation: calPulse 2s infinite; }
+@keyframes calPulse { 0%,100% { border-color: var(--accent); box-shadow: 0 0 4px rgba(0,144,255,0.3); } 50% { border-color: var(--accent2); box-shadow: 0 0 10px rgba(0,200,255,0.5); } }
 
-.btn { padding: 11px 20px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: transform .15s; font-family: inherit; }
-.btn:hover { transform: translateY(-1px); }
-.btn:disabled { opacity: 0.6; cursor: default; transform: none; }
-.btn-primary { background: linear-gradient(135deg, var(--accent3), var(--accent), var(--accent2)); color: #fff; box-shadow: 0 4px 16px rgba(0,144,255,0.35); }
-.btn-green { background: linear-gradient(135deg, #00b894, var(--green)); color: #fff; box-shadow: 0 4px 16px rgba(0,229,160,0.3); }
-.btn-red { background: var(--red); color: #fff; }
-.btn-sm { padding: 6px 12px; font-size: 11px; }
+.checkin-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, #00b894, #00e5a0); border: none; border-radius: 11px; color: #fff; font-size: 15px; font-weight: 900; cursor: pointer; font-family: inherit; letter-spacing: 1px; box-shadow: 0 4px 20px rgba(0,229,160,0.35); transition: transform .15s; margin-bottom: 6px; }
+.checkin-btn:hover { transform: translateY(-1px); }
+.checkin-btn:disabled { background: rgba(15,28,60,0.8); color: var(--muted); cursor: default; box-shadow: none; transform: none; }
 
-.member-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(0,100,255,0.08); }
-.member-row:last-child { border-bottom: none; }
-.member-uid { font-weight: 700; font-size: 14px; color: var(--accent2); }
-.member-info { font-size: 11px; color: var(--muted); margin-top: 3px; }
-
-.result-box { background: rgba(0,229,160,0.06); border: 1px solid rgba(0,229,160,0.2); border-radius: 9px; padding: 12px 14px; font-size: 13px; color: var(--green); margin-top: 10px; display: none; white-space: pre-wrap; line-height: 1.8; }
-
-.section-title { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
+/* NEWS SECTION */
+.section-title { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin: 16px 0 8px; display: flex; align-items: center; gap: 8px; }
 .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border2), transparent); }
 
-.quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.quick-item { padding: 13px 10px; background: rgba(248,251,255,0.9); border: 1px solid var(--border2); border-radius: 11px; cursor: pointer; text-align: center; font-size: 13px; font-weight: 600; font-family: inherit; transition: all .2s; color: var(--muted); }
-.quick-item:hover { border-color: var(--accent); color: var(--accent2); }
-.quick-item.selected { border-color: var(--accent); color: var(--accent2); background: rgba(0,144,255,0.1); box-shadow: 0 0 12px rgba(0,144,255,0.2); }
+.news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.news-card { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; overflow: hidden; cursor: pointer; transition: border-color .2s, transform .2s; text-decoration: none; display: block; }
+.news-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.news-card-img { width: 100%; height: 80px; object-fit: cover; display: block; background: rgba(0,40,100,0.5); }
+.news-card-img-placeholder { width: 100%; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 28px; background: linear-gradient(135deg, rgba(0,40,100,0.6), rgba(0,20,60,0.8)); }
+.news-card-body { padding: 8px 10px; }
+.news-card-tag { font-size: 9px; font-weight: 700; color: var(--accent2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.news-card-title { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.news-card-time { font-size: 9px; color: var(--muted); margin-top: 4px; }
 
-.toast { position: fixed; bottom: 28px; left: 50%; background: linear-gradient(135deg, #00b894, var(--green)); color: #fff; padding: 12px 26px; border-radius: 30px; font-weight: 700; font-size: 14px; opacity: 0; transition: opacity .3s, transform .3s; z-index: 9999; pointer-events: none; box-shadow: 0 4px 20px rgba(0,229,160,0.4); transform: translateX(-50%) translateY(10px); }
+.news-list-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-bottom: 7px; display: flex; gap: 10px; align-items: flex-start; cursor: pointer; transition: border-color .2s; text-decoration: none; }
+.news-list-item:hover { border-color: var(--accent); }
+.news-list-icon { font-size: 20px; flex-shrink: 0; width: 36px; height: 36px; background: rgba(0,40,100,0.5); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.news-list-text .tag { font-size: 9px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+.news-list-text .title { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.4; margin-top: 2px; }
+.news-list-text .time { font-size: 9px; color: var(--muted); margin-top: 3px; }
+
+.news-loading { text-align: center; color: var(--muted); font-size: 12px; padding: 20px; }
+.news-error { text-align: center; color: var(--muted); font-size: 11px; padding: 10px; }
+
+/* TASK CARDS */
+.task-card { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 12px 14px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+.task-card .task-name { font-size: 13px; font-weight: 600; }
+.task-card .task-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.task-status { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.task-status.done { background: rgba(0,229,160,0.12); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
+.task-status.pending { background: rgba(0,144,255,0.08); color: var(--muted); border: 1px solid var(--border); }
+.yt-watch-btn { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; background: linear-gradient(135deg, #c00, #ff4444); color: #fff; border: none; cursor: pointer; font-family: inherit; text-decoration: none; transition: transform .15s, box-shadow .15s; box-shadow: 0 2px 10px rgba(255,50,50,0.3); white-space: nowrap; }
+.yt-watch-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(255,50,50,0.45); }
+.yt-task-card { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 12px 14px; margin-bottom: 8px; }
+
+/* 獎金卡 */
+.bonus-card { background: linear-gradient(135deg, rgba(0,229,160,0.1), rgba(0,144,255,0.08)); border: 1px solid rgba(0,229,160,0.3); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; }
+.bonus-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--green), var(--accent2)); }
+.bonus-icon { font-size: 28px; flex-shrink: 0; }
+.bonus-amount { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--green), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+.bonus-label { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+/* 時段卡 */
+.slot-section { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; padding: 14px; margin-bottom: 12px; position: relative; overflow: hidden; }
+.slot-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #c00, #ff4444, #ff6b6b); }
+.slot-label { font-size: 11px; font-weight: 800; color: var(--accent2); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+.slot-badge { padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+.slot-badge.approved { background: rgba(0,229,160,0.15); color: var(--green); border: 1px solid rgba(0,229,160,0.4); }
+.slot-badge.pending  { background: rgba(255,200,0,0.1); color: #ffc800; border: 1px solid rgba(255,200,0,0.3); }
+.slot-badge.rejected { background: rgba(255,95,126,0.12); color: var(--red); border: 1px solid rgba(255,95,126,0.3); }
+.slot-badge.todo     { background: rgba(0,144,255,0.08); color: var(--muted); border: 1px solid var(--border); }
+
+/* 上傳區 */
+.upload-area { border: 2px dashed rgba(0,144,255,0.3); border-radius: 10px; padding: 14px; text-align: center; margin-top: 10px; position: relative; cursor: pointer; transition: all .2s; }
+.upload-area:hover { border-color: var(--accent); background: rgba(0,144,255,0.05); }
+.upload-area input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.upload-area-hint { font-size: 12px; color: var(--muted); pointer-events: none; }
+.upload-area-hint .uicon { font-size: 22px; margin-bottom: 4px; }
+.upload-preview { width: 100%; max-height: 150px; object-fit: cover; border-radius: 8px; margin-top: 8px; display: none; }
+.upload-submit-btn { width: 100%; padding: 10px; margin-top: 8px; background: linear-gradient(135deg, #005aff, #0090ff); border: none; border-radius: 9px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; display: none; transition: transform .15s; box-shadow: 0 3px 12px rgba(0,144,255,0.35); }
+.upload-submit-btn:hover { transform: translateY(-1px); }
+.upload-submit-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
+
+.toast { position: fixed; bottom: 24px; left: 50%; background: linear-gradient(135deg, #00b894, var(--green)); color: #fff; padding: 11px 24px; border-radius: 30px; font-weight: 700; font-size: 13px; opacity: 0; transition: opacity .3s, transform .3s; z-index: 9999; pointer-events: none; box-shadow: 0 4px 20px rgba(0,229,160,0.4); transform: translateX(-50%) translateY(10px); }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast.error { background: linear-gradient(135deg, #c0392b, var(--red)); color: #fff; }
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-
-/* 會員管理表格 */
-.member-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.member-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 620px; }
-.member-table th { padding: 10px 10px; text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border2); white-space: nowrap; }
-.member-table td { padding: 11px 10px; border-bottom: 1px solid rgba(0,100,255,0.07); vertical-align: middle; }
-.member-table tr:last-child td { border-bottom: none; }
-.member-table tr:hover td { background: rgba(0,100,255,0.04); }
-.mtd-uid { font-weight: 700; font-size: 14px; color: var(--accent2); white-space: nowrap; }
-.mtd-bonus { font-weight: 700; color: var(--green); white-space: nowrap; }
-.status-tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; cursor: pointer; transition: opacity .15s; }
-.status-tag:hover { opacity: .8; }
-.st-in   { background: rgba(0,229,160,0.12); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
-.st-out  { background: rgba(255,95,126,0.12); color: var(--red); border: 1px solid rgba(255,95,126,0.3); }
-.st-lost { background: rgba(255,200,0,0.12); color: #ffc800; border: 1px solid rgba(255,200,0,0.3); }
-.st-paid { background: rgba(0,229,160,0.12); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
-.st-wait { background: rgba(255,200,0,0.12); color: #ffc800; border: 1px solid rgba(255,200,0,0.3); }
-.st-none { background: rgba(85,119,170,0.1); color: var(--muted); border: 1px solid var(--border); }
-.note-input { background: transparent; border: none; border-bottom: 1px dashed var(--border2); color: var(--text); font-size: 12px; font-family: inherit; outline: none; width: 90px; padding: 2px 4px; transition: border-color .2s; }
-.note-input:focus { border-bottom-color: var(--accent); }
-.note-input::placeholder { color: var(--muted); }
-
-/* 審核卡 */
-.review-card { background: rgba(248,251,255,0.9); border: 1px solid var(--border2); border-radius: 14px; padding: 14px; margin-bottom: 14px; }
-.review-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
-.review-uid { font-size: 15px; font-weight: 800; color: var(--accent2); }
-.review-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.review-img { width: 100%; max-height: 220px; object-fit: contain; border-radius: 10px; background: rgba(0,0,0,0.3); margin-bottom: 12px; display: block; }
-.review-actions { display: flex; gap: 8px; }
-.review-actions .btn { flex: 1; padding: 10px; font-size: 13px; }
-.review-status { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-.review-status.pending  { background: rgba(255,200,0,0.12); color: #ffc800; border: 1px solid rgba(255,200,0,0.3); }
-.review-status.approved { background: rgba(0,229,160,0.12); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
-.review-status.rejected { background: rgba(255,95,126,0.12); color: var(--red); border: 1px solid rgba(255,95,126,0.3); }
 </style>
 </head>
 <body>
 
 <div id="auth-screen">
-  <div class="auth-card">
-    <h1>⚙️ 管理員登入</h1>
-    <p>請輸入管理員密碼</p>
-    <span class="field-label">密碼</span>
-    <input id="pass-input" type="password" placeholder="請輸入密碼">
-    <button class="auth-login-btn" id="login-btn">登 入</button>
-    <div id="auth-error"></div>
+  <div class="auth-wrap">
+    <div class="brand-header">
+      <div class="brand-logo-box">
+        <div class="brand-dot">⚡</div>
+        <div>
+          <div class="brand-name">OmniTask 任鏈科技</div>
+          <div class="brand-sub">× clickworker 聯名系統</div>
+        </div>
+      </div>
+      <h2>會員簽到平台</h2>
+      <!-- 裝飾插圖 -->
+      <svg viewBox="0 0 320 90" style="width:100%;max-width:320px;margin:10px auto 0;display:block;opacity:0.85" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0090ff"/><stop offset="100%" stop-color="#00e5a0"/></linearGradient>
+          <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1655c0"/><stop offset="100%" stop-color="#0090ff"/></linearGradient>
+        </defs>
+        <!-- 星星裝飾 -->
+        <circle cx="20" cy="20" r="2" fill="#00c8ff" opacity="0.7"/>
+        <circle cx="300" cy="15" r="3" fill="#00e5a0" opacity="0.6"/>
+        <circle cx="160" cy="8" r="1.5" fill="#fff" opacity="0.5"/>
+        <circle cx="260" cy="40" r="2" fill="#0090ff" opacity="0.6"/>
+        <circle cx="50" cy="60" r="1.5" fill="#00e5a0" opacity="0.5"/>
+        <!-- 手機圖示 -->
+        <rect x="120" y="10" width="36" height="60" rx="6" fill="url(#lg2)" opacity="0.9"/>
+        <rect x="124" y="15" width="28" height="42" rx="3" fill="#0a0f1e"/>
+        <circle cx="138" cy="63" r="2.5" fill="#00c8ff" opacity="0.8"/>
+        <!-- 螢幕內容 -->
+        <rect x="127" y="19" width="22" height="3" rx="1.5" fill="#0090ff" opacity="0.8"/>
+        <rect x="127" y="25" width="16" height="2" rx="1" fill="#334466"/>
+        <rect x="127" y="30" width="19" height="2" rx="1" fill="#334466"/>
+        <rect x="127" y="35" width="14" height="2" rx="1" fill="#334466"/>
+        <rect x="127" y="42" width="22" height="8" rx="3" fill="url(#lg1)" opacity="0.9"/>
+        <text x="138" y="48" text-anchor="middle" font-size="4" fill="#fff" font-family="sans-serif">簽到</text>
+        <!-- 勾選圓 -->
+        <circle cx="185" cy="40" r="22" fill="url(#lg1)" opacity="0.15"/>
+        <circle cx="185" cy="40" r="17" fill="none" stroke="url(#lg1)" stroke-width="2" opacity="0.5"/>
+        <text x="185" y="46" text-anchor="middle" font-size="18" fill="url(#lg1)">✓</text>
+        <!-- 獎勵圖示 -->
+        <circle cx="82" cy="42" r="18" fill="#1a2a4a"/>
+        <text x="82" y="49" text-anchor="middle" font-size="20">💰</text>
+        <!-- 連線虛線 -->
+        <line x1="100" y1="42" x2="118" y2="42" stroke="#0090ff" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
+        <line x1="156" y1="42" x2="168" y2="42" stroke="#00e5a0" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
+        <!-- 底部文字 -->
+        <text x="160" y="83" text-anchor="middle" font-size="8" fill="#334466" font-family="sans-serif" letter-spacing="1">完成任務 · 累積收益 · 每日簽到</text>
+      </svg>
+    </div>
+    <div class="auth-card">
+      <h1>🔐 會員登入</h1>
+      <p>請輸入你的會員編號與密碼</p>
+      <span class="field-label">會員編號</span>
+      <input id="uid-input" type="text" placeholder="例：U12345 或 12345" autocomplete="off">
+      <span class="field-label">密碼</span>
+      <input id="pass-input" type="password" placeholder="請輸入密碼">
+      <button class="auth-login-btn" id="login-btn">登 入</button>
+      <div id="auth-error"></div>
+    </div>
   </div>
 </div>
 
-<div id="admin-app">
+<div id="member-app">
   <div class="top-bar">
     <div class="top-bar-brand">
-      <div class="tb-dot">⚙️</div>
-      <h2>管理後台</h2>
+      <div class="tb-dot">⚡</div>
+      <h2>OmniTask</h2>
     </div>
-    <span class="top-badge">ADMIN</span>
-    <button class="logout-btn" id="admin-logout-btn">登出</button>
-  </div>
-  <div class="admin-tabs">
-    <button class="admin-tab-btn active" data-pane="pane-quick">⚡ 快速登記</button>
-    <button class="admin-tab-btn" data-pane="pane-withdraw">💸 領款申請 <span id="withdraw-badge" style="display:none;background:#ffc800;color:#000;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:4px">0</span></button>
-    <button class="admin-tab-btn" data-pane="pane-review">🔍 截圖審核 <span id="review-badge" style="display:none;background:#ff5f7e;color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:4px">0</span></button>
-    <button class="admin-tab-btn" data-pane="pane-store-review">🏪 店家審核 <span id="store-badge" style="display:none;background:#ff5f7e;color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:4px">0</span></button>
-    <button class="admin-tab-btn" data-pane="pane-ai-review">🤖 AI任務審核 <span id="ai-badge" style="display:none;background:#7c3aed;color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:4px">0</span></button>
-    <button class="admin-tab-btn" data-pane="pane-members">👥 會員</button>
-    <button class="admin-tab-btn" data-pane="pane-tasks">📋 任務</button>
-    <button class="admin-tab-btn" data-pane="pane-stats">📊 統計</button>
-    <button class="admin-tab-btn" data-pane="pane-settings">🔒 設定</button>
+    <span class="top-badge" id="member-uid-badge"></span>
+    <button class="logout-btn" id="logout-btn">登出</button>
   </div>
 
-  <div class="admin-pane active" id="pane-quick">
-    <div class="card">
-      <h4>⚡ 快速幫會員登記</h4>
-      <label>會員編號</label>
-      <input type="text" id="quick-uid" placeholder="例：12345 或 U12345" autocomplete="off">
-      <div class="section-title" style="margin:0 0 10px">YT 時段</div>
-      <div class="quick-grid" id="quick-yt-grid"></div>
-      <button class="btn btn-green" style="width:100%;margin-top:18px" id="quick-register-btn">✅ 確認登記</button>
-    </div>
-  </div>
-
-  <div class="admin-pane" id="pane-members">
-    <div class="card">
-      <h4>➕ 新增會員</h4>
-      <label>負責員工（選擇帶入此客戶的員工）</label>
-      <div style="display:flex;gap:8px;margin-bottom:10px">
-        <select id="customer-select" style="flex:1;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:9px;color:var(--text);font-size:13px;font-family:inherit">
-          <option value="">── 選擇員工 ──</option>
-        </select>
-        <button class="btn btn-primary" id="manage-customers-btn" style="white-space:nowrap;font-size:12px">✏️ 管理員工</button>
+  <!-- 累積獎金 固定顯示在所有分頁上方 -->
+  <div id="global-bonus-bar" style="display:none;background:linear-gradient(135deg,rgba(0,229,160,0.12),rgba(0,144,255,0.08));border-bottom:1px solid rgba(0,229,160,0.25);padding:10px 18px;display:none;align-items:center;gap:12px;position:sticky;top:52px;z-index:90;backdrop-filter:blur(12px)">
+    <div style="font-size:18px">💰</div>
+    <div style="flex:1">
+      <div style="display:flex;align-items:baseline;gap:6px">
+        <span style="font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;background:linear-gradient(135deg,var(--green),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent" id="global-bonus-amount">0</span>
+        <span style="font-size:11px;color:var(--muted)">元｜累積任務獎金</span>
       </div>
-      <label>會員編號（如 U12345）</label>
-      <input type="text" id="new-uid" placeholder="U12345" autocomplete="off">
-      <label>密碼（預設 123456）</label>
-      <input type="text" id="new-pw" placeholder="123456" autocomplete="off">
-      <button class="btn btn-primary" id="add-member-btn">新增會員</button>
+      <div style="font-size:10px;color:var(--muted);margin-top:1px">YT任務 + 店家任務 合計</div>
+    </div>
+    <button id="global-withdraw-btn" style="background:linear-gradient(135deg,#00b894,var(--green));border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:700;padding:8px 14px;cursor:pointer;font-family:inherit;flex-shrink:0;white-space:nowrap">申請領款</button>
+  </div>
 
-      <!-- 管理員工名單面板 -->
-      <div id="customer-panel" style="display:none;margin-top:16px;background:rgba(0,144,255,0.05);border:1px solid var(--border2);border-radius:12px;padding:14px">
-        <div style="font-weight:700;color:var(--accent2);margin-bottom:10px">👤 員工名單管理</div>
-        <div style="display:flex;gap:8px;margin-bottom:10px">
-          <input type="text" id="new-customer-name" placeholder="輸入員工名稱" autocomplete="off" style="flex:1">
-          <button class="btn btn-green" id="add-customer-btn" style="white-space:nowrap">新增</button>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="tab-checkin">📅 簽到</button>
+    <button class="tab-btn" data-tab="tab-news">🏦 幣託介紹</button>
+    <button class="tab-btn" data-tab="tab-tasks">📋 YT任務</button>
+    <button class="tab-btn" data-tab="tab-store">🏪 店家任務</button>
+    <button class="tab-btn" data-tab="tab-ai">🤖 AI任務</button>
+    <button class="tab-btn" data-tab="tab-setting">⚙️ 設定</button>
+  </div>
+
+  <!-- 簽到 TAB -->
+  <div class="tab-pane active" id="tab-checkin">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="num" id="stat-total">0</div>
+        <div class="lbl">累積簽到天數</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-streak">0</div>
+        <div class="lbl">連續天數</div>
+      </div>
+    </div>
+
+    <div class="cal-wrap">
+      <div class="cal-header">
+        <button class="cal-nav" id="cal-prev">‹</button>
+        <h3 id="cal-month-label"></h3>
+        <button class="cal-nav" id="cal-next">›</button>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+
+    <button class="checkin-btn" id="checkin-btn">📡 立即簽到</button>
+    <p style="color:var(--muted);font-size:10px;text-align:center;letter-spacing:.5px">⚠️ 只能簽今天，不能補簽</p>
+
+    <!-- 簽到插圖 banner -->
+    <div style="margin-top:14px;background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;overflow:hidden;position:relative">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#005aff,#00e5a0)"></div>
+      <svg viewBox="0 0 70 70" width="70" height="70" style="flex-shrink:0" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1655c0"/><stop offset="100%" stop-color="#00c8ff"/></linearGradient></defs>
+        <circle cx="35" cy="35" r="32" fill="url(#cg)" opacity="0.15"/>
+        <circle cx="35" cy="35" r="26" fill="none" stroke="url(#cg)" stroke-width="2" opacity="0.4"/>
+        <text x="35" y="43" text-anchor="middle" font-size="28">📅</text>
+        <circle cx="52" cy="18" r="8" fill="#00e5a0" opacity="0.9"/>
+        <text x="52" y="22" text-anchor="middle" font-size="9" fill="#fff">✓</text>
+      </svg>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--text)">每日簽到累積天數</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.6">持續簽到可累積連續天數獎勵<br>週日不開放，記得每天打卡！</div>
+      </div>
+    </div>
+
+    <!-- 幣託一條 banner，點進去跳幣託介紹頁 -->
+    <div style="margin-top:18px;margin-bottom:6px">
+      <button onclick="document.querySelectorAll('.tab-btn')[1].click()" style="width:100%;background:linear-gradient(135deg,rgba(0,30,80,0.95),rgba(0,15,50,0.98));border:1px solid rgba(0,144,255,0.35);border-radius:14px;padding:12px 16px;cursor:pointer;text-align:left;position:relative;overflow:hidden;transition:border-color .2s,transform .2s" onmouseover="this.style.borderColor='rgba(0,200,255,0.6)';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='rgba(0,144,255,0.35)';this.style.transform='none'">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#005aff,#0090ff,#00c8ff,#00e5a0)"></div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#0050c8,#0090ff);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 2px 12px rgba(0,144,255,0.4)">🏦</div>
+          <div style="flex:1;text-align:left">
+            <div style="font-size:14px;font-weight:800;color:#00c8ff;letter-spacing:.5px">幣託 BitoPro</div>
+            <div style="font-size:11px;color:#5577aa;margin-top:2px">什麼是幣託？安全性・好處介紹 →</div>
+          </div>
+          <div style="color:#5577aa;font-size:18px">›</div>
         </div>
-        <div id="customer-list-admin" style="max-height:200px;overflow-y:auto"></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- 幣託介紹 TAB -->
+  <div class="tab-pane" id="tab-news">
+    <!-- 頂部 Banner -->
+    <div style="background: linear-gradient(135deg, rgba(0,40,100,0.8), rgba(0,20,60,0.95)); border: 1px solid var(--border2); border-radius: 16px; padding: 20px 18px 16px; margin-bottom: 14px; position: relative; overflow: hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#005aff,#0090ff,#00c8ff,#00e5a0)"></div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#0050c8,#0090ff);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 4px 16px rgba(0,144,255,0.4)">🏦</div>
+        <div>
+          <div style="font-size:18px;font-weight:900;color: var(--accent3); font-weight:900; letter-spacing:1px">幣託 BitoPro</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">台灣合法加密貨幣交易所・企業資金流轉工具</div>
+        </div>
+      </div>
+      <p style="font-size:13px;color:#99bbdd;line-height:1.7">幣託（BitoPro）是台灣最早取得金管會登記的合法加密貨幣交易平台之一，專為個人與企業提供安全、快速的數位資產管理服務。</p>
+    </div>
+
+    <!-- 什麼是加密貨幣？ -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px">
+      <div style="font-size:12px;font-weight:800;color:var(--accent2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">💡 新手必看：什麼是 USDT？</div>
+      <p style="font-size:13px;color:#aaccee;line-height:1.8;margin-bottom:10px">USDT（泰達幣）是一種「穩定幣」，1 USDT ≈ 1 美元，價格不像比特幣那樣大漲大跌，非常適合用於跨境轉帳與企業出金。</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:20px;margin-bottom:4px">💵</div>
+          <div style="font-size:11px;font-weight:700;color:var(--green)">穩定不波動</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">1 USDT ≈ 1 USD</div>
+        </div>
+        <div style="background:rgba(0,144,255,0.08);border:1px solid rgba(0,144,255,0.2);border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:20px;margin-bottom:4px">⚡</div>
+          <div style="font-size:11px;font-weight:700;color:var(--accent2)">即時到帳</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">無需等待銀行處理</div>
+        </div>
       </div>
     </div>
-    <div class="card">
-      <h4>📥 批次匯入</h4>
-      <label>每行一個5碼數字（不含U）</label>
-      <textarea id="batch-input" placeholder="12345&#10;67890&#10;11111"></textarea>
-      <button class="btn btn-primary" id="batch-import-btn">開始匯入</button>
-      <div class="result-box" id="batch-result"></div>
-    </div>
-    <div class="card">
-      <h4>👥 會員管理</h4>
 
-      <!-- 篩選列 -->
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center">
-        <select id="filter-staff" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer">
-          <option value="">👤 全部員工</option>
-        </select>
-        <select id="filter-group" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer">
-          <option value="">🏠 全部群組狀態</option>
-          <option value="in">在群</option>
-          <option value="out">已退群</option>
-          <option value="lost">失聯</option>
-        </select>
-        <select id="filter-pay" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer">
-          <option value="">💰 全部領款狀態</option>
-          <option value="wait">待領款</option>
-          <option value="paid">已領款</option>
-          <option value="none">未領款</option>
-        </select>
-        <span id="filter-count" style="font-size:12px;color:var(--muted);margin-left:4px"></span>
-        <button id="filter-reset-btn" class="btn btn-sm" style="margin-left:auto;font-size:12px;padding:6px 12px">重置篩選</button>
-      </div>
-
-      <div class="member-table-wrap">
-        <table class="member-table">
-          <thead>
-            <tr>
-              <th>編號</th>
-              <th>群組狀態</th>
-              <th>任務名稱</th>
-              <th>任務狀態</th>
-              <th>已領金額</th>
-              <th>領款狀態</th>
-              <th>簽到天數</th>
-              <th>連續天數</th>
-              <th>密碼</th>
-              <th>備註</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="admin-member-list"></tbody>
-        </table>
+    <!-- 為什麼選幣託 -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px">
+      <div style="font-size:12px;font-weight:800;color:var(--accent2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">🏆 為什麼選擇幣託？</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(0,90,255,0.3),rgba(0,144,255,0.15));border:1px solid rgba(0,144,255,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🏛️</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">台灣合法登記平台</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.6">已於金融監督管理委員會完成虛擬資產服務業者（VASP）登記，是台灣少數合規的交易所之一。</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(0,90,255,0.3),rgba(0,144,255,0.15));border:1px solid rgba(0,144,255,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">💸</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">降低跨境手續費</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.6">傳統銀行電匯動輒數百元手續費，透過 USDT 出金大幅節省成本，適合企業大額資金流轉。</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(0,90,255,0.3),rgba(0,144,255,0.15));border:1px solid rgba(0,144,255,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📊</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">資產透明可追蹤</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.6">所有交易紀錄均可在帳戶中查詢，資金流向清晰，方便財務管理與對帳。</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="admin-pane" id="pane-tasks">
-    <div class="card">
-      <h4>▶️ 新增YT影片任務</h4>
-      <label>YT影片一 名稱</label>
-      <input type="text" id="yt-name1" placeholder="例：YT影片一" autocomplete="off">
-      <label>YT影片一 連結</label>
-      <input type="text" id="yt-url1" placeholder="https://youtu.be/..." autocomplete="off">
-      <label>YT影片二 名稱</label>
-      <input type="text" id="yt-name2" placeholder="例：YT影片二" autocomplete="off">
-      <label>YT影片二 連結</label>
-      <input type="text" id="yt-url2" placeholder="https://youtu.be/..." autocomplete="off">
-      <button class="btn btn-primary" style="width:100%;margin-top:4px" id="add-yt-btn">新增YT影片任務</button>
+    <!-- 出金流程 -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px">
+      <div style="font-size:12px;font-weight:800;color:var(--accent2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">📤 出金流程（超簡單 3 步驟）</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:12px;background:rgba(34,114,232,0.06);border-radius:10px;padding:12px">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0">1</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text)">下載 BitoPro App</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">官方網站或 App Store / Google Play 下載，請只透過官方管道，勿使用第三方連結</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;background:rgba(34,114,232,0.06);border-radius:10px;padding:12px">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0">2</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text)">完成身分驗證（KYC）</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">依指示上傳身分證件，確保帳戶安全與合規，通常數分鐘至數小時內完成審核</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;background:rgba(34,114,232,0.06);border-radius:10px;padding:12px">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0">3</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text)">綁定為資產接收帳戶</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">完成後即可作為 OmniTask 任鏈科技公司出金的 USDT 接收地址</div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card">
-      <h4>📋 現有YT影片任務</h4>
-      <div id="admin-yt-task-list"></div>
-    </div>
-    <div class="card">
-      <h4>🤖 AI數據任務 今日時段設定</h4>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:14px">設定後前台會員即可看到今日時段並上傳截圖，清空即代表該時段尚未公告。</p>
-      <label>時段一 名稱／說明</label>
-      <input type="text" id="ai-slot1-input" placeholder="例：早場 09:00 — 數據任務A" autocomplete="off">
-      <label>時段二 名稱／說明</label>
-      <input type="text" id="ai-slot2-input" placeholder="例：晚場 21:00 — 數據任務B" autocomplete="off">
-      <button class="btn btn-primary" style="width:100%;margin-top:8px" id="save-ai-slots-btn">💾 儲存今日時段</button>
-      <div id="ai-slot-status" style="font-size:12px;color:var(--muted);text-align:center;margin-top:8px"></div>
-    </div>
-  </div>
 
-  <div class="admin-pane" id="pane-stats">
-    <div class="card">
-      <h4>📊 會員簽到統計排行</h4>
-      <div id="stats-list"></div>
+    <!-- 安全提示 -->
+    <div style="background:linear-gradient(135deg,rgba(255,95,126,0.08),rgba(255,95,126,0.04));border:1px solid rgba(255,95,126,0.25);border-radius:14px;padding:16px;margin-bottom:10px">
+      <div style="font-size:12px;font-weight:800;color:#ff8fa3;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🔒 安全機制說明</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="color:var(--green);font-size:14px">✓</span>
+          <span style="font-size:12px;color:#aaccee">僅建議透過<strong style="color:var(--text)">官方平台</strong>下載 App 或前往官網</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="color:var(--green);font-size:14px">✓</span>
+          <span style="font-size:12px;color:#aaccee">請勿透過<strong style="color:var(--text)">第三方連結</strong>或不明網站登入帳戶</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="color:var(--green);font-size:14px">✓</span>
+          <span style="font-size:12px;color:#aaccee">啟用<strong style="color:var(--text)">雙重驗證（2FA）</strong>，增加帳戶安全層級</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="color:var(--green);font-size:14px">✓</span>
+          <span style="font-size:12px;color:#aaccee">定期確認登入紀錄，發現異常立即聯繫客服</span>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="admin-pane" id="pane-withdraw">
-    <div class="card">
-      <h4>💸 領款申請清單</h4>
-      <div id="withdraw-list"><div style="color:var(--muted);text-align:center;padding:20px">載入中...</div></div>
+    <!-- OmniTask 合作說明 -->
+    <div style="background:linear-gradient(135deg,rgba(0,229,160,0.08),rgba(0,144,255,0.06));border:1px solid rgba(0,229,160,0.25);border-radius:14px;padding:16px;margin-bottom:6px">
+      <div style="font-size:12px;font-weight:800;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🎁 OmniTask 任鏈科技 × 幣託</div>
+      <p style="font-size:12px;color:#aaccee;line-height:1.8">新用戶完成幣託身份驗證（KYC）後，即可獲得 <strong style="color:var(--green)">OmniTask 任鏈科技專屬活動獎勵</strong>。詳情請洽助理，把握機會！</p>
     </div>
-  </div>
 
-  <div class="admin-pane" id="pane-review">
-    <div class="card">
-      <h4>🔍 待審核截圖</h4>
-      <div id="review-loading" style="color:var(--muted);text-align:center;padding:20px">載入中...</div>
-      <div id="review-list"></div>
-    </div>
-  </div>
-
-  <div class="admin-pane" id="pane-store-review">
-    <div class="card">
-      <h4>🏪 店家任務審核</h4>
-      <div id="store-review-loading" style="color:var(--muted);text-align:center;padding:20px">載入中...</div>
-      <div id="store-review-list"></div>
-    </div>
-  </div>
-
-  <div class="admin-pane" id="pane-ai-review">
-    <div class="card">
-      <h4>🤖 AI任務審核</h4>
-      <div id="ai-review-loading" style="color:var(--muted);text-align:center;padding:20px">載入中...</div>
-      <div id="ai-review-list"></div>
+    <div style="text-align:center;margin-top:14px;margin-bottom:4px">
+      <a href="https://www.bitopro.com" target="_blank" rel="noopener" style="display:inline-block;padding:12px 32px;background:linear-gradient(135deg,var(--accent3),var(--accent),var(--accent2));border-radius:30px;color:#fff;font-size:13px;font-weight:800;text-decoration:none;letter-spacing:1px;box-shadow:0 4px 20px rgba(0,144,255,0.4)">前往幣託官網 →</a>
     </div>
   </div>
 
-  <div class="admin-pane" id="pane-settings">
-    <div class="card">
-      <h4>🔒 修改管理員密碼</h4>
-      <p style="color:var(--muted);font-size:12px;margin-bottom:14px">修改後需重新上傳檔案才會生效</p>
-      <label>新密碼（至少4位）</label>
-      <input type="password" id="new-pass" placeholder="新密碼" autocomplete="off">
-      <label>確認新密碼</label>
-      <input type="password" id="new-pass2" placeholder="再輸入一次" autocomplete="off">
-      <button class="btn btn-primary" id="change-pass-btn" style="width:100%">顯示新密碼</button>
-      <div class="result-box" id="pass-result"></div>
+  <!-- 店家任務 TAB -->
+  <div class="tab-pane" id="tab-store">
+
+    <!-- 說明區 -->
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:18px 16px;margin-bottom:14px">
+      <!-- 店家插圖 header -->
+      <svg viewBox="0 0 340 100" style="width:100%;max-width:340px;margin:0 auto 14px;display:block" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1655c0"/><stop offset="100%" stop-color="#2272e8"/></linearGradient>
+          <linearGradient id="sg2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#00b894"/><stop offset="100%" stop-color="#00e5a0"/></linearGradient>
+        </defs>
+        <!-- 店面圖 -->
+        <rect x="100" y="28" width="80" height="55" rx="4" fill="url(#sg1)" opacity="0.9"/>
+        <rect x="95" y="20" width="90" height="14" rx="3" fill="#0090ff"/>
+        <!-- 招牌 -->
+        <rect x="112" y="25" width="56" height="8" rx="2" fill="#fff" opacity="0.2"/>
+        <!-- 門 -->
+        <rect x="126" y="55" width="24" height="28" rx="3" fill="#0a1a3a"/>
+        <circle cx="148" cy="70" r="1.5" fill="#00c8ff"/>
+        <!-- 窗戶 -->
+        <rect x="108" y="40" width="18" height="14" rx="2" fill="#fff" opacity="0.25"/>
+        <rect x="154" y="40" width="18" height="14" rx="2" fill="#fff" opacity="0.25"/>
+        <!-- 遮陽棚條紋 -->
+        <rect x="95" y="20" width="12" height="14" rx="0" fill="#005aff" opacity="0.5"/>
+        <rect x="119" y="20" width="12" height="14" fill="#005aff" opacity="0.5"/>
+        <rect x="143" y="20" width="12" height="14" fill="#005aff" opacity="0.5"/>
+        <rect x="167" y="20" width="12" height="14" fill="#005aff" opacity="0.5"/>
+        <!-- 地點標記 -->
+        <circle cx="200" cy="30" r="12" fill="#ff5f7e" opacity="0.9"/>
+        <text x="200" y="35" text-anchor="middle" font-size="12">📍</text>
+        <!-- 金幣 -->
+        <circle cx="240" cy="60" r="16" fill="#ffd700" opacity="0.15"/>
+        <circle cx="240" cy="60" r="12" fill="none" stroke="#ffd700" stroke-width="1.5" opacity="0.5"/>
+        <text x="240" y="65" text-anchor="middle" font-size="14">💰</text>
+        <!-- 箭頭連線 -->
+        <path d="M183 55 Q210 48 228 55" stroke="#00e5a0" stroke-width="1.5" fill="none" stroke-dasharray="4,3" opacity="0.7"/>
+        <!-- 左側裝飾 -->
+        <circle cx="60" cy="50" r="20" fill="url(#sg1)" opacity="0.12"/>
+        <text x="60" y="57" text-anchor="middle" font-size="22">🏪</text>
+        <!-- 右側裝飾 -->
+        <text x="295" y="55" text-anchor="middle" font-size="22">✅</text>
+        <!-- 底部標語 -->
+        <text x="170" y="92" text-anchor="middle" font-size="8.5" fill="#334466" font-family="sans-serif" letter-spacing="1">探店體驗 · 填寫回饋 · 入帳 700元</text>
+      </svg>
+      <div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:3px">🏪 店家實境收益任務</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:16px">真實探店 × 真誠回饋 × 共享成長</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
+        <div style="background:rgba(0,144,255,0.08);border:1px solid rgba(0,144,255,0.2);border-radius:10px;padding:10px 8px;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">👥</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text)">真實互動</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">親身體驗與店家良性互動</div>
+        </div>
+        <div style="background:rgba(0,144,255,0.08);border:1px solid rgba(0,144,255,0.2);border-radius:10px;padding:10px 8px;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">⏰</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text)">輕鬆參與</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">流程簡單，利用閒暇時間</div>
+        </div>
+        <div style="background:rgba(0,144,255,0.08);border:1px solid rgba(0,144,255,0.2);border-radius:10px;padding:10px 8px;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">🛡️</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text)">安心保障</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">基於個人真實感受</div>
+        </div>
+      </div>
+
+      <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:10px">📌 任務執行流程</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(0,144,255,0.05);border-radius:8px;padding:8px 12px">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+          <div style="font-size:13px;color:var(--text)"><strong>線上登記</strong>：填寫下方回饋表並送出</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(0,144,255,0.05);border-radius:8px;padding:8px 12px">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+          <div style="font-size:13px;color:var(--text)"><strong>實地體驗</strong>：前往指定店家實際體驗</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(0,144,255,0.05);border-radius:8px;padding:8px 12px">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+          <div style="font-size:13px;color:var(--text)"><strong>心得回傳</strong>：依實際觀察填寫體驗回饋</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(0,229,160,0.08);border-radius:8px;padding:8px 12px;border:1px solid rgba(0,229,160,0.2)">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div>
+          <div style="font-size:13px;color:var(--text)"><strong>領取回饋</strong>：審核通過後入帳 <strong style="color:var(--green)">700元</strong></div>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.3);border-radius:10px;padding:12px 14px">
+        <div style="font-size:12px;font-weight:700;color:#d4a017;margin-bottom:8px">🏆 任務獎勵金</div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text);margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(255,193,7,0.2)"><span>任務酬勞</span><span style="font-weight:700">500 元</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text);margin-bottom:10px"><span>體驗補貼</span><span style="font-weight:700">200 元</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:15px;font-weight:800;background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.25);border-radius:8px;padding:10px 12px"><span style="color:#c0392b">總計可領取</span><span style="color:#c0392b">700 元</span></div>
+      </div>
     </div>
+
+    <!-- 可前往店家 -->
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">📍 可前往店家類型</div>
+      <div style="margin-bottom:10px">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:7px;font-weight:600;letter-spacing:0.5px">🍽️ 餐飲類</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">火鍋</span>
+          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">燒肉</span>
+          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">韓式料理</span>
+          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">日式料理</span>
+          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">義式料理</span>
+          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">早餐加盟</span>
+          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">咖啡廳</span>
+          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">手搖飲</span>
+          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">酒吧/餐酒館</span>
+          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">吃到飽</span>
+          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">高級餐廳</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:7px;font-weight:600;letter-spacing:0.5px">✨ 生活體驗類</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span style="background:rgba(0,180,120,0.08);border:1px solid rgba(0,180,120,0.25);border-radius:20px;padding:5px 13px;font-size:12px;color:#0aab6e">美容美甲</span>
+          <span style="background:rgba(0,180,120,0.08);border:1px solid rgba(0,180,120,0.25);border-radius:20px;padding:5px 13px;font-size:12px;color:#0aab6e">美髮沙龍</span>
+          <span style="background:rgba(0,180,120,0.08);border:1px solid rgba(0,180,120,0.25);border-radius:20px;padding:5px 13px;font-size:12px;color:#0aab6e">按摩SPA</span>
+          <span style="background:rgba(0,180,120,0.08);border:1px solid rgba(0,180,120,0.25);border-radius:20px;padding:5px 13px;font-size:12px;color:#0aab6e">健身房</span>
+          <span style="background:rgba(0,180,120,0.08);border:1px solid rgba(0,180,120,0.25);border-radius:20px;padding:5px 13px;font-size:12px;color:#0aab6e">寵物店</span>
+          <span style="background:rgba(0,180,120,0.08);border:1px solid rgba(0,180,120,0.25);border-radius:20px;padding:5px 13px;font-size:12px;color:#0aab6e">KTV</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 我的店家任務紀錄 -->
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">📋 我的任務紀錄</div>
+      <div id="store-task-history" style="font-size:13px;color:var(--muted);text-align:center;padding:12px">載入中...</div>
+    </div>
+
+    <!-- 冷卻提示（送出後7天內顯示） -->
+    <div id="store-cooldown-notice" style="display:none;background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.3);border-radius:14px;padding:18px 16px;margin-bottom:14px;text-align:center">
+      <div style="font-size:28px;margin-bottom:8px">⏳</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">本週任務已完成</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:10px" id="store-cooldown-msg"></div>
+      <div style="background:rgba(255,193,7,0.1);border-radius:10px;padding:10px 14px;display:inline-block">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:3px">下次可送出時間</div>
+        <div style="font-size:14px;font-weight:700;color:#d4a017" id="store-next-date"></div>
+      </div>
+    </div>
+
+    <!-- 回饋表單 -->
+    <div id="store-form-section">
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:18px 16px;margin-bottom:16px">
+      <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:2px">📝 店家實境任務回饋表</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:16px">完整填寫後送出，等候審核通過入帳 700 元</div>
+
+      <div style="margin-bottom:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">任務日期</div>
+        <input type="date" id="store-date" style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;font-size:14px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit">
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">店家名稱／分店</div>
+        <input type="text" id="store-name" placeholder="例：鼎泰豐 信義店" autocomplete="off" style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;font-size:14px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit">
+      </div>
+
+      <div style="border-top:1px solid var(--border2);margin:0 0 16px"></div>
+      <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:14px">體驗回饋內容</div>
+
+      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">1️⃣ 本次接待服務給您的整體感受</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：服務態度、專業介紹、親切程度、應對方式等</div>
+        <textarea id="store-q1" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+
+      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">2️⃣ 店內環境與氛圍體驗</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：整潔度、舒適感、空間氣氛、音樂、燈光等</div>
+        <textarea id="store-q2" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+
+      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">3️⃣ 本次消費／體驗過程中印象最深刻的地方</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">可分享讓您加分或特別有感的細節</div>
+        <textarea id="store-q3" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+
+      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">4️⃣ 對於商品／服務內容的實際感受</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：品質、效果、實用性、價格感受等</div>
+        <textarea id="store-q4" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+
+      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">5️⃣ 店內動線與整體安排是否順暢</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：等候流程、座位安排、空間規劃等</div>
+        <textarea id="store-q5" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+
+      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">6️⃣ 是否會願意再次回訪？原因是什麼？</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">請說明您的原因</div>
+        <textarea id="store-q6" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+
+      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">7️⃣ 如果推薦給朋友，您會怎麼介紹這間店？</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">請說明您會如何推薦</div>
+        <textarea id="store-q7" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+
+      <div style="margin-bottom:16px;background:rgba(148,163,184,0.05);border:1px solid var(--border2);border-radius:10px;padding:12px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">8️⃣ 其他建議或希望店家改善的地方 <span style="font-size:11px;font-weight:400;color:var(--muted)">（選填）</span></div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">任何額外想回饋的都可以填寫</div>
+        <textarea id="store-q8" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+      </div>
+
+      <div id="store-form-error" style="color:#e03f5e;font-size:13px;margin-bottom:10px;display:none"></div>
+
+      <!-- 發票上傳 -->
+      <div style="background:rgba(255,193,7,0.06);border:1px solid rgba(255,193,7,0.25);border-radius:12px;padding:14px;margin-bottom:12px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">🧾 發票上傳</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px">請上傳消費發票截圖或照片</div>
+        <div class="upload-area" id="invoice-upload-area" style="cursor:pointer;min-height:80px">
+          <input type="file" accept="image/*" id="invoice-file-input" style="display:none">
+          <div class="upload-area-hint" id="invoice-upload-hint">
+            <div class="uicon">🧾</div>
+            <div>點擊上傳發票</div>
+          </div>
+          <img class="upload-preview" id="invoice-preview" alt="發票預覽" style="display:none">
+        </div>
+      </div>
+
+      <!-- 影片提示 -->
+      <div style="background:rgba(0,144,255,0.06);border:1px solid rgba(0,144,255,0.2);border-radius:12px;padding:14px;margin-bottom:16px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">🎬 影片心得</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.7">請將影片心得直接傳給助理，助理確認後會同步審核資料。</div>
+      </div>
+
+      <button id="store-submit-btn" style="width:100%;padding:14px;background:linear-gradient(135deg,#1655c0,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">
+        📤 送出回饋表等候審核
+      </button>
+    </div>
+    </div><!-- end store-form-section -->
+  </div>
+
+  <!-- AI任務 TAB -->
+  <div class="tab-pane" id="tab-ai">
+
+    <!-- 說明 banner -->
+    <div style="background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(0,144,255,0.08));border:1px solid rgba(124,58,237,0.25);border-radius:16px;padding:18px 16px;margin-bottom:14px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#7c3aed,#2272e8,#00e5a0)"></div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
+        <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#2272e8);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 4px 16px rgba(124,58,237,0.35)">🤖</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:var(--text)">AI數據任務</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">掌握熱勢 × 參與數據 × 回報任務</div>
+        </div>
+      </div>
+      <div style="background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--text);line-height:1.8">
+        📢 每日兩個時段，各自上傳截圖回報，管理員確認後即入帳獎勵。
+      </div>
+    </div>
+
+    <!-- 我的AI任務紀錄 -->
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">📋 我的 AI 任務紀錄</div>
+      <div id="ai-task-history"><div style="color:var(--muted);text-align:center;padding:12px;font-size:13px">載入中...</div></div>
+    </div>
+
+    <!-- 今日時段（從Firebase動態載入） -->
+    <div id="ai-slots-container"></div>
+
+  </div>
+
+  <!-- 設定 TAB -->
+  <div class="tab-pane" id="tab-setting">
+    <div style="max-width:420px;margin:0 auto;padding-top:8px">
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:22px 20px;margin-bottom:16px">
+        <div style="font-weight:700;font-size:15px;color:var(--text);margin-bottom:18px">🔐 修改密碼</div>
+
+        <div style="margin-bottom:14px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">目前密碼</div>
+          <input type="password" id="pw-current" placeholder="請輸入目前密碼" autocomplete="off"
+            style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+        </div>
+
+        <div style="margin-bottom:14px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">新密碼</div>
+          <input type="password" id="pw-new" placeholder="請輸入新密碼（至少6位）" autocomplete="off"
+            style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">確認新密碼</div>
+          <input type="password" id="pw-confirm" placeholder="再輸入一次新密碼" autocomplete="off"
+            style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+        </div>
+
+        <div id="pw-error" style="color:#e03f5e;font-size:13px;margin-bottom:12px;display:none"></div>
+
+        <button id="pw-save-btn"
+          style="width:100%;padding:13px;background:linear-gradient(135deg,#1655c0,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">
+          儲存新密碼
+        </button>
+      </div>
+    </div>
+  </div>
+    <!-- 申請領款面板 -->
+    <div id="withdraw-panel" style="display:none;background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.25);border-radius:14px;padding:16px;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px">💸 申請領款</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">請至平台提領後，在此登記金額，管理員確認後將從獎金扣除。</div>
+      <input type="number" id="withdraw-amount" min="1" placeholder="輸入申請金額（元）" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(0,229,160,0.35);border-radius:9px;color:var(--text);font-size:15px;outline:none;font-family:inherit;margin-bottom:10px">
+      <div id="withdraw-pending-notice" style="display:none;color:#ffc800;font-size:12px;margin-bottom:10px">⏳ 已有一筆申請待審核，請等管理員確認後再申請。</div>
+      <button id="withdraw-submit-btn" style="width:100%;padding:12px;background:linear-gradient(135deg,#00b894,var(--green));border:none;border-radius:9px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">送出申請</button>
+    </div>
+    <div class="section-title">▶️ YT 影音任務</div>
+    <!-- YT任務插圖 -->
+    <div style="background:linear-gradient(135deg,rgba(255,0,0,0.06),rgba(0,144,255,0.06));border:1px solid rgba(255,0,0,0.15);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px">
+      <svg viewBox="0 0 50 50" width="50" height="50" style="flex-shrink:0" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="8" width="46" height="32" rx="8" fill="#ff0000" opacity="0.9"/>
+        <polygon points="20,18 35,25 20,32" fill="#fff"/>
+        <rect x="10" y="44" width="30" height="3" rx="1.5" fill="#334466"/>
+      </svg>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--text)">觀看 YouTube 影片賺取獎勵</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">每部影片上傳截圖與心得，通過審核即入帳 <strong style="color:var(--green)">100元</strong></div>
+      </div>
+    </div>
+    <div id="yt-slots-list"></div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
 const firebaseConfig = {
@@ -361,1078 +785,854 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// ── App constants ──
-const ADMIN_PASS = '51686069';
 const isSunday = () => new Date().getDay() === 0;
 const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const dateStr  = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 
-// ── Firestore helpers ──
-async function fsGet(path) {
-  const parts = path.split('/');
-  const ref = doc(db, parts[0], parts[1]);
-  const snap = await getDoc(ref);
-  return snap.exists() ? snap.data() : null;
+let currentUID = null;
+
+function showToast(msg, err = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast' + (err ? ' error' : '');
+  void t.offsetWidth; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
 }
 
-async function fsSet(path, data) {
+async function fsGet(path) {
+  const parts = path.split('/');
+  const snap = await getDoc(doc(db, parts[0], parts[1]));
+  return snap.exists() ? snap.data() : null;
+}
+async function fsUpdate(path, data) {
   const parts = path.split('/');
   await setDoc(doc(db, parts[0], parts[1]), data, { merge: true });
 }
-
-async function fsUpdate(path, data) {
-  return fsSet(path, data);
-}
-
-async function fsDelete(path) {
-  const parts = path.split('/');
-  await deleteDoc(doc(db, parts[0], parts[1]));
-}
-
 async function fsList(col) {
   const snap = await getDocs(collection(db, col));
   return snap.docs.map(d => ({ id: d.id, data: d.data() }));
 }
 
-// ── Toast ──
-function showToast(msg, err = false) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast' + (err ? ' error' : '');
-  void t.offsetWidth;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+// ── 店家任務 ──
+async function loadStoreHistory() {
+  const el = document.getElementById('store-task-history');
+  const formEl = document.getElementById('store-form-section');
+  const submitBtn = document.getElementById('store-submit-btn');
+  try {
+    const docs = await fsList('store_reviews');
+    const mine = docs.filter(({ data: d }) => d.uid === currentUID);
+
+    // 找最新一筆（不管狀態）
+    const sorted = mine.sort((a, b) => new Date(b.data.createdAt) - new Date(a.data.createdAt));
+    const latest = sorted[0];
+
+    // 計算下次可送出時間
+    let nextAvailable = null;
+    let cooldownMsg = '';
+    if (latest) {
+      const lastDate = new Date(latest.data.createdAt);
+      nextAvailable = new Date(lastDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const now = new Date();
+      if (now < nextAvailable) {
+        const diff = nextAvailable - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        cooldownMsg = `還需等待 ${days} 天 ${hours} 小時`;
+      }
+    }
+
+    // 顯示紀錄
+    if (!mine.length) {
+      el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:8px">尚無任務紀錄</div>';
+    } else {
+      el.innerHTML = sorted.map(({ data: d }) => {
+        const statusMap = {
+          pending:  ['#ffc800', '⏳ 審核中'],
+          approved: ['var(--green)', '✅ 已通過'],
+          rejected: ['var(--red)', '❌ 已拒絕']
+        };
+        const [col, label] = statusMap[d.status] || statusMap.pending;
+        return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;margin-bottom:8px">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">${d.storeName}</div>
+            <div style="font-size:11px;color:var(--muted)">${d.date} 送出</div>
+          </div>
+          <span style="font-size:12px;font-weight:700;color:${col}">${label}${d.status==='approved'?' +700元':''}</span>
+        </div>`;
+      }).join('');
+    }
+
+    // 控制表單顯示
+    if (cooldownMsg) {
+      // 冷卻中，隱藏表單，顯示倒數
+      formEl.style.display = 'none';
+      document.getElementById('store-cooldown-notice').style.display = 'block';
+      document.getElementById('store-cooldown-msg').textContent = cooldownMsg;
+      const nextStr = nextAvailable.toLocaleDateString('zh-TW', { month: 'long', day: 'numeric' }) +
+                      ' ' + nextAvailable.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('store-next-date').textContent = nextStr;
+    } else {
+      formEl.style.display = 'block';
+      document.getElementById('store-cooldown-notice').style.display = 'none';
+    }
+
+  } catch(e) { el.innerHTML = ''; }
+}
+
+// 預設今天日期
+document.getElementById('store-date').value = todayStr();
+
+document.getElementById('store-submit-btn').addEventListener('click', async () => {
+  const errEl = document.getElementById('store-form-error');
+  errEl.style.display = 'none';
+  const date      = document.getElementById('store-date').value;
+  const storeName = document.getElementById('store-name').value.trim();
+  const answers   = [1,2,3,4,5,6,7,8].map(n => document.getElementById(`store-q${n}`).value.trim());
+
+  if (!date || !storeName) { errEl.textContent = '請填寫任務日期與店家名稱'; errEl.style.display = 'block'; return; }
+  const emptyRequired = answers.slice(0,7).some(a => a.length < 10);
+  if (emptyRequired) { errEl.textContent = '請填寫第1～7題回饋內容（每題至少10字）'; errEl.style.display = 'block'; return; }
+
+  const btn = document.getElementById('store-submit-btn');
+  btn.textContent = '送出中...'; btn.disabled = true;
+  try {
+    // 發票圖片（選填）
+    let invoiceBase64 = '';
+    const invoiceFile = document.getElementById('invoice-file-input').files[0];
+    if (invoiceFile) invoiceBase64 = await compressImage(invoiceFile);
+
+    const reviewId = `${currentUID}_store_${Date.now()}`;
+    await fsUpdate(`store_reviews/${reviewId}`, {
+      uid: currentUID, date, storeName,
+      q1: answers[0], q2: answers[1], q3: answers[2], q4: answers[3],
+      q5: answers[4], q6: answers[5], q7: answers[6], q8: answers[7],
+      invoiceBase64,
+      status: 'pending', createdAt: new Date().toISOString()
+    });
+    showToast('✅ 回饋表已送出，等候審核！');
+    document.getElementById('store-name').value = '';
+    [1,2,3,4,5,6,7,8].forEach(n => document.getElementById(`store-q${n}`).value = '');
+    document.getElementById('invoice-preview').style.display = 'none';
+    document.getElementById('invoice-upload-hint').style.display = 'flex';
+    document.getElementById('invoice-file-input').value = '';
+    loadStoreHistory();
+  } catch(e) {
+    errEl.textContent = '送出失敗：' + e.message; errEl.style.display = 'block';
+  }
+  btn.textContent = '📤 送出回饋表等候審核'; btn.disabled = false;
+});
+
+// 切到店家任務分頁時載入紀錄
+document.querySelector('[data-tab="tab-store"]').addEventListener('click', () => {
+  if (currentUID) loadStoreHistory();
+});
+
+// ── AI 任務 ──
+async function loadAiTaskHistory() {
+  const el = document.getElementById('ai-task-history');
+  try {
+    const docs = await fsList('ai_reviews');
+    const mine = docs.filter(({ data: d }) => d.uid === currentUID)
+                     .sort((a, b) => new Date(b.data.createdAt) - new Date(a.data.createdAt));
+    if (!mine.length) {
+      el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:12px;font-size:13px">尚無任務紀錄</div>';
+      return;
+    }
+    el.innerHTML = mine.map(({ data: d }) => {
+      const statusMap = {
+        pending:  ['#ffc800', '⏳ 審核中'],
+        approved: ['var(--green)', '✅ 已通過'],
+        rejected: ['var(--red)', '❌ 已拒絕']
+      };
+      const [col, label] = statusMap[d.status] || statusMap.pending;
+      return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;margin-bottom:8px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--text)">${d.slotName || d.taskName || 'AI數據任務'}</div>
+          <div style="font-size:11px;color:var(--muted)">${d.date}${d.slotLabel ? ' · '+d.slotLabel : ''}</div>
+        </div>
+        <span style="font-size:12px;font-weight:700;color:${col}">${label}${d.status==='approved'&&d.reward?' +'+d.reward+'元':''}</span>
+      </div>`;
+    }).join('');
+  } catch(e) { el.innerHTML = ''; }
+}
+
+async function renderAiSlots() {
+  const container = document.getElementById('ai-slots-container');
+  container.innerHTML = '';
+  const today = todayStr();
+
+  // 讀取後台設定的今日時段
+  const config = await fsGet('ai_config/today');
+  const slots = [
+    { key: 'slot1', label: config?.slot1 || '時段一（尚未公告）', active: !!config?.slot1 },
+    { key: 'slot2', label: config?.slot2 || '時段二（尚未公告）', active: !!config?.slot2 },
+  ];
+
+  // 讀取今日已提交紀錄
+  const docs = await fsList('ai_reviews');
+  const todayMine = docs.filter(({ data: d }) => d.uid === currentUID && d.date === today);
+  const submittedSlots = new Set(todayMine.map(({ data: d }) => d.slotKey));
+
+  for (const slot of slots) {
+    const done = submittedSlots.has(slot.key);
+    const card = document.createElement('div');
+    card.style.cssText = 'background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:16px;margin-bottom:12px';
+
+    const slotColor = slot.key === 'slot1' ? '#7c3aed' : '#2272e8';
+
+    if (!slot.active) {
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:0">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(148,163,184,0.15);display:flex;align-items:center;justify-content:center;font-size:16px">🕐</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--muted)">${slot.key === 'slot1' ? '時段一' : '時段二'}</div>
+            <div style="font-size:11px;color:var(--muted)">尚未公告，請等候通知</div>
+          </div>
+        </div>`;
+    } else if (done) {
+      const rec = todayMine.find(({ data: d }) => d.slotKey === slot.key);
+      const st = rec?.data?.status || 'pending';
+      const stMap = { pending: ['#ffc800','⏳ 審核中'], approved: ['var(--green)','✅ 已通過'], rejected: ['var(--red)','❌ 已拒絕'] };
+      const [col, stLabel] = stMap[st] || stMap.pending;
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:32px;height:32px;border-radius:8px;background:${slotColor}22;display:flex;align-items:center;justify-content:center;font-size:16px">✅</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--text)">${slot.label}</div>
+              <div style="font-size:11px;color:var(--muted)">已回報</div>
+            </div>
+          </div>
+          <span style="font-size:12px;font-weight:700;color:${col}">${stLabel}</span>
+        </div>`;
+    } else {
+      card.innerHTML = `
+        <div style="margin-bottom:12px;display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:8px;background:${slotColor}22;display:flex;align-items:center;justify-content:center;font-size:16px">🤖</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">${slot.label}</div>
+            <div style="font-size:11px;color:var(--muted)">今日 ${slot.key === 'slot1' ? '第一' : '第二'} 時段</div>
+          </div>
+        </div>
+        <div class="upload-area" id="ai-area-${slot.key}" style="cursor:pointer;min-height:80px;margin-bottom:10px">
+          <input type="file" accept="image/*" id="ai-file-${slot.key}" style="display:none">
+          <div id="ai-hint-${slot.key}" class="upload-area-hint">
+            <div class="uicon">📸</div>
+            <div>點擊上傳任務截圖</div>
+          </div>
+          <img id="ai-prev-${slot.key}" class="upload-preview" alt="" style="display:none">
+        </div>
+        <div style="margin-bottom:10px">
+          <textarea id="ai-note-${slot.key}" placeholder="✍️ 備註（選填）..." rows="2" style="width:100%;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+        </div>
+        <div id="ai-err-${slot.key}" style="color:#e03f5e;font-size:12px;margin-bottom:8px;display:none"></div>
+        <button id="ai-btn-${slot.key}" data-slot="${slot.key}" data-label="${slot.label}" style="width:100%;padding:12px;background:linear-gradient(135deg,${slotColor},#2272e8);border:none;border-radius:9px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">
+          📤 送出${slot.key === 'slot1' ? '時段一' : '時段二'}回報
+        </button>`;
+
+      container.appendChild(card);
+
+      // 綁定上傳事件
+      const area = card.querySelector(`#ai-area-${slot.key}`);
+      const fileInput = card.querySelector(`#ai-file-${slot.key}`);
+      const preview = card.querySelector(`#ai-prev-${slot.key}`);
+      const hint = card.querySelector(`#ai-hint-${slot.key}`);
+
+      area.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+        hint.style.display = 'none';
+      });
+
+      const submitBtn = card.querySelector(`#ai-btn-${slot.key}`);
+      submitBtn.addEventListener('click', async () => {
+        const errEl = card.querySelector(`#ai-err-${slot.key}`);
+        errEl.style.display = 'none';
+        if (!fileInput.files[0]) { errEl.textContent = '請上傳截圖'; errEl.style.display = 'block'; return; }
+        submitBtn.textContent = '檢查中...'; submitBtn.disabled = true;
+        try {
+          // 防重複：確認此時段今日是否已送出
+          const checkDocs = await fsList('ai_reviews');
+          const alreadySent = checkDocs.some(({ data: d }) =>
+            d.uid === currentUID && d.date === today && d.slotKey === slot.key
+          );
+          if (alreadySent) {
+            errEl.textContent = '此時段今日已送出，請等候審核結果';
+            errEl.style.display = 'block';
+            submitBtn.textContent = `📤 送出${slot.key === 'slot1' ? '時段一' : '時段二'}回報`;
+            submitBtn.disabled = false;
+            renderAiSlots();
+            return;
+          }
+          submitBtn.textContent = '送出中...';
+          const base64 = await compressImage(fileInput.files[0]);
+          const note = card.querySelector(`#ai-note-${slot.key}`).value.trim();
+          const reviewId = `${currentUID}_ai_${slot.key}_${today}`;
+          await fsUpdate(`ai_reviews/${reviewId}`, {
+            uid: currentUID, date: today,
+            slotKey: slot.key, slotName: slot.label, slotLabel: slot.key === 'slot1' ? '時段一' : '時段二',
+            note, imageBase64: base64,
+            status: 'pending', createdAt: new Date().toISOString()
+          });
+          showToast(`✅ ${slot.key === 'slot1' ? '時段一' : '時段二'}已回報！`);
+          loadAiTaskHistory();
+          renderAiSlots();
+        } catch(e) {
+          errEl.textContent = '送出失敗：' + e.message; errEl.style.display = 'block';
+          submitBtn.textContent = `📤 送出${slot.key === 'slot1' ? '時段一' : '時段二'}回報`;
+          submitBtn.disabled = false;
+        }
+      });
+      continue;
+    }
+    container.appendChild(card);
+  }
+}
+
+document.querySelector('[data-tab="tab-ai"]').addEventListener('click', () => {
+  if (currentUID) { loadAiTaskHistory(); renderAiSlots(); }
+});
+
+// ── 發票上傳 ──
+document.getElementById('invoice-upload-area').addEventListener('click', () => {
+  document.getElementById('invoice-file-input').click();
+});
+document.getElementById('invoice-file-input').addEventListener('change', () => {
+  const file = document.getElementById('invoice-file-input').files[0];
+  if (!file) return;
+  const preview = document.getElementById('invoice-preview');
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = 'block';
+  document.getElementById('invoice-upload-hint').style.display = 'none';
+});
+
+// ── 修改密碼 ──
+document.getElementById('pw-save-btn').addEventListener('click', async () => {
+  const errEl = document.getElementById('pw-error');
+  errEl.style.display = 'none';
+  const current = document.getElementById('pw-current').value.trim();
+  const newPw   = document.getElementById('pw-new').value.trim();
+  const confirm = document.getElementById('pw-confirm').value.trim();
+  if (!current || !newPw || !confirm) {
+    errEl.textContent = '請填寫所有欄位'; errEl.style.display = 'block'; return;
+  }
+  if (newPw.length < 6) {
+    errEl.textContent = '新密碼至少需要6位'; errEl.style.display = 'block'; return;
+  }
+  if (newPw !== confirm) {
+    errEl.textContent = '兩次輸入的新密碼不一致'; errEl.style.display = 'block'; return;
+  }
+  const btn = document.getElementById('pw-save-btn');
+  btn.textContent = '儲存中...'; btn.disabled = true;
+  try {
+    const data = await fsGet(`members/${currentUID}`);
+    if (!data || data.password !== current) {
+      errEl.textContent = '目前密碼錯誤'; errEl.style.display = 'block';
+      btn.textContent = '儲存新密碼'; btn.disabled = false; return;
+    }
+    await fsUpdate(`members/${currentUID}`, { password: newPw });
+    localStorage.setItem('saved_pass', newPw);
+    showToast('✅ 密碼已成功修改！');
+    document.getElementById('pw-current').value = '';
+    document.getElementById('pw-new').value = '';
+    document.getElementById('pw-confirm').value = '';
+  } catch(e) {
+    errEl.textContent = '儲存失敗：' + e.message; errEl.style.display = 'block';
+  }
+  btn.textContent = '儲存新密碼'; btn.disabled = false;
+});
+
+// ── 新聞抓取 ──
+// 使用 allorigins 代理抓 Google News RSS（繁中科技/財經）
+const RSS_SOURCES = [
+  { url: 'https://news.google.com/rss/search?q=科技+AI&hl=zh-TW&gl=TW&ceid=TW:zh-Hant', tag: 'AI 科技', icon: '🤖' },
+  { url: 'https://news.google.com/rss/search?q=財經+股市&hl=zh-TW&gl=TW&ceid=TW:zh-Hant', tag: '財經', icon: '💹' },
+  { url: 'https://news.google.com/rss/search?q=人才+科技業&hl=zh-TW&gl=TW&ceid=TW:zh-Hant', tag: '人才', icon: '👔' },
+];
+
+async function fetchRSS(rssUrl) {
+  const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
+  const res = await fetch(proxy);
+  const json = await res.json();
+  const xml = new DOMParser().parseFromString(json.contents, 'text/xml');
+  const items = [...xml.querySelectorAll('item')].slice(0, 6);
+  return items.map(item => ({
+    title: item.querySelector('title')?.textContent || '',
+    link:  item.querySelector('link')?.textContent || '#',
+    pubDate: item.querySelector('pubDate')?.textContent || '',
+    thumbnail: '',
+  }));
+}
+
+function timeAgo(dateStr) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor(diff / 60000);
+  if (h > 24) return Math.floor(h/24) + ' 天前';
+  if (h > 0) return h + ' 小時前';
+  return m + ' 分鐘前';
+}
+
+function newsCardHTML(item, tag, icon) {
+  const title = item.title || '';
+  const link  = item.link || '#';
+  const time  = item.pubDate ? timeAgo(item.pubDate) : '';
+  const thumb = item.thumbnail || item.enclosure?.link || '';
+  return `
+    <a class="news-card" href="${link}" target="_blank" rel="noopener">
+      ${thumb
+        ? `<img class="news-card-img" src="${thumb}" onerror="this.parentNode.querySelector('.news-card-img-placeholder').style.display='flex';this.style.display='none'" loading="lazy">`
+        : ''}
+      <div class="news-card-img-placeholder" style="${thumb ? 'display:none' : ''}">${icon}</div>
+      <div class="news-card-body">
+        <div class="news-card-tag">${tag}</div>
+        <div class="news-card-title">${title}</div>
+        <div class="news-card-time">${time}</div>
+      </div>
+    </a>`;
+}
+
+function newsListHTML(item, tag, icon) {
+  const title = item.title || '';
+  const link  = item.link || '#';
+  const time  = item.pubDate ? timeAgo(item.pubDate) : '';
+  return `
+    <a class="news-list-item" href="${link}" target="_blank" rel="noopener">
+      <div class="news-list-icon">${icon}</div>
+      <div class="news-list-text">
+        <div class="tag">${tag}</div>
+        <div class="title">${title}</div>
+        <div class="time">${time}</div>
+      </div>
+    </a>`;
+}
+
+async function loadNews() {
+  // 首頁預覽（簽到頁）
+  const previewEl = document.getElementById('news-preview');
+  // 新聞頁大圖
+  const featuredEl = document.getElementById('news-featured');
+  const aiEl = document.getElementById('news-ai');
+  const industryEl = document.getElementById('news-industry');
+
+  try {
+    const [src0, src1, src2] = await Promise.allSettled(RSS_SOURCES.map(s => fetchRSS(s.url)));
+
+    const items0 = src0.status === 'fulfilled' ? src0.value : [];
+    const items1 = src1.status === 'fulfilled' ? src1.value : [];
+    const items2 = src2.status === 'fulfilled' ? src2.value : [];
+
+    // 簽到頁預覽：前3則清單
+    const previewItems = [...items0.slice(0,2), ...items2.slice(0,1)];
+    if (previewItems.length) {
+      previewEl.innerHTML = previewItems.map(it => newsListHTML(it, '科技', RSS_SOURCES[0].icon)).join('');
+    } else {
+      previewEl.innerHTML = '<div class="news-error">暫無資料，請稍後再試</div>';
+    }
+
+    // 大圖卡（新聞頁頂部）
+    const featured = [...items2.slice(0,2), ...items0.slice(0,2)];
+    if (featured.length) {
+      featuredEl.innerHTML = featured.map((it, i) => {
+        const src = i < 2 ? RSS_SOURCES[2] : RSS_SOURCES[0];
+        return newsCardHTML(it, src.tag, src.icon);
+      }).join('');
+    } else {
+      featuredEl.innerHTML = '<div class="news-error">暫無資料</div>';
+    }
+
+    // AI 與人才（數位時代）
+    if (items1.length) {
+      aiEl.innerHTML = items1.slice(0,4).map(it => newsListHTML(it, RSS_SOURCES[1].tag, RSS_SOURCES[1].icon)).join('');
+    } else {
+      aiEl.innerHTML = '<div class="news-error">暫無資料</div>';
+    }
+
+    // 產業即時（科技新聞）
+    if (items0.length) {
+      industryEl.innerHTML = items0.slice(2,6).map(it => newsListHTML(it, RSS_SOURCES[0].tag, RSS_SOURCES[0].icon)).join('');
+    } else {
+      industryEl.innerHTML = '<div class="news-error">暫無資料</div>';
+    }
+
+  } catch(e) {
+    featuredEl.innerHTML = '<div class="news-error">新聞載入失敗，請稍後再試</div>';
+    previewEl.innerHTML = '';
+  }
 }
 
 // ── 登入 ──
 document.getElementById('login-btn').addEventListener('click', doLogin);
+document.getElementById('uid-input').addEventListener('keydown', e => e.key === 'Enter' && doLogin());
 document.getElementById('pass-input').addEventListener('keydown', e => e.key === 'Enter' && doLogin());
 
 async function doLogin() {
+  const uid  = document.getElementById('uid-input').value.trim().toUpperCase();
   const pass = document.getElementById('pass-input').value.trim();
   const errEl = document.getElementById('auth-error');
-  if (pass === ADMIN_PASS) {
-    errEl.style.display = 'none';
-    const btn = document.getElementById('login-btn');
-    btn.textContent = '連線中...'; btn.disabled = true;
-    try {
-      await signInAnonymously(auth);
-      localStorage.setItem('omni_admin', '1');
-      document.getElementById('auth-screen').style.display = 'none';
-      document.getElementById('admin-app').style.display = 'block';
-      initAdmin();
-    } catch(e) {
-      errEl.textContent = '連線失敗：' + e.message;
-      errEl.style.display = 'block';
-      btn.textContent = '登 入'; btn.disabled = false;
-    }
-  } else {
-    errEl.textContent = '密碼錯誤';
-    errEl.style.display = 'block';
+  const btn = document.getElementById('login-btn');
+  errEl.textContent = '';
+  if (!uid) { errEl.textContent = '請輸入會員編號'; return; }
+  if (!pass) { errEl.textContent = '請輸入密碼'; return; }
+  btn.textContent = '連線中...'; btn.disabled = true;
+  try {
+    await signInAnonymously(auth);
+    const fullUID = uid.startsWith('U') ? uid : 'U' + uid;
+    const data = await fsGet(`members/${fullUID}`);
+    if (!data) { errEl.textContent = '找不到此會員編號'; btn.textContent = '登 入'; btn.disabled = false; return; }
+    if (data.password !== pass) { errEl.textContent = '密碼錯誤'; btn.textContent = '登 入'; btn.disabled = false; return; }
+    currentUID = fullUID;
+    localStorage.setItem('omni_uid', fullUID);
+    localStorage.setItem('omni_pass', pass);
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('member-app').style.display = 'block';
+    document.getElementById('member-uid-badge').textContent = fullUID;
+    initMember();
+  } catch(e) {
+    errEl.textContent = '連線錯誤：' + e.message;
+    btn.textContent = '登 入'; btn.disabled = false;
   }
 }
 
-// ── 後台自動登入 ──
+// ── 自動登入（重整不跳出）──
 (async () => {
-  if (localStorage.getItem('omni_admin') === '1') {
+  const savedUID  = localStorage.getItem('omni_uid');
+  const savedPass = localStorage.getItem('omni_pass');
+  if (savedUID && savedPass) {
     // 先隱藏登入畫面，避免重整時閃現
     document.getElementById('auth-screen').style.display = 'none';
     try {
       await signInAnonymously(auth);
-      document.getElementById('admin-app').style.display = 'block';
-      initAdmin();
-    } catch(_) {
-      localStorage.removeItem('omni_admin');
-      document.getElementById('auth-screen').style.display = 'flex';
-    }
+      const data = await fsGet(`members/${savedUID}`);
+      if (data && data.password === savedPass) {
+        currentUID = savedUID;
+        document.getElementById('member-app').style.display = 'block';
+        document.getElementById('member-uid-badge').textContent = savedUID;
+        initMember();
+        return;
+      }
+    } catch(_) {}
+    localStorage.removeItem('omni_uid');
+    localStorage.removeItem('omni_pass');
+    document.getElementById('auth-screen').style.display = 'flex';
   }
 })();
 
-// ── Admin init ──
-function initAdmin() {
-  document.getElementById('admin-logout-btn').addEventListener('click', () => {
-    localStorage.removeItem('omni_admin');
+let calYear, calMonth;
+
+function initMember() {
+  const now = new Date(); calYear = now.getFullYear(); calMonth = now.getMonth();
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  }));
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    localStorage.removeItem('omni_uid');
+    localStorage.removeItem('omni_pass');
     location.reload();
   });
-  document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.addEventListener('click', () => {
-    document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(btn.dataset.pane).classList.add('active');
-  }));
-
-  document.getElementById('change-pass-btn').addEventListener('click', () => {
-    const nw = document.getElementById('new-pass').value.trim();
-    const nw2 = document.getElementById('new-pass2').value.trim();
-    if (!nw || nw.length < 4) { showToast('新密碼至少4位', true); return; }
-    if (nw !== nw2) { showToast('兩次輸入不一致', true); return; }
-    const r = document.getElementById('pass-result');
-    r.style.display = 'block';
-    r.textContent = `新密碼：${nw}\n\n請將 admin.html 裡的 ADMIN_PASS 改成上面的值，重新上傳即可生效。`;
-  });
-
-  loadAdminMembers();
-  loadYtTasks();
-  loadCustomers();
-  renderQuickRegister();
-  updateStoreBadge();
-  updateAiBadge();
-  loadAiSlotConfig();
-
-  document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-    if (btn.dataset.pane === 'pane-store-review') btn.addEventListener('click', loadStoreReviews);
-    if (btn.dataset.pane === 'pane-ai-review') btn.addEventListener('click', loadAiReviews);
-    if (btn.dataset.pane === 'pane-tasks') btn.addEventListener('click', loadAiSlotConfig);
-  });
-  loadMemberStats();
-  loadReviews();
-  loadWithdrawRequests();
-
-  // 每次切到領款 tab 自動刷新
-  document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-    if (btn.dataset.pane === 'pane-withdraw') {
-      btn.addEventListener('click', loadWithdrawRequests);
-    }
-  });
-
-  // 事件委派：通過/拒絕（_bound flag 確保只綁一次，防 initAdmin 重複呼叫疊加）
-  const reviewList = document.getElementById('review-list');
-  if (!reviewList._bound) {
-    reviewList._bound = true;
-    reviewList.addEventListener('click', async (e) => {
-      const btn = e.target.closest('[data-action]');
-      if (!btn || btn.disabled) return;
-      const { action, rid, uid, tid, date } = btn.dataset;
-      if (action === 'approve') {
-        btn.disabled = true;
-        btn.closest('.review-actions').querySelectorAll('button').forEach(b => b.disabled = true);
-        await approveReview(rid, uid, tid, date);
-      }
-      if (action === 'reject') {
-        // 開彈窗填原因
-        const modal = document.getElementById('reject-modal');
-        modal.style.display = 'flex';
-        document.getElementById('reject-reason-input').value = '';
-        document.getElementById('reject-reason-input').focus();
-        document.getElementById('reject-confirm-btn').onclick = async () => {
-          const reason = document.getElementById('reject-reason-input').value.trim();
-          if (!reason) { alert('請選擇拒絕原因'); return; }
-          modal.style.display = 'none';
-          btn.disabled = true;
-          btn.closest('.review-actions').querySelectorAll('button').forEach(b => b.disabled = true);
-          await rejectReview(rid, uid, tid, date, reason);
-        };
-        document.getElementById('reject-cancel-btn').onclick = () => {
-          modal.style.display = 'none';
-        };
-      }
-    });
-  }
-
-  // 每次切到審核 tab 自動刷新
-  document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-    if (btn.dataset.pane === 'pane-review') {
-      btn.addEventListener('click', loadReviews);
-    }
-  });
+  renderCalendar();
+  renderTasks();
+  loadNews();
 }
 
-// ── 會員列表（含群組狀態、任務、獎金、領款、備註）──
-let _allMemberDocs = [];
-let _ytTaskMap = {};
-
-async function loadAdminMembers() {
-  const list = document.getElementById('admin-member-list');
-  list.innerHTML = '<tr><td colspan="11" style="color:var(--muted);text-align:center;padding:20px">載入中...</td></tr>';
+async function markYtDone(ytId, today) {
   try {
-    const [memberDocs, ytTaskDocs, staffDocs] = await Promise.all([
-      fsList('members'),
-      fsList('yt_tasks'),
-      fsList('customers')
-    ]);
-    _ytTaskMap = {};
-    ytTaskDocs.forEach(({ id, data: t }) => { _ytTaskMap[id] = t.name; });
-    _allMemberDocs = memberDocs;
-
-    // 更新員工篩選下拉（只顯示員工名單裡的名字）
-    const filterStaff = document.getElementById('filter-staff');
-    const prev = filterStaff.value;
-    filterStaff.innerHTML = '<option value="">👤 全部員工</option>';
-    staffDocs.forEach(({ data: s }) => {
-      const opt = document.createElement('option');
-      opt.value = s.name; opt.textContent = s.name;
-      filterStaff.appendChild(opt);
-    });
-    if (prev) filterStaff.value = prev;
-
-    renderFilteredMembers();
+    const data = await fsGet(`members/${currentUID}`);
+    const ytTasks = (data && data.ytTasks) || {};
+    if (!ytTasks[ytId]) ytTasks[ytId] = {};
+    ytTasks[ytId][today] = true;
+    await fsUpdate(`members/${currentUID}`, { ytTasks });
+    showToast('✅ YT任務完成！');
+    renderTasks();
   } catch(e) {
-    const list = document.getElementById('admin-member-list');
-    list.innerHTML = `<tr><td colspan="11" style="color:var(--red);text-align:center;padding:20px">載入失敗：${e.message}</td></tr>`;
+    showToast('標記失敗：' + e.message, true);
   }
 }
-
-function renderFilteredMembers() {
-  const list = document.getElementById('admin-member-list');
-  const filterStaff = document.getElementById('filter-staff').value;
-  const filterGroup = document.getElementById('filter-group').value;
-  const filterPay   = document.getElementById('filter-pay').value;
-  const today = todayStr();
-
-  let filtered = _allMemberDocs.filter(({ data: d }) => {
-    if (filterStaff && !(d.note && d.note.includes(filterStaff))) return false;
-    if (filterGroup && (d.groupStatus || 'in') !== filterGroup) return false;
-    if (filterPay   && (d.payStatus   || 'wait') !== filterPay)  return false;
-    return true;
-  });
-
-  const countEl = document.getElementById('filter-count');
-  countEl.textContent = `共 ${filtered.length} 位`;
-
-  list.innerHTML = '';
-  if (!filtered.length) {
-    list.innerHTML = '<tr><td colspan="11" style="color:var(--muted);text-align:center;padding:20px">無符合條件的會員</td></tr>';
-    return;
-  }
-
-  const ytTaskMap = _ytTaskMap;
-
-  filtered.forEach(({ id: uid, data: d }) => {
-      const ytReviews = d.ytReviews || {};
-      const ytTasks   = d.ytTasks   || {};
-      let taskNames = [], taskStatus = 'none';
-      Object.keys(ytTaskMap).forEach(tid => {
-        const todayStatus = ytReviews[tid] && ytReviews[tid][today];
-        if (todayStatus === 'approved' || (ytTasks[tid] && ytTasks[tid][today])) {
-          taskNames.push(ytTaskMap[tid]);
-          taskStatus = todayStatus || 'done';
-        }
-      });
-      const taskLabel = taskNames.length ? taskNames.join('、') : '—';
-      let statusHtml;
-      if (taskStatus === 'approved') statusHtml = '<span class="review-status approved">✅ 已通過</span>';
-      else if (taskStatus === 'rejected') statusHtml = '<span class="review-status rejected">❌ 拒絕</span>';
-      else if (taskStatus === 'done') statusHtml = '<span class="review-status pending">⏳ 待審核</span>';
-      else statusHtml = '<span style="color:var(--muted);font-size:12px">—</span>';
-
-      const grp = d.groupStatus || 'in';
-      const grpMap = { in: ['st-in','在群'], out: ['st-out','已退群'], lost: ['st-lost','失聯'] };
-      const [grpCls, grpLabel] = grpMap[grp] || grpMap.in;
-
-      const pay = d.payStatus || 'wait';
-      const payMap = { wait: ['st-wait','待領款'], paid: ['st-paid','已領款'], none: ['st-none','未領款'] };
-      const [payCls, payLabel] = payMap[pay] || payMap.wait;
-
-      const bonus = d.bonus || 0;
-      const note = d.note || '';
-
-      const checkins = d.checkins || {};
-      const totalDays = Object.keys(checkins).filter(k => checkins[k]).length;
-      let streak = 0;
-      const dt = new Date(today);
-      while (checkins[dateStr(dt)]) { streak++; dt.setDate(dt.getDate() - 1); }
-
-      const pw = d.password || '—';
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="mtd-uid">${uid}</td>
-        <td>
-          <span class="status-tag ${grpCls}" data-uid="${uid}" data-field="groupStatus" data-val="${grp}">${grpLabel}</span>
-        </td>
-        <td style="font-size:12px;max-width:120px;word-break:break-all">${taskLabel}</td>
-        <td>${statusHtml}</td>
-        <td class="mtd-bonus">$${bonus}</td>
-        <td>
-          <span class="status-tag ${payCls}" data-uid="${uid}" data-field="payStatus" data-val="${pay}">${payLabel}</span>
-        </td>
-        <td style="text-align:center;font-weight:700;color:var(--accent2)">${totalDays}</td>
-        <td style="text-align:center;font-weight:700;color:var(--green)">${streak}</td>
-        <td style="min-width:130px">
-          <div style="display:flex;align-items:center;gap:5px">
-            <span class="pw-display" style="font-size:12px;color:var(--accent2);font-weight:600;letter-spacing:1px">${pw}</span>
-            <button class="btn btn-sm reset-pw-btn" data-uid="${uid}" style="font-size:11px;padding:3px 8px;background:rgba(0,144,255,0.15);border:1px solid rgba(0,144,255,0.3);color:var(--accent2);white-space:nowrap">重設</button>
-          </div>
-        </td>
-        <td>
-          <input class="note-input" type="text" value="${note.replace(/"/g,'&quot;')}" placeholder="備註" data-uid="${uid}">
-        </td>
-        <td>
-          <button class="btn btn-red btn-sm" data-uid="${uid}">刪除</button>
-        </td>`;
-
-      // 群組狀態點擊循環
-      tr.querySelector('[data-field="groupStatus"]').addEventListener('click', async (e) => {
-        const el = e.currentTarget;
-        const cycle = { in: 'out', out: 'lost', lost: 'in' };
-        const next = cycle[el.dataset.val] || 'in';
-        const [cls, label] = grpMap[next];
-        el.className = `status-tag ${cls}`;
-        el.textContent = label;
-        el.dataset.val = next;
-        await fsSet(`members/${uid}`, { groupStatus: next });
-        showToast(`${uid} 群組狀態 → ${label}`);
-      });
-
-      // 領款狀態點擊循環
-      tr.querySelector('[data-field="payStatus"]').addEventListener('click', async (e) => {
-        const el = e.currentTarget;
-        const cycle = { wait: 'paid', paid: 'none', none: 'wait' };
-        const next = cycle[el.dataset.val] || 'wait';
-        const [cls, label] = payMap[next];
-        el.className = `status-tag ${cls}`;
-        el.textContent = label;
-        el.dataset.val = next;
-        await fsSet(`members/${uid}`, { payStatus: next });
-        showToast(`${uid} 領款狀態 → ${label}`);
-      });
-
-      // 備註失焦儲存
-      tr.querySelector('.note-input').addEventListener('blur', async (e) => {
-        const val = e.target.value.trim();
-        await fsSet(`members/${uid}`, { note: val });
-        showToast(`${uid} 備註已儲存`);
-      });
-
-      // 重設密碼
-      tr.querySelector('.reset-pw-btn').addEventListener('click', async () => {
-        const newPw = prompt(`重設 ${uid} 的密碼\n（留空則重設為 123456）`);
-        if (newPw === null) return; // 按取消
-        const finalPw = newPw.trim() || '123456';
-        await fsSet(`members/${uid}`, { password: finalPw });
-        tr.querySelector('.pw-display').textContent = finalPw;
-        showToast(`✅ ${uid} 密碼已重設為：${finalPw}`);
-      });
-
-      // 刪除按鈕
-      tr.querySelector('.btn-red').addEventListener('click', () => deleteMember(uid));
-      list.appendChild(tr);
-    });
-}
-
-// 篩選事件綁定（只綁一次）
-(function bindFilters() {
-  ['filter-staff','filter-group','filter-pay'].forEach(id => {
-    document.getElementById(id).addEventListener('change', renderFilteredMembers);
-  });
-  document.getElementById('filter-reset-btn').addEventListener('click', () => {
-    document.getElementById('filter-staff').value = '';
-    document.getElementById('filter-group').value = '';
-    document.getElementById('filter-pay').value = '';
-    renderFilteredMembers();
-  });
-})();
-
-async function deleteMember(uid) {
-  if (!confirm(`確定刪除 ${uid}？`)) return;
+async function renderCalendar() {
   try {
-    await fsDelete(`members/${uid}`);
-    showToast('已刪除');
-    loadAdminMembers();
-  } catch(e) {
-    showToast('刪除失敗：' + e.message, true);
-  }
-}
-
-// ── 新增單一會員 ──
-// ── 店家任務審核 ──
-async function updateStoreBadge() {
-  try {
-    const docs = await fsList('store_reviews');
-    const pending = docs.filter(({ data: d }) => d.status === 'pending').length;
-    const badge = document.getElementById('store-badge');
-    if (pending > 0) { badge.textContent = pending; badge.style.display = 'inline'; }
-    else badge.style.display = 'none';
-  } catch(e) {}
-}
-
-async function loadStoreReviews() {
-  const loading = document.getElementById('store-review-loading');
-  const list    = document.getElementById('store-review-list');
-  loading.style.display = 'block';
-  list.innerHTML = '';
-  try {
-    const docs = await fsList('store_reviews');
-    const pending = docs.filter(({ data: d }) => d.status === 'pending');
-    loading.style.display = 'none';
-    if (!pending.length) {
-      list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:30px">目前無待審核的店家回饋</div>';
-      return;
-    }
-    pending.forEach(({ id, data: r }) => {
-      const card = document.createElement('div');
-      card.style.cssText = 'background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:18px;margin-bottom:16px';
-      const qs = [
-        ['接待服務整體感受', r.q1],
-        ['店內環境與氛圍', r.q2],
-        ['印象最深刻的地方', r.q3],
-        ['商品／服務實際感受', r.q4],
-        ['店內動線與整體安排', r.q5],
-        ['是否願意再次回訪', r.q6],
-        ['如何推薦給朋友', r.q7],
-        ['其他建議', r.q8],
-      ];
-      card.innerHTML = `
-        <div style="font-size:15px;font-weight:800;color:var(--accent2);margin-bottom:4px">${r.uid}</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:14px">🏪 ${r.storeName} ／ 📅 ${r.date} ／ 送出：${r.createdAt ? r.createdAt.slice(0,16).replace('T',' ') : ''}</div>
-        ${qs.map(([q,a],i)=>`
-          <div style="margin-bottom:10px">
-            <div style="font-size:11px;font-weight:700;color:var(--accent2);margin-bottom:3px">${i+1}️⃣ ${q}</div>
-            <div style="font-size:13px;color:var(--text);background:rgba(0,0,0,0.15);border-radius:8px;padding:8px 12px;line-height:1.7">${a || '（未填寫）'}</div>
-          </div>`).join('')}
-        <div style="display:flex;gap:10px;margin-top:14px" id="store-actions-${id}">
-          <button class="btn btn-green" style="flex:1" data-sid="${id}" data-uid="${r.uid}" data-action="approve">✅ 通過 +700元</button>
-          <button class="btn btn-red"   style="flex:1" data-sid="${id}" data-uid="${r.uid}" data-action="reject">❌ 拒絕</button>
-        </div>`;
-      list.appendChild(card);
-    });
-
-    list.addEventListener('click', async (e) => {
-      const btn = e.target.closest('[data-action]');
-      if (!btn || btn.disabled) return;
-      const { action, sid, uid } = btn.dataset;
-      btn.closest(`#store-actions-${sid}`).querySelectorAll('button').forEach(b => b.disabled = true);
-
-      if (action === 'approve') {
-        btn.textContent = '處理中...';
-        try {
-          await fsSet(`store_reviews/${sid}`, { status: 'approved' });
-          const memberData = await fsGet(`members/${uid}`);
-          const newBonus = ((memberData && memberData.bonus) || 0) + 700;
-          await fsSet(`members/${uid}`, { bonus: newBonus });
-          showToast(`✅ 已通過，入帳 700 元（累積 ${newBonus} 元）`);
-          loadStoreReviews(); updateStoreBadge();
-        } catch(e) { showToast('操作失敗：' + e.message, true); }
-      }
-
-      if (action === 'reject') {
-        const modal = document.getElementById('reject-modal');
-        modal.style.display = 'flex';
-        document.getElementById('reject-reason-input').value = '';
-        document.getElementById('reject-confirm-btn').onclick = async () => {
-          const reason = document.getElementById('reject-reason-input').value;
-          if (!reason) { alert('請選擇拒絕原因'); return; }
-          modal.style.display = 'none';
-          try {
-            await fsSet(`store_reviews/${sid}`, { status: 'rejected', rejectReason: reason });
-            showToast('🚫 已拒絕');
-            loadStoreReviews(); updateStoreBadge();
-          } catch(e) { showToast('操作失敗：' + e.message, true); }
-        };
-        document.getElementById('reject-cancel-btn').onclick = () => {
-          modal.style.display = 'none';
-          btn.closest(`#store-actions-${sid}`).querySelectorAll('button').forEach(b => b.disabled = false);
-        };
-      }
-    }, { once: true });
-
-  } catch(e) {
-    loading.style.display = 'none';
-    list.innerHTML = `<div style="color:var(--red);text-align:center;padding:20px">載入失敗：${e.message}</div>`;
-  }
-}
-
-
-// ── AI 時段設定 ──
-async function loadAiSlotConfig() {
-  const config = await fsGet('ai_config/today');
-  if (config) {
-    document.getElementById('ai-slot1-input').value = config.slot1 || '';
-    document.getElementById('ai-slot2-input').value = config.slot2 || '';
-  }
-}
-
-document.getElementById('save-ai-slots-btn').addEventListener('click', async () => {
-  const slot1 = document.getElementById('ai-slot1-input').value.trim();
-  const slot2 = document.getElementById('ai-slot2-input').value.trim();
-  const btn = document.getElementById('save-ai-slots-btn');
-  const status = document.getElementById('ai-slot-status');
-  btn.textContent = '儲存中...'; btn.disabled = true;
-  try {
-    await fsSet('ai_config/today', { slot1, slot2, updatedAt: new Date().toISOString() });
-    status.textContent = '✅ 已儲存！前台會員即可看到今日時段';
-    status.style.color = 'var(--green)';
-    showToast('✅ AI時段已更新');
-  } catch(e) {
-    status.textContent = '❌ 儲存失敗：' + e.message;
-    status.style.color = 'var(--red)';
-  }
-  btn.textContent = '💾 儲存今日時段'; btn.disabled = false;
-});
-
-// ── AI 任務審核 ──
-async function updateAiBadge() {
-  try {
-    const docs = await fsList('ai_reviews');
-    const pending = docs.filter(({ data: d }) => d.status === 'pending').length;
-    const badge = document.getElementById('ai-badge');
-    if (pending > 0) { badge.textContent = pending; badge.style.display = 'inline'; }
-    else badge.style.display = 'none';
-  } catch(e) {}
-}
-
-async function loadAiReviews() {
-  const loading = document.getElementById('ai-review-loading');
-  const list    = document.getElementById('ai-review-list');
-  loading.style.display = 'block';
-  list.innerHTML = '';
-  try {
-    const docs = await fsList('ai_reviews');
-    const pending = docs.filter(({ data: d }) => d.status === 'pending');
-    loading.style.display = 'none';
-    if (!pending.length) {
-      list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:30px">目前無待審核的 AI 任務</div>';
-      return;
-    }
-    pending.forEach(({ id, data: r }) => {
-      const card = document.createElement('div');
-      card.style.cssText = 'background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:18px;margin-bottom:16px';
-      card.innerHTML = `
-        <div style="font-size:15px;font-weight:800;color:var(--accent2);margin-bottom:4px">${r.uid}</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:12px">🤖 ${r.taskName || 'AI數據任務'} ／ 📅 ${r.date} ／ 送出：${r.createdAt ? r.createdAt.slice(0,16).replace('T',' ') : ''}</div>
-        ${r.imageBase64 ? `<img src="${r.imageBase64}" style="width:100%;max-width:400px;border-radius:10px;margin-bottom:12px;display:block">` : ''}
-        ${r.note ? `<div style="background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.2);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);margin-bottom:12px"><span style="font-size:11px;font-weight:700;color:#7c3aed;display:block;margin-bottom:3px">✍️ 備註</span>${r.note}</div>` : ''}
-        <div style="display:flex;gap:10px" id="ai-actions-${id}">
-          <button class="btn btn-green" style="flex:1" data-aid="${id}" data-uid="${r.uid}" data-action="approve">✅ 通過</button>
-          <button class="btn btn-red"   style="flex:1" data-aid="${id}" data-uid="${r.uid}" data-action="reject">❌ 拒絕</button>
-        </div>`;
-      list.appendChild(card);
-    });
-
-    list.addEventListener('click', async (e) => {
-      const btn = e.target.closest('[data-action]');
-      if (!btn || btn.disabled) return;
-      const { action, aid, uid } = btn.dataset;
-      btn.closest(`#ai-actions-${aid}`).querySelectorAll('button').forEach(b => b.disabled = true);
-      if (action === 'approve') {
-        btn.textContent = '處理中...';
-        try {
-          await fsSet(`ai_reviews/${aid}`, { status: 'approved' });
-          showToast(`✅ 已通過審核`);
-          loadAiReviews(); updateAiBadge();
-        } catch(e) { showToast('操作失敗：' + e.message, true); }
-      }
-      if (action === 'reject') {
-        const modal = document.getElementById('reject-modal');
-        modal.style.display = 'flex';
-        document.getElementById('reject-reason-input').value = '';
-        document.getElementById('reject-confirm-btn').onclick = async () => {
-          const reason = document.getElementById('reject-reason-input').value;
-          if (!reason) { alert('請選擇拒絕原因'); return; }
-          modal.style.display = 'none';
-          try {
-            await fsSet(`ai_reviews/${aid}`, { status: 'rejected', rejectReason: reason });
-            showToast('🚫 已拒絕');
-            loadAiReviews(); updateAiBadge();
-          } catch(e) { showToast('操作失敗：' + e.message, true); }
-        };
-        document.getElementById('reject-cancel-btn').onclick = () => {
-          modal.style.display = 'none';
-          btn.closest(`#ai-actions-${aid}`).querySelectorAll('button').forEach(b => b.disabled = false);
-        };
-      }
-    }, { once: true });
-  } catch(e) {
-    loading.style.display = 'none';
-    list.innerHTML = `<div style="color:var(--red);text-align:center;padding:20px">載入失敗：${e.message}</div>`;
-  }
-}
-
-async function loadCustomers() {
-  const docs = await fsList('customers');
-  const select = document.getElementById('customer-select');
-  const listEl = document.getElementById('customer-list-admin');
-  // 更新下拉
-  const prev = select.value;
-  select.innerHTML = '<option value="">── 選擇客戶 ──</option>';
-  docs.forEach(({ id, data: c }) => {
-    const opt = document.createElement('option');
-    opt.value = c.name; opt.textContent = c.name; opt.dataset.id = id;
-    select.appendChild(opt);
-  });
-  if (prev) select.value = prev;
-  // 更新管理列表
-  if (!listEl) return;
-  listEl.innerHTML = '';
-  if (!docs.length) { listEl.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:10px">尚無員工名單</div>'; return; }
-  docs.forEach(({ id, data: c }) => {
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:7px 4px;border-bottom:1px solid var(--border2)';
-    row.innerHTML = `<span style="font-size:13px">${c.name}</span><button class="btn btn-red btn-sm" data-cid="${id}">刪除</button>`;
-    row.querySelector('button').addEventListener('click', async () => {
-      await fsDelete(`customers/${id}`);
-      loadCustomers();
-    });
-    listEl.appendChild(row);
-  });
-}
-
-document.getElementById('manage-customers-btn').addEventListener('click', () => {
-  const panel = document.getElementById('customer-panel');
-  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-});
-
-document.getElementById('add-customer-btn').addEventListener('click', async () => {
-  const name = document.getElementById('new-customer-name').value.trim();
-  if (!name) { showToast('請輸入客戶名稱', true); return; }
-  await fsSet(`customers/${Date.now()}`, { name });
-  document.getElementById('new-customer-name').value = '';
-  showToast('✅ 已新增員工');
-  loadCustomers();
-});
-
-document.getElementById('add-member-btn').addEventListener('click', async () => {
-  const uidRaw = document.getElementById('new-uid').value.trim().toUpperCase();
-  const pw = document.getElementById('new-pw').value.trim() || '123456';
-  const customerName = document.getElementById('customer-select').value;
-  if (!uidRaw) { showToast('請輸入會員編號', true); return; }
-  const uid = uidRaw.startsWith('U') ? uidRaw : 'U' + uidRaw;
-  const btn = document.getElementById('add-member-btn');
-  btn.textContent = '新增中...'; btn.disabled = true;
-  try {
-    const existing = await fsGet(`members/${uid}`);
-    if (existing) { showToast('此編號已存在', true); btn.textContent = '新增會員'; btn.disabled = false; return; }
-    await fsSet(`members/${uid}`, {
-      password: pw,
-      note: customerName || '',
-      checkins: {},
-      clickTasks: {},
-      ytTasks: {}
-    });
-    showToast(`✅ 已新增 ${uid}${customerName ? '（負責：' + customerName + '）' : ''}`);
-    document.getElementById('new-uid').value = '';
-    document.getElementById('new-pw').value = '';
-    document.getElementById('customer-select').value = '';
-    loadAdminMembers();
-  } catch(e) {
-    showToast('新增失敗：' + e.message, true);
-  }
-  btn.textContent = '新增會員'; btn.disabled = false;
-});
-
-// ── 批次匯入 ──
-document.getElementById('batch-import-btn').addEventListener('click', async () => {
-  const raw = document.getElementById('batch-input').value.trim();
-  if (!raw) { showToast('請輸入編號清單', true); return; }
-  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
-  let ok = 0, skip = 0, fail = 0;
-  const resultEl = document.getElementById('batch-result');
-  resultEl.style.display = 'block';
-  resultEl.textContent = '匯入中...';
-  const btn = document.getElementById('batch-import-btn');
-  btn.disabled = true;
-  for (const line of lines) {
-    const digits = line.replace(/\D/g, '');
-    if (!digits) { fail++; continue; }
-    const uid = 'U' + digits.padStart(5, '0');
-    try {
-      const existing = await fsGet(`members/${uid}`);
-      if (existing) { skip++; continue; }
-      await fsSet(`members/${uid}`, { password: '123456', checkins: {}, clickTasks: {}, ytTasks: {} });
-      ok++;
-    } catch(e) { fail++; }
-  }
-  resultEl.textContent = `✅ 新增 ${ok} 位\n⏭ 跳過 ${skip} 位（已存在）${fail ? `\n❌ 失敗 ${fail} 位` : ''}`;
-  btn.disabled = false;
-  loadAdminMembers();
-});
-
-// ── YT 影片任務管理 ──
-async function loadYtTasks() {
-  try {
-    const docs = await fsList('yt_tasks');
-    const list = document.getElementById('admin-yt-task-list');
-    list.innerHTML = '';
-    if (!docs.length) { list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px">尚無YT任務</div>'; return; }
-    docs.forEach(({ id, data: t }) => {
-      const row = document.createElement('div');
-      row.className = 'member-row';
-      row.innerHTML = `
-        <div style="flex:1;min-width:0">
-          <div class="member-uid">▶️ ${t.name}</div>
-          <div class="member-info" style="word-break:break-all">${t.url || '無連結'}</div>
-        </div>
-        <button class="btn btn-red btn-sm" style="margin-left:8px;flex-shrink:0">刪除</button>`;
-      row.querySelector('button').addEventListener('click', () => deleteYtTask(id));
-      list.appendChild(row);
-    });
-  } catch(e) {
-    showToast('讀取YT任務失敗：' + e.message, true);
-  }
-}
-
-async function deleteYtTask(id) {
-  if (!confirm('確定刪除此YT任務？')) return;
-  try {
-    await fsDelete(`yt_tasks/${id}`);
-    showToast('已刪除YT任務');
-    loadYtTasks();
-    renderQuickRegister();
-  } catch(e) {
-    showToast('刪除失敗：' + e.message, true);
-  }
-}
-
-document.getElementById('add-yt-btn').addEventListener('click', async () => {
-  const name1 = document.getElementById('yt-name1').value.trim();
-  const url1  = document.getElementById('yt-url1').value.trim();
-  const name2 = document.getElementById('yt-name2').value.trim();
-  const url2  = document.getElementById('yt-url2').value.trim();
-  if (!name1 || !url1 || !name2 || !url2) { showToast('請填寫兩部影片的名稱與連結', true); return; }
-  const btn = document.getElementById('add-yt-btn');
-  btn.textContent = '新增中...'; btn.disabled = true;
-  try {
-    const ts = Date.now();
-    await fsSet(`yt_tasks/yt_${ts}_1`, { name: name1, url: url1, createdAt: new Date().toISOString() });
-    await fsSet(`yt_tasks/yt_${ts}_2`, { name: name2, url: url2, createdAt: new Date().toISOString() });
-    showToast('✅ 已新增兩部YT任務');
-    document.getElementById('yt-name1').value = '';
-    document.getElementById('yt-url1').value = '';
-    document.getElementById('yt-name2').value = '';
-    document.getElementById('yt-url2').value = '';
-    loadYtTasks();
-    renderQuickRegister();
-  } catch(e) {
-    showToast('新增失敗：' + e.message, true);
-  }
-  btn.textContent = '新增YT影片任務'; btn.disabled = false;
-});
-
-// ── 快速登記 ──
-async function renderQuickRegister() {
-  const ytGrid = document.getElementById('quick-yt-grid');
-  ytGrid.innerHTML = '';
-  if (!isSunday()) {
-    try {
-      const ytDocs = await fsList('yt_tasks');
-      if (!ytDocs.length) {
-        ytGrid.innerHTML = '<div style="color:var(--muted);font-size:13px">尚無YT影片任務</div>';
-      } else {
-        ytDocs.forEach(({ id, data: t }) => {
-          const el = document.createElement('div');
-          el.className = 'quick-item'; el.dataset.id = id; el.dataset.type = 'yt';
-          el.textContent = t.name;
-          el.onclick = () => el.classList.toggle('selected');
-          ytGrid.appendChild(el);
-        });
-      }
-    } catch(e) { ytGrid.innerHTML = '<div style="color:var(--muted);font-size:13px">讀取失敗</div>'; }
-  } else {
-    ytGrid.innerHTML = '<div style="color:var(--muted);font-size:13px">今日（週日）無YT任務</div>';
-  }
-}
-
-document.getElementById('quick-register-btn').addEventListener('click', async () => {
-  const uidRaw = document.getElementById('quick-uid').value.trim().toUpperCase();
-  if (!uidRaw) { showToast('請輸入會員編號', true); return; }
-  const uid = uidRaw.startsWith('U') ? uidRaw : 'U' + uidRaw;
-  const today = todayStr();
-  const selected = document.querySelectorAll('#quick-yt-grid .selected');
-  if (!selected.length) { showToast('請選擇要登記的項目', true); return; }
-
-  const btn = document.getElementById('quick-register-btn');
-  btn.textContent = '登記中...'; btn.disabled = true;
-  try {
-    const data = await fsGet(`members/${uid}`);
-    if (!data) { showToast(`找不到 ${uid}`, true); btn.textContent = '✅ 確認登記'; btn.disabled = false; return; }
-    const clickTasks = data.clickTasks || {};
-    const ytTasks = data.ytTasks || {};
-
-    selected.forEach(el => {
-      const id = el.dataset.id, type = el.dataset.type;
-      if (type === 'click') {
-        if (!clickTasks[id]) clickTasks[id] = {};
-        clickTasks[id][today] = true;
-      } else {
-        if (!ytTasks[id]) ytTasks[id] = {};
-        ytTasks[id][today] = true;
-      }
-    });
-
-    await fsUpdate(`members/${uid}`, { clickTasks, ytTasks });
-    showToast(`✅ ${uid} 登記完成！`);
-    document.querySelectorAll('.quick-item.selected').forEach(el => el.classList.remove('selected'));
-    document.getElementById('quick-uid').value = '';
-  } catch(e) {
-    showToast('登記失敗：' + e.message, true);
-  }
-  btn.textContent = '✅ 確認登記'; btn.disabled = false;
-});
-
-// ── 截圖審核 ──────────────────────────────────────
-async function loadReviews() {
-  const loading = document.getElementById('review-loading');
-  const list    = document.getElementById('review-list');
-  const badge   = document.getElementById('review-badge');
-  loading.style.display = 'block';
-  list.innerHTML = '';
-  try {
-    const docs = await fsList('pending_reviews');
-    loading.style.display = 'none';
-
-    // 只顯示待審核（pending），通過/拒絕後自動消失
-    const pendingDocs = docs.filter(d => d.data.status === 'pending');
-
-    const pendingCount = pendingDocs.length;
-    if (pendingCount > 0) {
-      badge.textContent = pendingCount;
-      badge.style.display = 'inline-block';
-    } else {
-      badge.style.display = 'none';
-    }
-
-    if (!pendingDocs.length) {
-      list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px">目前沒有待審核截圖 🎉</div>';
-      return;
-    }
-
-    pendingDocs.forEach(({ id, data: r }) => {
-      const card = document.createElement('div');
-      card.className = 'review-card';
-      card.id = `rcard-${id}`;
-
-      const videoLabel = r.taskName || (r.taskId ? `影片 ${r.taskId}` : (r.slot ? `時段 ${r.slot}` : id));
-
-      card.innerHTML = `
-        <div class="review-card-header">
-          <div>
-            <div class="review-uid">${r.uid}</div>
-            <div class="review-meta">▶️ ${videoLabel} ／ 📅 ${r.date || ''} ／ 送出：${r.createdAt ? r.createdAt.slice(0,16).replace('T',' ') : ''}</div>
-          </div>
-          <span class="review-status pending">⏳ 待審核</span>
-        </div>
-        ${r.imageBase64 ? `<img src="${r.imageBase64}" style="width:100%;max-width:400px;border-radius:10px;margin-bottom:12px;display:block">` : ''}
-        ${r.invoiceBase64 ? `<div style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;color:#d4a017;margin-bottom:5px">🧾 發票</div><img src="${r.invoiceBase64}" style="width:100%;max-width:300px;border-radius:10px;display:block"></div>` : ''}
-        <div class="review-actions" id="actions-${id}">
-          <button class="btn btn-green" data-action="approve" data-rid="${id}" data-uid="${r.uid}" data-tid="${r.taskId || ''}" data-date="${r.date || ''}">✅ 通過 +100元</button>
-          <button class="btn btn-red"   data-action="reject"  data-rid="${id}" data-uid="${r.uid}" data-tid="${r.taskId || ''}" data-date="${r.date || ''}">❌ 拒絕</button>
-        </div>
-      `;
-      list.appendChild(card);
-    });
-  } catch(e) {
-    loading.style.display = 'none';
-    list.innerHTML = `<div style="color:var(--red);text-align:center;padding:20px">載入失敗：${e.message}</div>`;
-  }
-}
-
-async function approveReview(reviewId, uid, taskId, date) {
-  const btn = document.querySelector(`#actions-${reviewId} .btn-green`);
-  if (btn) { btn.textContent = '處理中...'; btn.disabled = true; }
-  try {
-    await fsSet(`pending_reviews/${reviewId}`, { status: 'approved' });
-
-    const memberData = await fsGet(`members/${uid}`);
-    const newBonus = ((memberData && memberData.bonus) || 0) + 100;
-    const updateData = { bonus: newBonus };
-
-    // 只有 taskId 有值才寫入（避免 Firestore 空 key 錯誤）
-    if (taskId) {
-      const ytTasks   = (memberData && memberData.ytTasks)   || {};
-      const ytReviews = (memberData && memberData.ytReviews) || {};
-      if (!ytTasks[taskId])   ytTasks[taskId]   = {};
-      if (!ytReviews[taskId]) ytReviews[taskId] = {};
-      ytTasks[taskId][date]   = true;
-      ytReviews[taskId][date] = 'approved';
-      updateData.ytTasks   = ytTasks;
-      updateData.ytReviews = ytReviews;
-    }
-
-    await fsSet(`members/${uid}`, updateData);
-    showToast(`✅ 已通過，入帳 100 元（累積 ${newBonus} 元）`);
-    loadReviews();
-  } catch(e) {
-    showToast('操作失敗：' + e.message, true);
-    if (btn) { btn.textContent = '✅ 通過 +100元'; btn.disabled = false; }
-  }
-}
-
-async function rejectReview(reviewId, uid, taskId, date, reason) {
-  const btn = document.querySelector(`#actions-${reviewId} .btn-red`);
-  if (btn) { btn.textContent = '處理中...'; btn.disabled = true; }
-  try {
-    await fsSet(`pending_reviews/${reviewId}`, { status: 'rejected', rejectReason: reason });
-
-    if (taskId) {
-      const memberData = await fsGet(`members/${uid}`);
-      const ytReviews  = (memberData && memberData.ytReviews) || {};
-      if (!ytReviews[taskId]) ytReviews[taskId] = {};
-      ytReviews[taskId][date] = 'rejected';
-      // 把原因也存到會員資料
-      const ytRejectReasons = (memberData && memberData.ytRejectReasons) || {};
-      if (!ytRejectReasons[taskId]) ytRejectReasons[taskId] = {};
-      ytRejectReasons[taskId][date] = reason;
-      await fsSet(`members/${uid}`, { ytReviews, ytRejectReasons });
-    }
-
-    showToast(`🚫 已拒絕，原因已通知前台`);
-    loadReviews();
-  } catch(e) {
-    showToast('操作失敗：' + e.message, true);
-    if (btn) { btn.textContent = '❌ 拒絕'; btn.disabled = false; }
-  }
-}
-
-// ── 領款申請 ──────────────────────────────────────
-async function loadWithdrawRequests() {
-  const list   = document.getElementById('withdraw-list');
-  const badge  = document.getElementById('withdraw-badge');
-  list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px">載入中...</div>';
-  try {
-    const docs = await fsList('withdrawal_requests');
-    const pending = docs.filter(d => d.data.status === 'pending');
-    const done    = docs.filter(d => d.data.status !== 'pending');
-
-    badge.textContent = pending.length;
-    badge.style.display = pending.length ? 'inline-block' : 'none';
-
-    list.innerHTML = '';
-
-    if (!docs.length) {
-      list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px">目前沒有申請 🎉</div>';
-      return;
-    }
-
-    // 待確認
-    if (pending.length) {
-      list.innerHTML += `<div class="section-title" style="margin:0 0 10px">⏳ 待確認（${pending.length} 筆）</div>`;
-      pending.forEach(({ id, data: r }) => {
-        const div = document.createElement('div');
-        div.className = 'review-card';
-        div.id = `wr-${id}`;
-        div.innerHTML = `
-          <div class="review-card-header">
-            <div>
-              <div class="review-uid">${r.uid}</div>
-              <div class="review-meta">申請金額：<strong style="color:var(--green);font-size:15px">$${r.amount}</strong> ／ ${r.createdAt ? r.createdAt.slice(0,16).replace('T',' ') : ''}</div>
-            </div>
-            <span class="review-status pending">⏳ 待確認</span>
-          </div>
-          <div class="review-actions">
-            <button class="btn btn-green" data-wid="${id}" data-uid="${r.uid}" data-amt="${r.amount}" data-action="confirm">✅ 確認發放，扣除 $${r.amount}</button>
-            <button class="btn btn-red"   data-wid="${id}" data-uid="${r.uid}" data-amt="${r.amount}" data-action="reject">❌ 拒絕</button>
-          </div>`;
-        list.appendChild(div);
-      });
-    }
-
-    // 已處理
-    if (done.length) {
-      list.innerHTML += `<div class="section-title" style="margin:16px 0 10px">✅ 已處理（最近 ${Math.min(done.length,20)} 筆）</div>`;
-      done.slice(-20).reverse().forEach(({ data: r }) => {
-        const isPaid = r.status === 'confirmed';
-        list.innerHTML += `
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,100,255,0.08)">
-            <div>
-              <div style="font-weight:700;color:var(--accent2)">${r.uid}</div>
-              <div style="font-size:11px;color:var(--muted)">$${r.amount} ／ ${r.confirmedAt ? r.confirmedAt.slice(0,16).replace('T',' ') : r.createdAt?.slice(0,16).replace('T',' ') || ''}</div>
-            </div>
-            <span class="review-status ${isPaid ? 'approved' : 'rejected'}">${isPaid ? '✅ 已發放' : '❌ 已拒絕'}</span>
-          </div>`;
-      });
-    }
-
-    // 事件委派
-    list.querySelectorAll('[data-action]').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const { action, wid, uid, amt } = btn.dataset;
-        btn.disabled = true;
-        if (action === 'confirm') await confirmWithdraw(wid, uid, parseInt(amt));
-        if (action === 'reject')  await rejectWithdraw(wid, uid);
-      });
-    });
-
-  } catch(e) {
-    list.innerHTML = `<div style="color:var(--red);text-align:center;padding:20px">讀取失敗：${e.message}</div>`;
-  }
-}
-
-async function confirmWithdraw(wid, uid, amount) {
-  try {
-    const memberData = await fsGet(`members/${uid}`);
-    const bonus = (memberData && memberData.bonus) || 0;
-    if (amount > bonus) {
-      showToast(`⚠️ ${uid} 獎金不足（餘額 $${bonus}）`, true);
-      loadWithdrawRequests();
-      return;
-    }
-    const newBonus = bonus - amount;
-    await fsSet(`members/${uid}`, { bonus: newBonus });
-    await fsSet(`withdrawal_requests/${wid}`, {
-      status: 'confirmed',
-      confirmedAt: new Date().toISOString(),
-      bonusAfter: newBonus,
-    });
-    showToast(`✅ 已確認發放 $${amount}，${uid} 剩餘 $${newBonus}`);
-    loadWithdrawRequests();
-    loadAdminMembers();
-  } catch(e) {
-    showToast('操作失敗：' + e.message, true);
-  }
-}
-
-async function rejectWithdraw(wid, uid) {
-  try {
-    await fsSet(`withdrawal_requests/${wid}`, {
-      status: 'rejected',
-      confirmedAt: new Date().toISOString(),
-    });
-    showToast(`🚫 已拒絕 ${uid} 的申請`);
-    loadWithdrawRequests();
-  } catch(e) {
-    showToast('操作失敗：' + e.message, true);
-  }
-}
-
-// ── 統計 ──
-async function loadMemberStats() {
-  try {
-    const docs = await fsList('members');
-    const list = document.getElementById('stats-list');
-    list.innerHTML = '';
+    const data = await fsGet(`members/${currentUID}`);
+    const checkins = (data && data.checkins) || {};
     const today = todayStr();
-    const members = [];
-    docs.forEach(({ id: uid, data: d }) => {
-      const checkins = d.checkins || {};
-      const total = Object.keys(checkins).filter(k => checkins[k]).length;
-      let streak = 0, dt = new Date(today);
-      while (checkins[dateStr(dt)]) { streak++; dt.setDate(dt.getDate() - 1); }
-      members.push({ uid, total, streak, checkedToday: !!checkins[today] });
+    const totalCheckins = Object.keys(checkins).filter(k => checkins[k]).length;
+    let streak = 0, d = new Date(today);
+    while (checkins[dateStr(d)]) { streak++; d.setDate(d.getDate() - 1); }
+    document.getElementById('stat-total').textContent = totalCheckins;
+    document.getElementById('stat-streak').textContent = streak;
+    document.getElementById('cal-month-label').textContent = `${calYear}年${calMonth+1}月`;
+
+    const firstDay = new Date(calYear, calMonth, 1);
+    const lastDay  = new Date(calYear, calMonth+1, 0);
+    const startDow = firstDay.getDay();
+    const grid = document.getElementById('cal-grid');
+    grid.innerHTML = '';
+    ['日','一','二','三','四','五','六'].forEach(d => {
+      const el = document.createElement('div'); el.className = 'cal-day-label'; el.textContent = d; grid.appendChild(el);
     });
-    members.sort((a, b) => b.total - a.total);
-    if (!members.length) { list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px">尚無資料</div>'; return; }
-    members.forEach((m, i) => {
-      list.innerHTML += `
-        <div class="member-row">
-          <div>
-            <div class="member-uid">#${i+1} ${m.uid} ${m.checkedToday ? '<span style="color:var(--green);font-size:10px;margin-left:6px">● 今日已簽</span>' : ''}</div>
-            <div class="member-info">累積 ${m.total} 天 ｜ 連續 ${m.streak} 天</div>
+    for (let i = 0; i < startDow; i++) {
+      const el = document.createElement('div'); el.className = 'cal-day empty'; grid.appendChild(el);
+    }
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+      const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      const dow = new Date(calYear, calMonth, day).getDay();
+      const isSun = dow === 0;
+      const el = document.createElement('div'); el.className = 'cal-day'; el.textContent = day;
+      if (isSun) { el.style.opacity = '0.3'; el.style.color = 'var(--muted)'; }
+      if (!isSun && checkins[ds]) el.classList.add('checked');
+      if (ds === today) { el.classList.add('today'); if (!checkins[ds] && !isSun) el.classList.add('can-checkin'); }
+      grid.appendChild(el);
+    }
+    const btn = document.getElementById('checkin-btn');
+    const todayIsSunday = new Date().getDay() === 0;
+    if (todayIsSunday) { btn.textContent = '🚫 週日不開放簽到'; btn.disabled = true; }
+    else if (checkins[today]) { btn.textContent = '✅ 今日已簽到'; btn.disabled = true; }
+    else { btn.textContent = '📡 立即簽到'; btn.disabled = false; btn.onclick = () => doCheckin(today); }
+    document.getElementById('cal-prev').onclick = () => { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar(); };
+    document.getElementById('cal-next').onclick = () => { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar(); };
+  } catch(e) {
+    showToast('載入失敗：' + e.message, true);
+  }
+}
+
+async function doCheckin(today) {
+  const btn = document.getElementById('checkin-btn');
+  if (new Date().getDay() === 0) { showToast('週日不開放簽到', true); return; }
+  btn.textContent = '簽到中...'; btn.disabled = true;
+  try {
+    const data = await fsGet(`members/${currentUID}`);
+    const checkins = (data && data.checkins) || {};
+    if (checkins[today]) { showToast('今日已簽到', true); renderCalendar(); return; }
+    checkins[today] = true;
+    await fsUpdate(`members/${currentUID}`, { checkins, lastCheckin: today });
+    showToast('✅ 簽到成功！');
+    renderCalendar();
+  } catch(e) {
+    showToast('簽到失敗：' + e.message, true);
+    btn.textContent = '📡 立即簽到'; btn.disabled = false;
+  }
+}
+
+async function renderTasks() {
+  try {
+    const today = todayStr();
+    const memberData = await fsGet(`members/${currentUID}`);
+    const ytTasks         = (memberData && memberData.ytTasks)         || {};
+    const ytReviews       = (memberData && memberData.ytReviews)       || {};
+    const ytRejectReasons = (memberData && memberData.ytRejectReasons) || {};
+    const bonus           = (memberData && memberData.bonus)           || 0;
+
+    // 獎金卡
+    document.getElementById('global-bonus-bar').style.display = 'flex';
+    document.getElementById('global-bonus-amount').textContent = bonus;
+
+
+    // YT 任務 — 每部影片各自上傳截圖
+    const ytDocs = await fsList('yt_tasks');
+    const ytEl = document.getElementById('yt-slots-list');
+    ytEl.innerHTML = '';
+
+    if (isSunday()) {
+      ytEl.innerHTML = '<div class="task-card"><div class="task-name" style="color:var(--muted)">📅 今日（週日）無 YT 任務</div></div>';
+      return;
+    }
+    if (!ytDocs.length) {
+      ytEl.innerHTML = '<div class="task-card"><div class="task-name" style="color:var(--muted)">目前沒有 YT 影片任務</div></div>';
+      return;
+    }
+
+    ytDocs.forEach(({ id: taskId, data: t }, idx) => {
+      // 每2部自動分時段標籤顯示用
+      const slotNum = Math.floor(idx / 2) + 1;
+      // reviewStatus 以 ytReviews 為主（後台審核寫入）
+      const reviewStatus = (ytReviews[taskId] && ytReviews[taskId][today]) || null;
+      // isDone = 後台已通過（ytReviews approved）
+      const isDone = reviewStatus === 'approved';
+
+      let badgeClass = 'todo', badgeText = '未上傳';
+      if (isDone)                          { badgeClass = 'approved'; badgeText = '✅ 已通過'; }
+      else if (reviewStatus === 'pending') { badgeClass = 'pending';  badgeText = '⏳ 審核中'; }
+      else if (reviewStatus === 'rejected'){ badgeClass = 'rejected'; badgeText = '❌ 已拒絕'; }
+
+      const section = document.createElement('div');
+      section.className = 'slot-section';
+
+      const canUpload = !isDone && reviewStatus !== 'pending';
+      const rejectReason = reviewStatus === 'rejected' ? ((ytRejectReasons[taskId] && ytRejectReasons[taskId][today]) || '') : '';
+      const uploadHTML = canUpload ? `
+        <div class="upload-area" id="upload-area-${taskId}">
+          <input type="file" accept="image/*" id="file-input-${taskId}">
+          <div class="upload-area-hint">
+            <div class="uicon">📸</div>
+            <div>上傳截圖（按讚＋訂閱）</div>
+            <div style="font-size:10px;margin-top:3px">送出後等候審核，通過入帳 <strong style="color:var(--green)">100元</strong></div>
           </div>
-        </div>`;
+          <img class="upload-preview" id="preview-${taskId}" alt="預覽">
+        </div>
+        <textarea id="comment-${taskId}" placeholder="✍️ 請輸入觀看心得（至少10字）..." style="width:100%;margin-top:10px;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(0,144,255,0.3);border-radius:9px;color:var(--text);font-size:13px;font-family:inherit;resize:vertical;min-height:80px;outline:none;box-sizing:border-box"></textarea>
+        <button class="upload-submit-btn" id="submit-btn-${taskId}">📤 送出截圖與心得等候審核</button>
+        ${rejectReason ? `<div style="background:rgba(255,95,126,0.08);border:1px solid rgba(255,95,126,0.3);border-radius:9px;padding:10px 14px;margin-top:8px"><div style="color:var(--red);font-size:12px;font-weight:700;margin-bottom:4px">⚠️ 拒絕原因</div><div style="color:#c0392b;font-size:13px">${rejectReason}</div></div>` : '<div style="color:var(--red);font-size:11px;margin-top:6px;text-align:center">⚠️ 截圖或心得不符，請重新上傳</div>'}
+      ` : '';
+
+      section.innerHTML = `
+        <div class="slot-label">
+          <span>時段${slotNum} ▶️ ${t.name}</span>
+          <span class="slot-badge ${badgeClass}">${badgeText}</span>
+        </div>
+        ${t.url ? `<a class="yt-watch-btn" href="${t.url}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:${canUpload?'10px':'0'}">▶ 前往觀看</a>` : ''}
+        ${uploadHTML}
+      `;
+
+      ytEl.appendChild(section);
+
+      if (!canUpload) return;
+
+      const fileInput = document.getElementById(`file-input-${taskId}`);
+      const preview   = document.getElementById(`preview-${taskId}`);
+      const submitBtn = document.getElementById(`submit-btn-${taskId}`);
+
+      fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+        submitBtn.style.display = 'block';
+      });
+
+      submitBtn.addEventListener('click', () => {
+        const comment = document.getElementById(`comment-${taskId}`);
+        uploadScreenshot(taskId, t.name, fileInput, submitBtn, comment);
+      });
     });
   } catch(e) {
-    showToast('讀取統計失敗：' + e.message, true);
+    showToast('載入任務失敗：' + e.message, true);
+  }
+}
+
+// ── 申請領款 ──────────────────────────────────────
+document.getElementById('global-withdraw-btn').addEventListener('click', async () => {
+  const panel = document.getElementById('withdraw-panel');
+  const isOpen = panel.style.display !== 'none';
+  if (!isOpen) {
+    // 檢查是否已有待審核申請
+    try {
+      const reqs = await fsList('withdrawal_requests');
+      const hasPending = reqs.some(r => r.data.uid === currentUID && r.data.status === 'pending');
+      document.getElementById('withdraw-pending-notice').style.display = hasPending ? 'block' : 'none';
+      document.getElementById('withdraw-submit-btn').disabled = hasPending;
+    } catch(e) {}
+  }
+  panel.style.display = isOpen ? 'none' : 'block';
+});
+
+document.getElementById('withdraw-submit-btn').addEventListener('click', async () => {
+  const amt = parseInt(document.getElementById('withdraw-amount').value);
+  if (!amt || amt <= 0) { showToast('請輸入有效金額', true); return; }
+
+  const memberData = await fsGet(`members/${currentUID}`);
+  const bonus = (memberData && memberData.bonus) || 0;
+  if (amt > bonus) { showToast(`金額超過獎金餘額（$${bonus}）`, true); return; }
+
+  const btn = document.getElementById('withdraw-submit-btn');
+  btn.textContent = '送出中...'; btn.disabled = true;
+  try {
+    const reqId = `wr_${currentUID}_${Date.now()}`;
+    await fsUpdate(`withdrawal_requests/${reqId}`, {
+      uid: currentUID,
+      amount: amt,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+    });
+    showToast('✅ 申請已送出，等待管理員確認');
+    document.getElementById('withdraw-panel').style.display = 'none';
+    document.getElementById('withdraw-amount').value = '';
+  } catch(e) {
+    showToast('送出失敗：' + e.message, true);
+    btn.textContent = '送出申請'; btn.disabled = false;
+  }
+});
+
+// 壓縮圖片為 base64
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const MAX = 800;
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+        else       { w = Math.round(w * MAX / h); h = MAX; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL('image/jpeg', 0.7));
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+async function uploadScreenshot(taskId, taskName, fileInput, submitBtn, commentEl) {
+  const file = fileInput.files[0];
+  if (!file) { showToast('請先選擇截圖', true); return; }
+  const comment = commentEl ? commentEl.value.trim() : '';
+  if (comment.length < 10) { showToast('請輸入至少10字的觀看心得', true); return; }
+  submitBtn.textContent = '檢查中...'; submitBtn.disabled = true;
+  try {
+    const today = todayStr();
+
+    // 防重複：先檢查目前狀態
+    const memberData = await fsGet(`members/${currentUID}`);
+    const ytReviews  = (memberData && memberData.ytReviews) || {};
+    const currentStatus = (ytReviews[taskId] && ytReviews[taskId][today]) || null;
+    if (currentStatus === 'pending') {
+      showToast('此影片今日已送出，請等候審核結果', true);
+      submitBtn.textContent = '📤 送出截圖與心得等候審核';
+      submitBtn.disabled = false;
+      return;
+    }
+    if (currentStatus === 'approved') {
+      showToast('此影片今日已通過，無需重複送出', true);
+      submitBtn.textContent = '📤 送出截圖與心得等候審核';
+      submitBtn.disabled = false;
+      renderTasks();
+      return;
+    }
+
+    submitBtn.textContent = '壓縮中...';
+    const base64   = await compressImage(file);
+    const reviewId = `${currentUID}_${taskId}_${today}`;
+
+    await fsUpdate(`pending_reviews/${reviewId}`, {
+      uid:         currentUID,
+      taskId,
+      taskName,
+      date:        today,
+      imageBase64: base64,
+      comment:     comment,
+      status:      'pending',
+      createdAt:   new Date().toISOString(),
+    });
+
+    // 更新會員 ytReviews 狀態
+    if (!ytReviews[taskId]) ytReviews[taskId] = {};
+    ytReviews[taskId][today] = 'pending';
+    await fsUpdate(`members/${currentUID}`, { ytReviews });
+
+    showToast('✅ 截圖與心得已送出，等候審核！');
+    renderTasks();
+  } catch(e) {
+    showToast('上傳失敗：' + e.message, true);
+    submitBtn.textContent = '📤 送出截圖與心得等候審核';
+    submitBtn.disabled = false;
   }
 }
 </script>
-<!-- 拒絕原因彈窗 -->
-<div id="reject-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center">
-  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:24px;max-width:420px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.3)">
-    <div style="font-weight:700;font-size:16px;color:var(--red);margin-bottom:14px">❌ 選擇拒絕原因</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:10px">此原因將顯示給前台會員查看</div>
-    <select id="reject-reason-input" style="width:100%;padding:12px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;color:var(--text);font-size:14px;font-family:inherit;outline:none;cursor:pointer">
-      <option value="">── 請選擇原因 ──</option>
-      <option value="退回原因：截圖畫面不完整">退回原因：截圖畫面不完整</option>
-      <option value="退回原因：未按訂閱與讚">退回原因：未按訂閱與讚</option>
-      <option value="退回原因：未填寫心得">退回原因：未填寫心得</option>
-      <option value="退回原因：心得填寫過於簡短">退回原因：心得填寫過於簡短</option>
-    </select>
-    <div style="display:flex;gap:10px;margin-top:14px">
-      <button id="reject-cancel-btn" class="btn" style="flex:1;background:var(--surface2);color:var(--muted)">取消</button>
-      <button id="reject-confirm-btn" class="btn btn-red" style="flex:1">確認拒絕</button>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
