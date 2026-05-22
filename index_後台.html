@@ -305,6 +305,9 @@ textarea { resize: vertical; min-height: 100px; }
   <div class="admin-pane" id="pane-review">
     <div class="card">
       <h4>🔍 待審核截圖</h4>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+        <button id="approve-all-review-btn" class="btn btn-green" style="font-size:13px;padding:8px 20px">✅ 一鍵全部通過</button>
+      </div>
       <div id="review-loading" style="color:var(--muted);text-align:center;padding:20px">載入中...</div>
       <div id="review-list"></div>
     </div>
@@ -321,6 +324,9 @@ textarea { resize: vertical; min-height: 100px; }
   <div class="admin-pane" id="pane-ai-review">
     <div class="card">
       <h4>🤖 AI任務審核</h4>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+        <button id="approve-all-ai-btn" class="btn btn-green" style="font-size:13px;padding:8px 20px">✅ 一鍵全部通過</button>
+      </div>
       <div id="ai-review-loading" style="color:var(--muted);text-align:center;padding:20px">載入中...</div>
       <div id="ai-review-list"></div>
     </div>
@@ -1226,7 +1232,6 @@ async function approveReview(reviewId, uid, taskId, date) {
     const newBonus = ((memberData && memberData.bonus) || 0) + 100;
     const updateData = { bonus: newBonus };
 
-    // 只有 taskId 有值才寫入（避免 Firestore 空 key 錯誤）
     if (taskId) {
       const ytTasks   = (memberData && memberData.ytTasks)   || {};
       const ytReviews = (memberData && memberData.ytReviews) || {};
@@ -1246,6 +1251,68 @@ async function approveReview(reviewId, uid, taskId, date) {
     if (btn) { btn.textContent = '✅ 通過 +100元'; btn.disabled = false; }
   }
 }
+
+// ── 一鍵全部通過（截圖審核）──
+document.getElementById('approve-all-review-btn').addEventListener('click', async () => {
+  if (!confirm('確定要一鍵通過所有待審核截圖？')) return;
+  const btn = document.getElementById('approve-all-review-btn');
+  btn.textContent = '處理中...'; btn.disabled = true;
+  try {
+    const docs = await fsList('pending_reviews');
+    const pending = docs.filter(({ data: d }) => d.status === 'pending');
+    if (!pending.length) { showToast('目前沒有待審核項目'); btn.textContent = '✅ 一鍵全部通過'; btn.disabled = false; return; }
+    let count = 0;
+    for (const { id, data: r } of pending) {
+      try {
+        await fsSet(`pending_reviews/${id}`, { status: 'approved' });
+        const memberData = await fsGet(`members/${r.uid}`);
+        const newBonus = ((memberData && memberData.bonus) || 0) + 100;
+        const updateData = { bonus: newBonus };
+        if (r.taskId) {
+          const ytTasks   = (memberData && memberData.ytTasks)   || {};
+          const ytReviews = (memberData && memberData.ytReviews) || {};
+          if (!ytTasks[r.taskId])   ytTasks[r.taskId]   = {};
+          if (!ytReviews[r.taskId]) ytReviews[r.taskId] = {};
+          ytTasks[r.taskId][r.date]   = true;
+          ytReviews[r.taskId][r.date] = 'approved';
+          updateData.ytTasks   = ytTasks;
+          updateData.ytReviews = ytReviews;
+        }
+        await fsSet(`members/${r.uid}`, updateData);
+        count++;
+      } catch(e) { console.error(e); }
+    }
+    showToast(`✅ 已全部通過！共 ${count} 筆，各入帳 100 元`);
+    loadReviews();
+  } catch(e) {
+    showToast('操作失敗：' + e.message, true);
+  }
+  btn.textContent = '✅ 一鍵全部通過'; btn.disabled = false;
+});
+
+// ── 一鍵全部通過（AI任務審核）──
+document.getElementById('approve-all-ai-btn').addEventListener('click', async () => {
+  if (!confirm('確定要一鍵通過所有待審核 AI 任務？')) return;
+  const btn = document.getElementById('approve-all-ai-btn');
+  btn.textContent = '處理中...'; btn.disabled = true;
+  try {
+    const docs = await fsList('ai_reviews');
+    const pending = docs.filter(({ data: d }) => d.status === 'pending');
+    if (!pending.length) { showToast('目前沒有待審核項目'); btn.textContent = '✅ 一鍵全部通過'; btn.disabled = false; return; }
+    let count = 0;
+    for (const { id } of pending) {
+      try {
+        await fsSet(`ai_reviews/${id}`, { status: 'approved' });
+        count++;
+      } catch(e) { console.error(e); }
+    }
+    showToast(`✅ 已全部通過！共 ${count} 筆`);
+    loadAiReviews(); updateAiBadge();
+  } catch(e) {
+    showToast('操作失敗：' + e.message, true);
+  }
+  btn.textContent = '✅ 一鍵全部通過'; btn.disabled = false;
+});
 
 async function rejectReview(reviewId, uid, taskId, date, reason) {
   const btn = document.querySelector(`#actions-${reviewId} .btn-red`);
