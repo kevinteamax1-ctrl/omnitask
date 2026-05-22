@@ -1179,6 +1179,13 @@ async function loadReviews() {
     // 只顯示待審核（pending），通過/拒絕後自動消失
     const pendingDocs = docs.filter(d => d.data.status === 'pending');
 
+    // 偵測重複：同一 uid+taskId 出現超過一次
+    const taskCount = {};
+    pendingDocs.forEach(({ data: r }) => {
+      const key = `${r.uid}_${r.taskId}`;
+      taskCount[key] = (taskCount[key] || 0) + 1;
+    });
+
     const pendingCount = pendingDocs.length;
     if (pendingCount > 0) {
       badge.textContent = pendingCount;
@@ -1198,11 +1205,12 @@ async function loadReviews() {
       card.id = `rcard-${id}`;
 
       const videoLabel = r.taskName || (r.taskId ? `影片 ${r.taskId}` : (r.slot ? `時段 ${r.slot}` : id));
+      const isDuplicate = r.taskId && (taskCount[`${r.uid}_${r.taskId}`] > 1);
 
       card.innerHTML = `
         <div class="review-card-header">
           <div>
-            <div class="review-uid">${r.uid}</div>
+            <div class="review-uid">${r.uid}${isDuplicate ? ' <span style="background:#ffc800;color:#000;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;margin-left:6px">⚠️ 重複上傳</span>' : ''}</div>
             <div class="review-meta">▶️ ${videoLabel} ／ 📅 ${r.date || ''} ／ 送出：${r.createdAt ? r.createdAt.slice(0,16).replace('T',' ') : ''}</div>
           </div>
           <span class="review-status pending">⏳ 待審核</span>
