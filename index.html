@@ -6,163 +6,111 @@
 <title>OmniTask 任鏈科技 × clickworker 會員系統</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Orbitron:wght@700;900&display=swap');
+:root{--bg:#eef2f7;--surface:rgba(255,255,255,0.92);--surface2:rgba(240,245,252,0.97);--border:rgba(100,140,200,0.18);--border2:rgba(80,130,210,0.28);--accent:#2272e8;--accent2:#1a9fd4;--accent3:#1655c0;--green:#0aab6e;--red:#e03f5e;--text:#1a2540;--muted:#7a90b0;--radius:16px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 20% 50%,rgba(34,114,232,0.07) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(26,159,212,0.06) 0%,transparent 50%);pointer-events:none}
+body::after{content:'';position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(100,140,200,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(100,140,200,0.06) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;position:relative;z-index:1;padding:20px}
+.auth-wrap{width:100%;max-width:400px}
+.brand-header{text-align:center;margin-bottom:28px}
+.brand-logo-box{display:inline-flex;align-items:center;gap:10px;background:rgba(0,144,255,0.08);border:1px solid var(--border2);border-radius:14px;padding:10px 20px;margin-bottom:14px;box-shadow:0 0 30px rgba(0,144,255,0.15)}
+.brand-dot{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:18px}
+.brand-name{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:var(--accent3);letter-spacing:1px}
+.brand-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.brand-header h2{font-size:13px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.auth-card{background:var(--surface);border:1px solid var(--border2);border-radius:22px;padding:36px 32px;backdrop-filter:blur(20px);box-shadow:0 0 60px rgba(0,100,255,0.12),0 8px 32px rgba(30,70,160,0.1);position:relative;overflow:hidden}
+.auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent)}
+.auth-card h1{font-size:20px;font-weight:800;color:var(--text);margin-bottom:6px;text-align:center;letter-spacing:.5px}
+.auth-card>p{color:var(--muted);font-size:13px;margin-bottom:26px;text-align:center}
+.field-label{display:block;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:7px;margin-top:16px}
+.auth-card input{width:100%;padding:13px 16px;background:rgba(255,255,255,0.8);border:1px solid var(--border2);border-radius:11px;color:var(--text);font-size:15px;outline:none;font-family:inherit;transition:border-color .2s,box-shadow .2s}
+.auth-card input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,144,255,0.15)}
+.auth-card input::placeholder{color:rgba(85,119,170,0.7)}
+.auth-login-btn{width:100%;padding:14px;margin-top:22px;background:linear-gradient(135deg,#0aab6e,#2272e8);border:none;border-radius:14px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.5px;box-shadow:0 4px 20px rgba(0,160,120,0.3);transition:transform .15s}
+.auth-login-btn:hover{transform:translateY(-1px)}
+.auth-login-btn:disabled{opacity:0.6;cursor:default;transform:none}
+#auth-error{color:var(--red);font-size:13px;margin-top:12px;text-align:center;min-height:20px}
+#member-app{display:none;position:relative;z-index:1}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:52px;background:rgba(255,255,255,0.95);border-bottom:1px solid var(--border2);backdrop-filter:blur(16px);position:sticky;top:0;z-index:100}
+.top-bar-brand{display:flex;align-items:center;gap:8px}
+.top-bar-brand .tb-dot{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:13px}
+.top-bar-brand h2{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;color:var(--accent3)}
+.top-badge{background:linear-gradient(135deg,var(--accent3),var(--accent));color:#fff;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
+.logout-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:4px 10px;border-radius:7px;font-size:11px;cursor:pointer;font-family:inherit;transition:all .2s}
+.logout-btn:hover{border-color:var(--red);color:var(--red)}
+.tabs{display:flex;background:rgba(240,245,252,0.9);border-bottom:1px solid var(--border);backdrop-filter:blur(10px)}
+.tab-btn{flex:1;padding:11px 8px;text-align:center;font-size:12px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;font-family:inherit}
+.tab-btn.active{color:var(--accent2);border-bottom-color:var(--accent2)}
+.tab-pane{display:none;padding:14px}
+.tab-pane.active{display:block}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat-card{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:12px;text-align:center;backdrop-filter:blur(10px);position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.stat-card .num{font-family:'Orbitron',sans-serif;font-size:26px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-card .lbl{font-size:10px;color:var(--muted);margin-top:2px}
+.cal-wrap{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:12px;margin-bottom:12px;backdrop-filter:blur(10px)}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-header h3{font-size:13px;font-weight:700;color:var(--accent2);letter-spacing:.5px}
+.cal-nav{background:transparent;border:1px solid var(--border2);color:var(--accent2);padding:3px 10px;border-radius:7px;cursor:pointer;font-size:14px;transition:all .2s}
+.cal-nav:hover{background:rgba(0,144,255,0.15)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day-label{text-align:center;font-size:9px;color:var(--muted);padding:2px 0;font-weight:700}
+.cal-day{height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:11px;font-weight:500;position:relative;background:rgba(10,25,55,0.5);border:1px solid rgba(0,100,255,0.06);cursor:default;transition:all .2s}
+.cal-day.empty{background:transparent;border-color:transparent}
+.cal-day.today{border-color:var(--accent);color:var(--accent2);font-weight:700}
+.cal-day.checked{background:linear-gradient(135deg,rgba(0,229,160,0.3),rgba(0,229,160,0.12));color:var(--green);font-weight:700;border-color:rgba(0,229,160,0.5)}
+.cal-day.checked::after{content:'✓';font-size:6px;position:absolute;bottom:1px}
+.cal-day.can-checkin{cursor:pointer;border-color:var(--accent);animation:calPulse 2s infinite}
+@keyframes calPulse{0%,100%{border-color:var(--accent);box-shadow:0 0 4px rgba(0,144,255,0.3)}50%{border-color:var(--accent2);box-shadow:0 0 10px rgba(0,200,255,0.5)}}
+.checkin-btn{width:100%;padding:13px;background:linear-gradient(135deg,#00b894,#00e5a0);border:none;border-radius:11px;color:#fff;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:1px;box-shadow:0 4px 20px rgba(0,229,160,0.35);transition:transform .15s;margin-bottom:6px}
+.checkin-btn:hover{transform:translateY(-1px)}
+.checkin-btn:disabled{background:rgba(15,28,60,0.8);color:var(--muted);cursor:default;box-shadow:none;transform:none}
+.section-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent)}
+.task-card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.task-card .task-name{font-size:13px;font-weight:600}
+.task-card .task-meta{font-size:10px;color:var(--muted);margin-top:2px}
+.task-status{padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
+.task-status.done{background:rgba(0,229,160,0.12);color:var(--green);border:1px solid rgba(0,229,160,0.3)}
+.task-status.pending{background:rgba(0,144,255,0.08);color:var(--muted);border:1px solid var(--border)}
+.yt-watch-btn{display:inline-block;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;background:linear-gradient(135deg,#c00,#ff4444);color:#fff;border:none;cursor:pointer;font-family:inherit;text-decoration:none;transition:transform .15s,box-shadow .15s;box-shadow:0 2px 10px rgba(255,50,50,0.3);white-space:nowrap}
+.yt-watch-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,50,50,0.45)}
+.slot-section{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px;margin-bottom:12px;position:relative;overflow:hidden}
+.slot-section::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#c00,#ff4444,#ff6b6b)}
+.slot-label{font-size:11px;font-weight:800;color:var(--accent2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.slot-badge{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
+.slot-badge.approved{background:rgba(0,229,160,0.15);color:var(--green);border:1px solid rgba(0,229,160,0.4)}
+.slot-badge.pending{background:rgba(255,200,0,0.1);color:#ffc800;border:1px solid rgba(255,200,0,0.3)}
+.slot-badge.rejected{background:rgba(255,95,126,0.12);color:var(--red);border:1px solid rgba(255,95,126,0.3)}
+.slot-badge.todo{background:rgba(0,144,255,0.08);color:var(--muted);border:1px solid var(--border)}
+.upload-area{border:2px dashed rgba(0,144,255,0.3);border-radius:10px;padding:14px;text-align:center;margin-top:10px;position:relative;cursor:pointer;transition:all .2s}
+.upload-area:hover{border-color:var(--accent);background:rgba(0,144,255,0.05)}
+.upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-area-hint{font-size:12px;color:var(--muted);pointer-events:none}
+.upload-area-hint .uicon{font-size:22px;margin-bottom:4px}
+.upload-preview{width:100%;max-height:150px;object-fit:cover;border-radius:8px;margin-top:8px;display:none}
+.upload-submit-btn{width:100%;padding:10px;margin-top:8px;background:linear-gradient(135deg,#005aff,#0090ff);border:none;border-radius:9px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:none;transition:transform .15s;box-shadow:0 3px 12px rgba(0,144,255,0.35)}
+.upload-submit-btn:hover{transform:translateY(-1px)}
+.upload-submit-btn:disabled{opacity:0.6;cursor:default;transform:none}
+.toast{position:fixed;bottom:24px;left:50%;background:linear-gradient(135deg,#00b894,var(--green));color:#fff;padding:11px 24px;border-radius:30px;font-weight:700;font-size:13px;opacity:0;transition:opacity .3s,transform .3s;z-index:9999;pointer-events:none;box-shadow:0 4px 20px rgba(0,229,160,0.4);transform:translateX(-50%) translateY(10px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.error{background:linear-gradient(135deg,#c0392b,var(--red));color:#fff}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
-:root {
-  --bg: #eef2f7;
-  --surface: rgba(255,255,255,0.92);
-  --surface2: rgba(240,245,252,0.97);
-  --border: rgba(100,140,200,0.18);
-  --border2: rgba(80,130,210,0.28);
-  --accent: #2272e8;
-  --accent2: #1a9fd4;
-  --accent3: #1655c0;
-  --green: #0aab6e;
-  --red: #e03f5e;
-  --text: #1a2540;
-  --muted: #7a90b0;
-  --radius: 16px;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
-body::before { content: ''; position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse at 20% 50%, rgba(34,114,232,0.07) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(26,159,212,0.06) 0%, transparent 50%); pointer-events: none; }
-body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(100,140,200,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(100,140,200,0.06) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; }
+.travel-filter{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border2);background:var(--surface);color:var(--muted);cursor:pointer;white-space:nowrap;transition:all .2s;font-family:inherit}
+.active-filter{background:linear-gradient(135deg,#0aab6e,#2272e8);color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(10,171,110,0.3)}
+.travel-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.travel-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,144,255,0.1)}
+.travel-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#0aab6e,#2272e8)}
+.travel-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.travel-card-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.5;flex:1}
+.travel-price{font-size:13px;font-weight:800;color:#e03f5e;white-space:nowrap}
+.travel-card-meta{display:flex;gap:8px;flex-wrap:wrap}
+.travel-tag{font-size:10px;padding:3px 9px;border-radius:20px;font-weight:600}
 
-/* AUTH */
-#auth-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; position: relative; z-index: 1; padding: 20px; }
-.auth-wrap { width: 100%; max-width: 400px; }
-.brand-header { text-align: center; margin-bottom: 28px; }
-.brand-logo-box { display: inline-flex; align-items: center; gap: 10px; background: rgba(0,144,255,0.08); border: 1px solid var(--border2); border-radius: 14px; padding: 10px 20px; margin-bottom: 14px; box-shadow: 0 0 30px rgba(0,144,255,0.15); }
-.brand-dot { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 18px; }
-.brand-name { font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 700; color: var(--accent3); letter-spacing: 1px; }
-.brand-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.brand-header h2 { font-size: 13px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
-.auth-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 22px; padding: 36px 32px; backdrop-filter: blur(20px); box-shadow: 0 0 60px rgba(0,100,255,0.12), 0 8px 32px rgba(30,70,160,0.1); position: relative; overflow: hidden; }
-.auth-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent); }
-.auth-card h1 { font-size: 18px; font-weight: 700; color: var(--accent2); margin-bottom: 6px; text-align: center; letter-spacing: 1px; }
-.auth-card > p { color: var(--muted); font-size: 13px; margin-bottom: 26px; text-align: center; }
-.field-label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 7px; margin-top: 16px; }
-.auth-card input { width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.8); border: 1px solid var(--border2); border-radius: 11px; color: var(--text); font-size: 15px; outline: none; font-family: inherit; transition: border-color .2s, box-shadow .2s; }
-.auth-card input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,144,255,0.15); }
-.auth-card input::placeholder { color: rgba(85,119,170,0.7); }
-.auth-login-btn { width: 100%; padding: 14px; margin-top: 22px; background: linear-gradient(135deg, var(--accent3), var(--accent), var(--accent2)); border: none; border-radius: 11px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 1px; box-shadow: 0 4px 24px rgba(0,144,255,0.4); transition: transform .15s; }
-.auth-login-btn:hover { transform: translateY(-1px); }
-.auth-login-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
-#auth-error { color: var(--red); font-size: 13px; margin-top: 12px; text-align: center; min-height: 20px; }
-
-/* APP */
-#member-app { display: none; position: relative; z-index: 1; }
-.top-bar { display: flex; align-items: center; justify-content: space-between; padding: 0 18px; height: 52px; background: rgba(255,255,255,0.95); border-bottom: 1px solid var(--border2); backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 100; }
-.top-bar-brand { display: flex; align-items: center; gap: 8px; }
-.top-bar-brand .tb-dot { width: 26px; height: 26px; border-radius: 7px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 13px; }
-.top-bar-brand h2 { font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 700; color: var(--accent3); }
-.top-badge { background: linear-gradient(135deg, var(--accent3), var(--accent)); color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; }
-.logout-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 7px; font-size: 11px; cursor: pointer; font-family: inherit; transition: all .2s; }
-.logout-btn:hover { border-color: var(--red); color: var(--red); }
-
-.tabs { display: flex; background: rgba(240,245,252,0.9); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
-.tab-btn { flex: 1; padding: 11px 8px; text-align: center; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; transition: all .2s; font-family: inherit; }
-.tab-btn.active { color: var(--accent2); border-bottom-color: var(--accent2); }
-
-.tab-pane { display: none; padding: 14px 14px; }
-.tab-pane.active { display: block; }
-
-/* COMPACT STATS */
-.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-.stat-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 12px; text-align: center; backdrop-filter: blur(10px); position: relative; overflow: hidden; }
-.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
-.stat-card .num { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.stat-card .lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
-
-/* COMPACT CALENDAR */
-.cal-wrap { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; padding: 12px; margin-bottom: 12px; backdrop-filter: blur(10px); }
-.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.cal-header h3 { font-size: 13px; font-weight: 700; color: var(--accent2); letter-spacing: .5px; }
-.cal-nav { background: transparent; border: 1px solid var(--border2); color: var(--accent2); padding: 3px 10px; border-radius: 7px; cursor: pointer; font-size: 14px; transition: all .2s; }
-.cal-nav:hover { background: rgba(0,144,255,0.15); }
-.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
-.cal-day-label { text-align: center; font-size: 9px; color: var(--muted); padding: 2px 0; font-weight: 700; }
-.cal-day { height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 11px; font-weight: 500; position: relative; background: rgba(10,25,55,0.5); border: 1px solid rgba(0,100,255,0.06); cursor: default; transition: all .2s; }
-.cal-day.empty { background: transparent; border-color: transparent; }
-.cal-day.today { border-color: var(--accent); color: var(--accent2); font-weight: 700; }
-.cal-day.checked { background: linear-gradient(135deg, rgba(0,229,160,0.3), rgba(0,229,160,0.12)); color: var(--green); font-weight: 700; border-color: rgba(0,229,160,0.5); }
-.cal-day.checked::after { content: '✓'; font-size: 6px; position: absolute; bottom: 1px; }
-.cal-day.can-checkin { cursor: pointer; border-color: var(--accent); animation: calPulse 2s infinite; }
-@keyframes calPulse { 0%,100% { border-color: var(--accent); box-shadow: 0 0 4px rgba(0,144,255,0.3); } 50% { border-color: var(--accent2); box-shadow: 0 0 10px rgba(0,200,255,0.5); } }
-
-.checkin-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, #00b894, #00e5a0); border: none; border-radius: 11px; color: #fff; font-size: 15px; font-weight: 900; cursor: pointer; font-family: inherit; letter-spacing: 1px; box-shadow: 0 4px 20px rgba(0,229,160,0.35); transition: transform .15s; margin-bottom: 6px; }
-.checkin-btn:hover { transform: translateY(-1px); }
-.checkin-btn:disabled { background: rgba(15,28,60,0.8); color: var(--muted); cursor: default; box-shadow: none; transform: none; }
-
-/* NEWS SECTION */
-.section-title { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin: 16px 0 8px; display: flex; align-items: center; gap: 8px; }
-.section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border2), transparent); }
-
-.news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-.news-card { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; overflow: hidden; cursor: pointer; transition: border-color .2s, transform .2s; text-decoration: none; display: block; }
-.news-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-.news-card-img { width: 100%; height: 80px; object-fit: cover; display: block; background: rgba(0,40,100,0.5); }
-.news-card-img-placeholder { width: 100%; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 28px; background: linear-gradient(135deg, rgba(0,40,100,0.6), rgba(0,20,60,0.8)); }
-.news-card-body { padding: 8px 10px; }
-.news-card-tag { font-size: 9px; font-weight: 700; color: var(--accent2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-.news-card-title { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.news-card-time { font-size: 9px; color: var(--muted); margin-top: 4px; }
-
-.news-list-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-bottom: 7px; display: flex; gap: 10px; align-items: flex-start; cursor: pointer; transition: border-color .2s; text-decoration: none; }
-.news-list-item:hover { border-color: var(--accent); }
-.news-list-icon { font-size: 20px; flex-shrink: 0; width: 36px; height: 36px; background: rgba(0,40,100,0.5); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-.news-list-text .tag { font-size: 9px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
-.news-list-text .title { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.4; margin-top: 2px; }
-.news-list-text .time { font-size: 9px; color: var(--muted); margin-top: 3px; }
-
-.news-loading { text-align: center; color: var(--muted); font-size: 12px; padding: 20px; }
-.news-error { text-align: center; color: var(--muted); font-size: 11px; padding: 10px; }
-
-/* TASK CARDS */
-.task-card { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 12px 14px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
-.task-card .task-name { font-size: 13px; font-weight: 600; }
-.task-card .task-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
-.task-status { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; white-space: nowrap; }
-.task-status.done { background: rgba(0,229,160,0.12); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
-.task-status.pending { background: rgba(0,144,255,0.08); color: var(--muted); border: 1px solid var(--border); }
-.yt-watch-btn { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; background: linear-gradient(135deg, #c00, #ff4444); color: #fff; border: none; cursor: pointer; font-family: inherit; text-decoration: none; transition: transform .15s, box-shadow .15s; box-shadow: 0 2px 10px rgba(255,50,50,0.3); white-space: nowrap; }
-.yt-watch-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(255,50,50,0.45); }
-.yt-task-card { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 12px 14px; margin-bottom: 8px; }
-
-/* 獎金卡 */
-.bonus-card { background: linear-gradient(135deg, rgba(0,229,160,0.1), rgba(0,144,255,0.08)); border: 1px solid rgba(0,229,160,0.3); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; }
-.bonus-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--green), var(--accent2)); }
-.bonus-icon { font-size: 28px; flex-shrink: 0; }
-.bonus-amount { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--green), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
-.bonus-label { font-size: 11px; color: var(--muted); margin-top: 3px; }
-
-/* 時段卡 */
-.slot-section { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; padding: 14px; margin-bottom: 12px; position: relative; overflow: hidden; }
-.slot-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #c00, #ff4444, #ff6b6b); }
-.slot-label { font-size: 11px; font-weight: 800; color: var(--accent2); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-.slot-badge { padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; }
-.slot-badge.approved { background: rgba(0,229,160,0.15); color: var(--green); border: 1px solid rgba(0,229,160,0.4); }
-.slot-badge.pending  { background: rgba(255,200,0,0.1); color: #ffc800; border: 1px solid rgba(255,200,0,0.3); }
-.slot-badge.rejected { background: rgba(255,95,126,0.12); color: var(--red); border: 1px solid rgba(255,95,126,0.3); }
-.slot-badge.todo     { background: rgba(0,144,255,0.08); color: var(--muted); border: 1px solid var(--border); }
-
-/* 上傳區 */
-.upload-area { border: 2px dashed rgba(0,144,255,0.3); border-radius: 10px; padding: 14px; text-align: center; margin-top: 10px; position: relative; cursor: pointer; transition: all .2s; }
-.upload-area:hover { border-color: var(--accent); background: rgba(0,144,255,0.05); }
-.upload-area input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-.upload-area-hint { font-size: 12px; color: var(--muted); pointer-events: none; }
-.upload-area-hint .uicon { font-size: 22px; margin-bottom: 4px; }
-.upload-preview { width: 100%; max-height: 150px; object-fit: cover; border-radius: 8px; margin-top: 8px; display: none; }
-.upload-submit-btn { width: 100%; padding: 10px; margin-top: 8px; background: linear-gradient(135deg, #005aff, #0090ff); border: none; border-radius: 9px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; display: none; transition: transform .15s; box-shadow: 0 3px 12px rgba(0,144,255,0.35); }
-.upload-submit-btn:hover { transform: translateY(-1px); }
-.upload-submit-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
-
-.toast { position: fixed; bottom: 24px; left: 50%; background: linear-gradient(135deg, #00b894, var(--green)); color: #fff; padding: 11px 24px; border-radius: 30px; font-weight: 700; font-size: 13px; opacity: 0; transition: opacity .3s, transform .3s; z-index: 9999; pointer-events: none; box-shadow: 0 4px 20px rgba(0,229,160,0.4); transform: translateX(-50%) translateY(10px); }
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.toast.error { background: linear-gradient(135deg, #c0392b, var(--red)); color: #fff; }
-
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 </style>
 </head>
 <body>
@@ -178,51 +126,15 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
         </div>
       </div>
       <h2>會員簽到平台</h2>
-      <!-- 裝飾插圖 -->
-      <svg viewBox="0 0 320 90" style="width:100%;max-width:320px;margin:10px auto 0;display:block;opacity:0.85" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0090ff"/><stop offset="100%" stop-color="#00e5a0"/></linearGradient>
-          <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1655c0"/><stop offset="100%" stop-color="#0090ff"/></linearGradient>
-        </defs>
-        <!-- 星星裝飾 -->
-        <circle cx="20" cy="20" r="2" fill="#00c8ff" opacity="0.7"/>
-        <circle cx="300" cy="15" r="3" fill="#00e5a0" opacity="0.6"/>
-        <circle cx="160" cy="8" r="1.5" fill="#fff" opacity="0.5"/>
-        <circle cx="260" cy="40" r="2" fill="#0090ff" opacity="0.6"/>
-        <circle cx="50" cy="60" r="1.5" fill="#00e5a0" opacity="0.5"/>
-        <!-- 手機圖示 -->
-        <rect x="120" y="10" width="36" height="60" rx="6" fill="url(#lg2)" opacity="0.9"/>
-        <rect x="124" y="15" width="28" height="42" rx="3" fill="#0a0f1e"/>
-        <circle cx="138" cy="63" r="2.5" fill="#00c8ff" opacity="0.8"/>
-        <!-- 螢幕內容 -->
-        <rect x="127" y="19" width="22" height="3" rx="1.5" fill="#0090ff" opacity="0.8"/>
-        <rect x="127" y="25" width="16" height="2" rx="1" fill="#334466"/>
-        <rect x="127" y="30" width="19" height="2" rx="1" fill="#334466"/>
-        <rect x="127" y="35" width="14" height="2" rx="1" fill="#334466"/>
-        <rect x="127" y="42" width="22" height="8" rx="3" fill="url(#lg1)" opacity="0.9"/>
-        <text x="138" y="48" text-anchor="middle" font-size="4" fill="#fff" font-family="sans-serif">簽到</text>
-        <!-- 勾選圓 -->
-        <circle cx="185" cy="40" r="22" fill="url(#lg1)" opacity="0.15"/>
-        <circle cx="185" cy="40" r="17" fill="none" stroke="url(#lg1)" stroke-width="2" opacity="0.5"/>
-        <text x="185" y="46" text-anchor="middle" font-size="18" fill="url(#lg1)">✓</text>
-        <!-- 獎勵圖示 -->
-        <circle cx="82" cy="42" r="18" fill="#1a2a4a"/>
-        <text x="82" y="49" text-anchor="middle" font-size="20">💰</text>
-        <!-- 連線虛線 -->
-        <line x1="100" y1="42" x2="118" y2="42" stroke="#0090ff" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
-        <line x1="156" y1="42" x2="168" y2="42" stroke="#00e5a0" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
-        <!-- 底部文字 -->
-        <text x="160" y="83" text-anchor="middle" font-size="8" fill="#334466" font-family="sans-serif" letter-spacing="1">完成任務 · 累積收益 · 每日簽到</text>
-      </svg>
     </div>
     <div class="auth-card">
-      <h1>🔐 會員登入</h1>
-      <p>請輸入你的會員編號與密碼</p>
-      <span class="field-label">會員編號</span>
+      <h1>👋 歡迎回來！</h1>
+      <p>輸入你的帳號，開始今天的任務吧 ✨</p>
+      <span class="field-label">👤 會員編號</span>
       <input id="uid-input" type="text" placeholder="例：U12345 或 12345" autocomplete="off">
-      <span class="field-label">密碼</span>
+      <span class="field-label">🔑 密碼</span>
       <input id="pass-input" type="password" placeholder="請輸入密碼">
-      <button class="auth-login-btn" id="login-btn">登 入</button>
+      <button class="auth-login-btn" id="login-btn">開始任務 →</button>
       <div id="auth-error"></div>
     </div>
   </div>
@@ -238,22 +150,21 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
     <button class="logout-btn" id="logout-btn">登出</button>
   </div>
 
-  <!-- 累積獎金 固定顯示在所有分頁上方 -->
-  <div id="global-bonus-bar" style="display:none;background:linear-gradient(135deg,rgba(0,229,160,0.12),rgba(0,144,255,0.08));border-bottom:1px solid rgba(0,229,160,0.25);padding:10px 18px;display:none;align-items:center;gap:12px;position:sticky;top:52px;z-index:90;backdrop-filter:blur(12px)">
+  <div id="global-bonus-bar" style="display:none;background:linear-gradient(135deg,rgba(0,229,160,0.12),rgba(0,144,255,0.08));border-bottom:1px solid rgba(0,229,160,0.25);padding:10px 18px;align-items:center;gap:12px;position:sticky;top:52px;z-index:90;backdrop-filter:blur(12px)">
     <div style="font-size:18px">💰</div>
     <div style="flex:1">
       <div style="display:flex;align-items:baseline;gap:6px">
         <span style="font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;background:linear-gradient(135deg,var(--green),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent" id="global-bonus-amount">0</span>
-        <span style="font-size:11px;color:var(--muted)">元｜累積任務獎金</span>
+        <span style="font-size:11px;color:var(--muted)">元｜旅遊專用金</span>
       </div>
-      <div style="font-size:10px;color:var(--muted);margin-top:1px">YT任務 + 店家任務 合計</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:1px">YT任務 + 店家任務 累積</div>
     </div>
-    <button id="global-withdraw-btn" style="background:linear-gradient(135deg,#00b894,var(--green));border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:700;padding:8px 14px;cursor:pointer;font-family:inherit;flex-shrink:0;white-space:nowrap">申請領款</button>
+    <button id="global-withdraw-btn" style="background:linear-gradient(135deg,#00b894,var(--green));border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:700;padding:8px 14px;cursor:pointer;font-family:inherit;flex-shrink:0;white-space:nowrap">✈️ 兌換旅遊專用金</button>
   </div>
 
   <div class="tabs">
     <button class="tab-btn active" data-tab="tab-checkin">📅 簽到</button>
-    <button class="tab-btn" data-tab="tab-news">🏦 幣託介紹</button>
+    <button class="tab-btn" data-tab="tab-news">✈️ 旅遊</button>
     <button class="tab-btn" data-tab="tab-tasks">📋 YT任務</button>
     <button class="tab-btn" data-tab="tab-store">🏪 店家任務</button>
     <button class="tab-btn" data-tab="tab-ai">🤖 AI任務</button>
@@ -263,16 +174,9 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
   <!-- 簽到 TAB -->
   <div class="tab-pane active" id="tab-checkin">
     <div class="stats-row">
-      <div class="stat-card">
-        <div class="num" id="stat-total">0</div>
-        <div class="lbl">累積簽到天數</div>
-      </div>
-      <div class="stat-card">
-        <div class="num" id="stat-streak">0</div>
-        <div class="lbl">連續天數</div>
-      </div>
+      <div class="stat-card"><div class="num" id="stat-total">0</div><div class="lbl">累積簽到天數</div></div>
+      <div class="stat-card"><div class="num" id="stat-streak">0</div><div class="lbl">連續天數</div></div>
     </div>
-
     <div class="cal-wrap">
       <div class="cal-header">
         <button class="cal-nav" id="cal-prev">‹</button>
@@ -281,251 +185,70 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       </div>
       <div class="cal-grid" id="cal-grid"></div>
     </div>
-
     <button class="checkin-btn" id="checkin-btn">📡 立即簽到</button>
     <p style="color:var(--muted);font-size:10px;text-align:center;letter-spacing:.5px">⚠️ 只能簽今天，不能補簽</p>
-
-    <!-- 簽到插圖 banner -->
     <div style="margin-top:14px;background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;overflow:hidden;position:relative">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#005aff,#00e5a0)"></div>
-      <svg viewBox="0 0 70 70" width="70" height="70" style="flex-shrink:0" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1655c0"/><stop offset="100%" stop-color="#00c8ff"/></linearGradient></defs>
-        <circle cx="35" cy="35" r="32" fill="url(#cg)" opacity="0.15"/>
-        <circle cx="35" cy="35" r="26" fill="none" stroke="url(#cg)" stroke-width="2" opacity="0.4"/>
-        <text x="35" y="43" text-anchor="middle" font-size="28">📅</text>
-        <circle cx="52" cy="18" r="8" fill="#00e5a0" opacity="0.9"/>
-        <text x="52" y="22" text-anchor="middle" font-size="9" fill="#fff">✓</text>
-      </svg>
+      <div style="font-size:36px">📅</div>
       <div>
         <div style="font-size:13px;font-weight:700;color:var(--text)">每日簽到累積天數</div>
         <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.6">持續簽到可累積連續天數獎勵<br>週日不開放，記得每天打卡！</div>
       </div>
     </div>
-
-    <!-- 幣託一條 banner，點進去跳幣託介紹頁 -->
     <div style="margin-top:18px;margin-bottom:6px">
-      <button onclick="document.querySelectorAll('.tab-btn')[1].click()" style="width:100%;background:linear-gradient(135deg,rgba(0,30,80,0.95),rgba(0,15,50,0.98));border:1px solid rgba(0,144,255,0.35);border-radius:14px;padding:12px 16px;cursor:pointer;text-align:left;position:relative;overflow:hidden;transition:border-color .2s,transform .2s" onmouseover="this.style.borderColor='rgba(0,200,255,0.6)';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='rgba(0,144,255,0.35)';this.style.transform='none'">
-        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#005aff,#0090ff,#00c8ff,#00e5a0)"></div>
+      <button onclick="document.querySelectorAll('.tab-btn')[1].click()" style="width:100%;background:linear-gradient(135deg,rgba(0,100,60,0.12),rgba(34,114,232,0.10));border:1px solid rgba(0,180,120,0.35);border-radius:14px;padding:12px 16px;cursor:pointer;text-align:left;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#0aab6e,#2272e8,#1a9fd4)"></div>
         <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#0050c8,#0090ff);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 2px 12px rgba(0,144,255,0.4)">🏦</div>
+          <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#0aab6e,#2272e8);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">✈️</div>
           <div style="flex:1;text-align:left">
-            <div style="font-size:14px;font-weight:800;color:#00c8ff;letter-spacing:.5px">幣託 BitoPro</div>
-            <div style="font-size:11px;color:#5577aa;margin-top:2px">什麼是幣託？安全性・好處介紹 →</div>
+            <div style="font-size:14px;font-weight:800;color:var(--green)">旅遊專區</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">精選旅遊行程・用旅遊專用金圓夢 →</div>
           </div>
-          <div style="color:#5577aa;font-size:18px">›</div>
+          <div style="color:var(--muted);font-size:18px">›</div>
         </div>
       </button>
     </div>
   </div>
 
-  <!-- 幣託介紹 TAB -->
+  <!-- 旅遊 TAB -->
   <div class="tab-pane" id="tab-news">
-    <!-- 頂部 Banner -->
-    <div style="background: linear-gradient(135deg, rgba(0,40,100,0.8), rgba(0,20,60,0.95)); border: 1px solid var(--border2); border-radius: 16px; padding: 20px 18px 16px; margin-bottom: 14px; position: relative; overflow: hidden;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#005aff,#0090ff,#00c8ff,#00e5a0)"></div>
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#0050c8,#0090ff);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 4px 16px rgba(0,144,255,0.4)">🏦</div>
+    <div style="background:linear-gradient(135deg,rgba(0,180,120,0.12),rgba(34,114,232,0.10));border:1px solid rgba(0,180,120,0.25);border-radius:16px;padding:18px 16px;margin-bottom:14px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0aab6e,#2272e8,#1a9fd4)"></div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <div style="font-size:36px">✈️</div>
         <div>
-          <div style="font-size:18px;font-weight:900;color: var(--accent3); font-weight:900; letter-spacing:1px">幣託 BitoPro</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">台灣合法加密貨幣交易所・企業資金流轉工具</div>
+          <div style="font-size:17px;font-weight:800;color:var(--text)">旅遊專區</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">用旅遊專用金，圓你的旅行夢想</div>
         </div>
       </div>
-      <p style="font-size:13px;color:#99bbdd;line-height:1.7">幣託（BitoPro）是台灣最早取得金管會登記的合法加密貨幣交易平台之一，專為個人與企業提供安全、快速的數位資產管理服務。</p>
+      <div style="background:rgba(0,180,120,0.08);border:1px solid rgba(0,180,120,0.2);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text);line-height:1.8">🌏 完成任務累積旅遊專用金，即可兌換精選旅遊行程！每天簽到、完成YT任務、店家任務，讓旅行夢想更近一步。</div>
     </div>
-
-    <!-- 什麼是加密貨幣？ -->
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px">
-      <div style="font-size:12px;font-weight:800;color:var(--accent2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">💡 新手必看：什麼是 USDT？</div>
-      <p style="font-size:13px;color:#aaccee;line-height:1.8;margin-bottom:10px">USDT（泰達幣）是一種「穩定幣」，1 USDT ≈ 1 美元，價格不像比特幣那樣大漲大跌，非常適合用於跨境轉帳與企業出金。</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:10px;padding:10px;text-align:center">
-          <div style="font-size:20px;margin-bottom:4px">💵</div>
-          <div style="font-size:11px;font-weight:700;color:var(--green)">穩定不波動</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">1 USDT ≈ 1 USD</div>
+    <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;-webkit-overflow-scrolling:touch">
+      <button onclick="filterTravel('all')" id="filter-all" class="travel-filter active-filter">🌏 全部</button>
+      <button onclick="filterTravel('japan')" id="filter-japan" class="travel-filter">🇯🇵 日本</button>
+      <button onclick="filterTravel('korea')" id="filter-korea" class="travel-filter">🇰🇷 韓國</button>
+      <button onclick="filterTravel('thai')" id="filter-thai" class="travel-filter">🇹🇭 泰國</button>
+      <button onclick="filterTravel('sea')" id="filter-sea" class="travel-filter">🌴 東南亞</button>
+      <button onclick="filterTravel('europe')" id="filter-europe" class="travel-filter">🇪🇺 歐洲</button>
+      <button onclick="filterTravel('other')" id="filter-other" class="travel-filter">🌐 其他</button>
+    </div>
+    <div id="travel-list"></div>
+    <div id="travel-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:20px">
+      <div style="background:var(--surface);border-radius:20px;padding:24px 20px;width:100%;max-width:480px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,0.3)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div style="font-size:15px;font-weight:800;color:var(--text);flex:1;line-height:1.4" id="modal-title"></div>
+          <button onclick="document.getElementById('travel-modal').style.display='none'" style="background:rgba(0,0,0,0.08);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:10px">✕</button>
         </div>
-        <div style="background:rgba(0,144,255,0.08);border:1px solid rgba(0,144,255,0.2);border-radius:10px;padding:10px;text-align:center">
-          <div style="font-size:20px;margin-bottom:4px">⚡</div>
-          <div style="font-size:11px;font-weight:700;color:var(--accent2)">即時到帳</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">無需等待銀行處理</div>
-        </div>
+        <div id="modal-body"></div>
       </div>
-    </div>
-
-    <!-- 為什麼選幣託 -->
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px">
-      <div style="font-size:12px;font-weight:800;color:var(--accent2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">🏆 為什麼選擇幣託？</div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;align-items:flex-start;gap:12px">
-          <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(0,90,255,0.3),rgba(0,144,255,0.15));border:1px solid rgba(0,144,255,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🏛️</div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:var(--text)">台灣合法登記平台</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.6">已於金融監督管理委員會完成虛擬資產服務業者（VASP）登記，是台灣少數合規的交易所之一。</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:flex-start;gap:12px">
-          <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(0,90,255,0.3),rgba(0,144,255,0.15));border:1px solid rgba(0,144,255,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">💸</div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:var(--text)">降低跨境手續費</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.6">傳統銀行電匯動輒數百元手續費，透過 USDT 出金大幅節省成本，適合企業大額資金流轉。</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:flex-start;gap:12px">
-          <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(0,90,255,0.3),rgba(0,144,255,0.15));border:1px solid rgba(0,144,255,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📊</div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:var(--text)">資產透明可追蹤</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.6">所有交易紀錄均可在帳戶中查詢，資金流向清晰，方便財務管理與對帳。</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 出金流程 -->
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px">
-      <div style="font-size:12px;font-weight:800;color:var(--accent2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">📤 出金流程（超簡單 3 步驟）</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="display:flex;align-items:center;gap:12px;background:rgba(34,114,232,0.06);border-radius:10px;padding:12px">
-          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0">1</div>
-          <div>
-            <div style="font-size:12px;font-weight:700;color:var(--text)">下載 BitoPro App</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">官方網站或 App Store / Google Play 下載，請只透過官方管道，勿使用第三方連結</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;background:rgba(34,114,232,0.06);border-radius:10px;padding:12px">
-          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0">2</div>
-          <div>
-            <div style="font-size:12px;font-weight:700;color:var(--text)">完成身分驗證（KYC）</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">依指示上傳身分證件，確保帳戶安全與合規，通常數分鐘至數小時內完成審核</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;background:rgba(34,114,232,0.06);border-radius:10px;padding:12px">
-          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0">3</div>
-          <div>
-            <div style="font-size:12px;font-weight:700;color:var(--text)">綁定為資產接收帳戶</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">完成後即可作為 OmniTask 任鏈科技公司出金的 USDT 接收地址</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 安全提示 -->
-    <div style="background:linear-gradient(135deg,rgba(255,95,126,0.08),rgba(255,95,126,0.04));border:1px solid rgba(255,95,126,0.25);border-radius:14px;padding:16px;margin-bottom:10px">
-      <div style="font-size:12px;font-weight:800;color:#ff8fa3;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🔒 安全機制說明</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="color:var(--green);font-size:14px">✓</span>
-          <span style="font-size:12px;color:#aaccee">僅建議透過<strong style="color:var(--text)">官方平台</strong>下載 App 或前往官網</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="color:var(--green);font-size:14px">✓</span>
-          <span style="font-size:12px;color:#aaccee">請勿透過<strong style="color:var(--text)">第三方連結</strong>或不明網站登入帳戶</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="color:var(--green);font-size:14px">✓</span>
-          <span style="font-size:12px;color:#aaccee">啟用<strong style="color:var(--text)">雙重驗證（2FA）</strong>，增加帳戶安全層級</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="color:var(--green);font-size:14px">✓</span>
-          <span style="font-size:12px;color:#aaccee">定期確認登入紀錄，發現異常立即聯繫客服</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- OmniTask 合作說明 -->
-    <div style="background:linear-gradient(135deg,rgba(0,229,160,0.08),rgba(0,144,255,0.06));border:1px solid rgba(0,229,160,0.25);border-radius:14px;padding:16px;margin-bottom:6px">
-      <div style="font-size:12px;font-weight:800;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🎁 OmniTask 任鏈科技 × 幣託</div>
-      <p style="font-size:12px;color:#aaccee;line-height:1.8">新用戶完成幣託身份驗證（KYC）後，即可獲得 <strong style="color:var(--green)">OmniTask 任鏈科技專屬活動獎勵</strong>。詳情請洽助理，把握機會！</p>
-    </div>
-
-    <div style="text-align:center;margin-top:14px;margin-bottom:4px">
-      <a href="https://www.bitopro.com" target="_blank" rel="noopener" style="display:inline-block;padding:12px 32px;background:linear-gradient(135deg,var(--accent3),var(--accent),var(--accent2));border-radius:30px;color:#fff;font-size:13px;font-weight:800;text-decoration:none;letter-spacing:1px;box-shadow:0 4px 20px rgba(0,144,255,0.4)">前往幣託官網 →</a>
     </div>
   </div>
 
   <!-- 店家任務 TAB -->
   <div class="tab-pane" id="tab-store">
-
-    <!-- 說明區 -->
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:18px 16px;margin-bottom:14px">
-      <!-- 店家插圖 header -->
-      <svg viewBox="0 0 340 100" style="width:100%;max-width:340px;margin:0 auto 14px;display:block" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="sg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1655c0"/><stop offset="100%" stop-color="#2272e8"/></linearGradient>
-          <linearGradient id="sg2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#00b894"/><stop offset="100%" stop-color="#00e5a0"/></linearGradient>
-        </defs>
-        <!-- 店面圖 -->
-        <rect x="100" y="28" width="80" height="55" rx="4" fill="url(#sg1)" opacity="0.9"/>
-        <rect x="95" y="20" width="90" height="14" rx="3" fill="#0090ff"/>
-        <!-- 招牌 -->
-        <rect x="112" y="25" width="56" height="8" rx="2" fill="#fff" opacity="0.2"/>
-        <!-- 門 -->
-        <rect x="126" y="55" width="24" height="28" rx="3" fill="#0a1a3a"/>
-        <circle cx="148" cy="70" r="1.5" fill="#00c8ff"/>
-        <!-- 窗戶 -->
-        <rect x="108" y="40" width="18" height="14" rx="2" fill="#fff" opacity="0.25"/>
-        <rect x="154" y="40" width="18" height="14" rx="2" fill="#fff" opacity="0.25"/>
-        <!-- 遮陽棚條紋 -->
-        <rect x="95" y="20" width="12" height="14" rx="0" fill="#005aff" opacity="0.5"/>
-        <rect x="119" y="20" width="12" height="14" fill="#005aff" opacity="0.5"/>
-        <rect x="143" y="20" width="12" height="14" fill="#005aff" opacity="0.5"/>
-        <rect x="167" y="20" width="12" height="14" fill="#005aff" opacity="0.5"/>
-        <!-- 地點標記 -->
-        <circle cx="200" cy="30" r="12" fill="#ff5f7e" opacity="0.9"/>
-        <text x="200" y="35" text-anchor="middle" font-size="12">📍</text>
-        <!-- 金幣 -->
-        <circle cx="240" cy="60" r="16" fill="#ffd700" opacity="0.15"/>
-        <circle cx="240" cy="60" r="12" fill="none" stroke="#ffd700" stroke-width="1.5" opacity="0.5"/>
-        <text x="240" y="65" text-anchor="middle" font-size="14">💰</text>
-        <!-- 箭頭連線 -->
-        <path d="M183 55 Q210 48 228 55" stroke="#00e5a0" stroke-width="1.5" fill="none" stroke-dasharray="4,3" opacity="0.7"/>
-        <!-- 左側裝飾 -->
-        <circle cx="60" cy="50" r="20" fill="url(#sg1)" opacity="0.12"/>
-        <text x="60" y="57" text-anchor="middle" font-size="22">🏪</text>
-        <!-- 右側裝飾 -->
-        <text x="295" y="55" text-anchor="middle" font-size="22">✅</text>
-        <!-- 底部標語 -->
-        <text x="170" y="92" text-anchor="middle" font-size="8.5" fill="#334466" font-family="sans-serif" letter-spacing="1">探店體驗 · 填寫回饋 · 入帳 700元</text>
-      </svg>
       <div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:3px">🏪 店家實境收益任務</div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:16px">真實探店 × 真誠回饋 × 共享成長</div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
-        <div style="background:rgba(0,144,255,0.08);border:1px solid rgba(0,144,255,0.2);border-radius:10px;padding:10px 8px;text-align:center">
-          <div style="font-size:18px;margin-bottom:4px">👥</div>
-          <div style="font-size:11px;font-weight:700;color:var(--text)">真實互動</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">親身體驗與店家良性互動</div>
-        </div>
-        <div style="background:rgba(0,144,255,0.08);border:1px solid rgba(0,144,255,0.2);border-radius:10px;padding:10px 8px;text-align:center">
-          <div style="font-size:18px;margin-bottom:4px">⏰</div>
-          <div style="font-size:11px;font-weight:700;color:var(--text)">輕鬆參與</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">流程簡單，利用閒暇時間</div>
-        </div>
-        <div style="background:rgba(0,144,255,0.08);border:1px solid rgba(0,144,255,0.2);border-radius:10px;padding:10px 8px;text-align:center">
-          <div style="font-size:18px;margin-bottom:4px">🛡️</div>
-          <div style="font-size:11px;font-weight:700;color:var(--text)">安心保障</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">基於個人真實感受</div>
-        </div>
-      </div>
-
-      <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:10px">📌 任務執行流程</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
-        <div style="display:flex;align-items:center;gap:10px;background:rgba(0,144,255,0.05);border-radius:8px;padding:8px 12px">
-          <div style="width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
-          <div style="font-size:13px;color:var(--text)"><strong>線上登記</strong>：填寫下方回饋表並送出</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;background:rgba(0,144,255,0.05);border-radius:8px;padding:8px 12px">
-          <div style="width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
-          <div style="font-size:13px;color:var(--text)"><strong>實地體驗</strong>：前往指定店家實際體驗</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;background:rgba(0,144,255,0.05);border-radius:8px;padding:8px 12px">
-          <div style="width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
-          <div style="font-size:13px;color:var(--text)"><strong>心得回傳</strong>：依實際觀察填寫體驗回饋</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;background:rgba(0,229,160,0.08);border-radius:8px;padding:8px 12px;border:1px solid rgba(0,229,160,0.2)">
-          <div style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div>
-          <div style="font-size:13px;color:var(--text)"><strong>領取回饋</strong>：審核通過後入帳 <strong style="color:var(--green)">700元</strong></div>
-        </div>
-      </div>
-
       <div style="background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.3);border-radius:10px;padding:12px 14px">
         <div style="font-size:12px;font-weight:700;color:#d4a017;margin-bottom:8px">🏆 任務獎勵金</div>
         <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text);margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(255,193,7,0.2)"><span>任務酬勞</span><span style="font-weight:700">500 元</span></div>
@@ -533,46 +256,10 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
         <div style="display:flex;justify-content:space-between;font-size:15px;font-weight:800;background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.25);border-radius:8px;padding:10px 12px"><span style="color:#c0392b">總計可領取</span><span style="color:#c0392b">700 元</span></div>
       </div>
     </div>
-
-    <!-- 可前往店家 -->
-    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:14px">
-      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">📍 可前往店家類型</div>
-      <div style="margin-bottom:10px">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:7px;font-weight:600;letter-spacing:0.5px">🍽️ 餐飲類</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px">
-          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">火鍋</span>
-          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">燒肉</span>
-          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">韓式料理</span>
-          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">日式料理</span>
-          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">義式料理</span>
-          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">早餐加盟</span>
-          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">咖啡廳</span>
-          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">手搖飲</span>
-          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">酒吧/餐酒館</span>
-          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">吃到飽</span>
-          <span style="background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.2);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--accent)">高級餐廳</span>
-        </div>
-      </div>
-      <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:7px;font-weight:600;letter-spacing:0.5px">✨ 生活體驗類</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px">
-          <span style="background:rgba(0,180,120,0.08);border:1px solid rgba(0,180,120,0.25);border-radius:20px;padding:5px 13px;font-size:12px;color:#0aab6e">美容美甲</span>
-          <span style="background:rgba(0,180,120,0.08);border:1px solid rgba(0,180,120,0.25);border-radius:20px;padding:5px 13px;font-size:12px;color:#0aab6e">美髮沙龍</span>
-          <span style="background:rgba(0,180,120,0.08);border:1px solid rgba(0,180,120,0.25);border-radius:20px;padding:5px 13px;font-size:12px;color:#0aab6e">按摩SPA</span>
-          <span style="background:rgba(0,180,120,0.08);border:1px solid rgba(0,180,120,0.25);border-radius:20px;padding:5px 13px;font-size:12px;color:#0aab6e">健身房</span>
-          <span style="background:rgba(0,180,120,0.08);border:1px solid rgba(0,180,120,0.25);border-radius:20px;padding:5px 13px;font-size:12px;color:#0aab6e">寵物店</span>
-          <span style="background:rgba(0,180,120,0.08);border:1px solid rgba(0,180,120,0.25);border-radius:20px;padding:5px 13px;font-size:12px;color:#0aab6e">KTV</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- 我的店家任務紀錄 -->
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:14px">
       <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">📋 我的任務紀錄</div>
       <div id="store-task-history" style="font-size:13px;color:var(--muted);text-align:center;padding:12px">載入中...</div>
     </div>
-
-    <!-- 冷卻提示（送出後7天內顯示） -->
     <div id="store-cooldown-notice" style="display:none;background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.3);border-radius:14px;padding:18px 16px;margin-bottom:14px;text-align:center">
       <div style="font-size:28px;margin-bottom:8px">⏳</div>
       <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">本週任務已完成</div>
@@ -582,129 +269,92 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
         <div style="font-size:14px;font-weight:700;color:#d4a017" id="store-next-date"></div>
       </div>
     </div>
-
-    <!-- 回饋表單 -->
     <div id="store-form-section">
-    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:18px 16px;margin-bottom:16px">
-      <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:2px">📝 店家實境任務回饋表</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:16px">完整填寫後送出，等候審核通過入帳 700 元</div>
-
-      <div style="margin-bottom:12px">
-        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">任務日期</div>
-        <input type="date" id="store-date" style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;font-size:14px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit">
-      </div>
-      <div style="margin-bottom:16px">
-        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">店家名稱／分店</div>
-        <input type="text" id="store-name" placeholder="例：鼎泰豐 信義店" autocomplete="off" style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;font-size:14px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit">
-      </div>
-
-      <div style="border-top:1px solid var(--border2);margin:0 0 16px"></div>
-      <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:14px">體驗回饋內容</div>
-
-      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">1️⃣ 本次接待服務給您的整體感受</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：服務態度、專業介紹、親切程度、應對方式等</div>
-        <textarea id="store-q1" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
-      </div>
-
-      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">2️⃣ 店內環境與氛圍體驗</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：整潔度、舒適感、空間氣氛、音樂、燈光等</div>
-        <textarea id="store-q2" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
-      </div>
-
-      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">3️⃣ 本次消費／體驗過程中印象最深刻的地方</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">可分享讓您加分或特別有感的細節</div>
-        <textarea id="store-q3" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
-      </div>
-
-      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">4️⃣ 對於商品／服務內容的實際感受</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：品質、效果、實用性、價格感受等</div>
-        <textarea id="store-q4" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
-      </div>
-
-      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">5️⃣ 店內動線與整體安排是否順暢</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：等候流程、座位安排、空間規劃等</div>
-        <textarea id="store-q5" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
-      </div>
-
-      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">6️⃣ 是否會願意再次回訪？原因是什麼？</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">請說明您的原因</div>
-        <textarea id="store-q6" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
-      </div>
-
-      <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">7️⃣ 如果推薦給朋友，您會怎麼介紹這間店？</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">請說明您會如何推薦</div>
-        <textarea id="store-q7" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
-      </div>
-
-      <div style="margin-bottom:16px;background:rgba(148,163,184,0.05);border:1px solid var(--border2);border-radius:10px;padding:12px">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">8️⃣ 其他建議或希望店家改善的地方 <span style="font-size:11px;font-weight:400;color:var(--muted)">（選填）</span></div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">任何額外想回饋的都可以填寫</div>
-        <textarea id="store-q8" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
-      </div>
-
-      <div id="store-form-error" style="color:#e03f5e;font-size:13px;margin-bottom:10px;display:none"></div>
-
-      <!-- 發票上傳 -->
-      <div style="background:rgba(255,193,7,0.06);border:1px solid rgba(255,193,7,0.25);border-radius:12px;padding:14px;margin-bottom:12px">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">🧾 發票上傳</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:10px">請上傳消費發票截圖或照片</div>
-        <div class="upload-area" id="invoice-upload-area" style="cursor:pointer;min-height:80px">
-          <input type="file" accept="image/*" id="invoice-file-input" style="display:none">
-          <div class="upload-area-hint" id="invoice-upload-hint">
-            <div class="uicon">🧾</div>
-            <div>點擊上傳發票</div>
-          </div>
-          <img class="upload-preview" id="invoice-preview" alt="發票預覽" style="display:none">
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:18px 16px;margin-bottom:16px">
+        <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:2px">📝 店家實境任務回饋表</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:16px">完整填寫後送出，等候審核通過入帳 700 元</div>
+        <div style="margin-bottom:12px">
+          <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">任務日期</div>
+          <input type="date" id="store-date" style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;font-size:14px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit">
         </div>
+        <div style="margin-bottom:16px">
+          <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px">店家名稱／分店</div>
+          <input type="text" id="store-name" placeholder="例：鼎泰豐 信義店" autocomplete="off" style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;font-size:14px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit">
+        </div>
+        <div style="border-top:1px solid var(--border2);margin:0 0 16px"></div>
+        <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:14px">體驗回饋內容</div>
+        <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">1️⃣ 本次接待服務給您的整體感受</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：服務態度、專業介紹、親切程度、應對方式等</div>
+          <textarea id="store-q1" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+        </div>
+        <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">2️⃣ 店內環境與氛圍體驗</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：整潔度、舒適感、空間氣氛、音樂、燈光等</div>
+          <textarea id="store-q2" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+        </div>
+        <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">3️⃣ 本次消費／體驗過程中印象最深刻的地方</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px">可分享讓您加分或特別有感的細節</div>
+          <textarea id="store-q3" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+        </div>
+        <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">4️⃣ 對於商品／服務內容的實際感受</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：品質、效果、實用性、價格感受等</div>
+          <textarea id="store-q4" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+        </div>
+        <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">5️⃣ 店內動線與整體安排是否順暢</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：等候流程、座位安排、空間規劃等</div>
+          <textarea id="store-q5" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+        </div>
+        <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">6️⃣ 是否會願意再次回訪？原因是什麼？</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px">請說明您的原因</div>
+          <textarea id="store-q6" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+        </div>
+        <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">7️⃣ 如果推薦給朋友，您會怎麼介紹這間店？</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px">請說明您會如何推薦</div>
+          <textarea id="store-q7" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+        </div>
+        <div style="margin-bottom:16px;background:rgba(148,163,184,0.05);border:1px solid var(--border2);border-radius:10px;padding:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">8️⃣ 其他建議 <span style="font-size:11px;font-weight:400;color:var(--muted)">（選填）</span></div>
+          <textarea id="store-q8" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
+        </div>
+        <div id="store-form-error" style="color:#e03f5e;font-size:13px;margin-bottom:10px;display:none"></div>
+        <div style="background:rgba(255,193,7,0.06);border:1px solid rgba(255,193,7,0.25);border-radius:12px;padding:14px;margin-bottom:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">🧾 發票上傳</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:10px">請上傳消費發票截圖或照片</div>
+          <div class="upload-area" id="invoice-upload-area" style="cursor:pointer;min-height:80px">
+            <input type="file" accept="image/*" id="invoice-file-input" style="display:none">
+            <div class="upload-area-hint" id="invoice-upload-hint"><div class="uicon">🧾</div><div>點擊上傳發票</div></div>
+            <img class="upload-preview" id="invoice-preview" alt="發票預覽" style="display:none">
+          </div>
+        </div>
+        <button id="store-submit-btn" style="width:100%;padding:14px;background:linear-gradient(135deg,#1655c0,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">📤 送出回饋表等候審核</button>
       </div>
-
-      <!-- 影片提示 -->
-      <div style="background:rgba(0,144,255,0.06);border:1px solid rgba(0,144,255,0.2);border-radius:12px;padding:14px;margin-bottom:16px">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">🎬 影片心得</div>
-        <div style="font-size:12px;color:var(--muted);line-height:1.7">請將影片心得直接傳給助理，助理確認後會同步審核資料。</div>
-      </div>
-
-      <button id="store-submit-btn" style="width:100%;padding:14px;background:linear-gradient(135deg,#1655c0,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">
-        📤 送出回饋表等候審核
-      </button>
     </div>
-    </div><!-- end store-form-section -->
   </div>
 
   <!-- AI任務 TAB -->
   <div class="tab-pane" id="tab-ai">
-
-    <!-- 說明 banner -->
     <div style="background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(0,144,255,0.08));border:1px solid rgba(124,58,237,0.25);border-radius:16px;padding:18px 16px;margin-bottom:14px;position:relative;overflow:hidden">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#7c3aed,#2272e8,#00e5a0)"></div>
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
-        <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#2272e8);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 4px 16px rgba(124,58,237,0.35)">🤖</div>
+        <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#2272e8);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">🤖</div>
         <div>
           <div style="font-size:16px;font-weight:800;color:var(--text)">AI數據任務</div>
           <div style="font-size:11px;color:var(--muted);margin-top:2px">掌握熱勢 × 參與數據 × 回報任務</div>
         </div>
       </div>
-      <div style="background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--text);line-height:1.8">
-        📢 每日兩個時段，各自上傳截圖回報，管理員確認後即入帳獎勵。
-      </div>
+      <div style="background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--text);line-height:1.8">📢 每日兩個時段，各自上傳截圖回報，管理員確認後即入帳獎勵。</div>
     </div>
-
-    <!-- 我的AI任務紀錄 -->
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:14px">
       <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">📋 我的 AI 任務紀錄</div>
       <div id="ai-task-history"><div style="color:var(--muted);text-align:center;padding:12px;font-size:13px">載入中...</div></div>
     </div>
-
-    <!-- 今日時段（從Firebase動態載入） -->
     <div id="ai-slots-container"></div>
-
   </div>
 
   <!-- 設定 TAB -->
@@ -712,50 +362,32 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
     <div style="max-width:420px;margin:0 auto;padding-top:8px">
       <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:22px 20px;margin-bottom:16px">
         <div style="font-weight:700;font-size:15px;color:var(--text);margin-bottom:18px">🔐 修改密碼</div>
-
         <div style="margin-bottom:14px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:6px">目前密碼</div>
-          <input type="password" id="pw-current" placeholder="請輸入目前密碼" autocomplete="off"
-            style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+          <input type="password" id="pw-current" placeholder="請輸入目前密碼" autocomplete="off" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
         </div>
-
         <div style="margin-bottom:14px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:6px">新密碼</div>
-          <input type="password" id="pw-new" placeholder="請輸入新密碼（至少6位）" autocomplete="off"
-            style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+          <input type="password" id="pw-new" placeholder="請輸入新密碼（至少6位）" autocomplete="off" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
         </div>
-
         <div style="margin-bottom:20px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:6px">確認新密碼</div>
-          <input type="password" id="pw-confirm" placeholder="再輸入一次新密碼" autocomplete="off"
-            style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+          <input type="password" id="pw-confirm" placeholder="再輸入一次新密碼" autocomplete="off" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
         </div>
-
         <div id="pw-error" style="color:#e03f5e;font-size:13px;margin-bottom:12px;display:none"></div>
-
-        <button id="pw-save-btn"
-          style="width:100%;padding:13px;background:linear-gradient(135deg,#1655c0,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">
-          儲存新密碼
-        </button>
+        <button id="pw-save-btn" style="width:100%;padding:13px;background:linear-gradient(135deg,#1655c0,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">儲存新密碼</button>
       </div>
     </div>
-  </div>
-    <!-- 申請領款面板 -->
     <div id="withdraw-panel" style="display:none;background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.25);border-radius:14px;padding:16px;margin-bottom:14px">
-      <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px">💸 申請領款</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">請至平台提領後，在此登記金額，管理員確認後將從獎金扣除。</div>
+      <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px">✈️ 兌換旅遊專用金</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">請至平台提領後，在此登記金額，管理員確認後將從旅遊專用金扣除。</div>
       <input type="number" id="withdraw-amount" min="1" placeholder="輸入申請金額（元）" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(0,229,160,0.35);border-radius:9px;color:var(--text);font-size:15px;outline:none;font-family:inherit;margin-bottom:10px">
       <div id="withdraw-pending-notice" style="display:none;color:#ffc800;font-size:12px;margin-bottom:10px">⏳ 已有一筆申請待審核，請等管理員確認後再申請。</div>
       <button id="withdraw-submit-btn" style="width:100%;padding:12px;background:linear-gradient(135deg,#00b894,var(--green));border:none;border-radius:9px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">送出申請</button>
     </div>
     <div class="section-title">▶️ YT 影音任務</div>
-    <!-- YT任務插圖 -->
     <div style="background:linear-gradient(135deg,rgba(255,0,0,0.06),rgba(0,144,255,0.06));border:1px solid rgba(255,0,0,0.15);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px">
-      <svg viewBox="0 0 50 50" width="50" height="50" style="flex-shrink:0" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="8" width="46" height="32" rx="8" fill="#ff0000" opacity="0.9"/>
-        <polygon points="20,18 35,25 20,32" fill="#fff"/>
-        <rect x="10" y="44" width="30" height="3" rx="1.5" fill="#334466"/>
-      </svg>
+      <div style="font-size:36px;flex-shrink:0">▶️</div>
       <div>
         <div style="font-size:13px;font-weight:700;color:var(--text)">觀看 YouTube 影片賺取獎勵</div>
         <div style="font-size:11px;color:var(--muted);margin-top:2px">每部影片上傳截圖與心得，通過審核即入帳 <strong style="color:var(--green)">100元</strong></div>
@@ -773,12 +405,12 @@ import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from 'https://
 import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyATOrj7upNj0Oa1Bf1LpXpdM8mRYVKbNfU",
-  authDomain: "member-checkin-35dbe.firebaseapp.com",
-  projectId: "member-checkin-35dbe",
-  storageBucket: "member-checkin-35dbe.firebasestorage.app",
-  messagingSenderId: "192670308422",
-  appId: "1:192670308422:web:0e272c14358e1a1b5a1247",
+  apiKey: "AIzaSyDtwyvkMDRJtZQg05h1Ik_OFVT0P9wKJhc",
+  authDomain: "omni-v2-140e1.firebaseapp.com",
+  projectId: "omni-v2-140e1",
+  storageBucket: "omni-v2-140e1.firebasestorage.app",
+  messagingSenderId: "17704272434",
+  appId: "1:17704272434:web:74aff6da84f4cacd39722b",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -812,101 +444,69 @@ async function fsList(col) {
   return snap.docs.map(d => ({ id: d.id, data: d.data() }));
 }
 
-// ── 店家任務 ──
 async function loadStoreHistory() {
   const el = document.getElementById('store-task-history');
   const formEl = document.getElementById('store-form-section');
-  const submitBtn = document.getElementById('store-submit-btn');
   try {
     const docs = await fsList('store_reviews');
     const mine = docs.filter(({ data: d }) => d.uid === currentUID);
-
-    // 找最新一筆（不管狀態）
     const sorted = mine.sort((a, b) => new Date(b.data.createdAt) - new Date(a.data.createdAt));
     const latest = sorted[0];
-
-    // 計算下次可送出時間
-    let nextAvailable = null;
-    let cooldownMsg = '';
+    let nextAvailable = null, cooldownMsg = '';
     if (latest) {
       const lastDate = new Date(latest.data.createdAt);
       nextAvailable = new Date(lastDate.getTime() + 7 * 24 * 60 * 60 * 1000);
       const now = new Date();
       if (now < nextAvailable) {
         const diff = nextAvailable - now;
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const days = Math.floor(diff / (1000*60*60*24));
+        const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
         cooldownMsg = `還需等待 ${days} 天 ${hours} 小時`;
       }
     }
-
-    // 顯示紀錄
     if (!mine.length) {
       el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:8px">尚無任務紀錄</div>';
     } else {
       el.innerHTML = sorted.map(({ data: d }) => {
-        const statusMap = {
-          pending:  ['#ffc800', '⏳ 審核中'],
-          approved: ['var(--green)', '✅ 已通過'],
-          rejected: ['var(--red)', '❌ 已拒絕']
-        };
+        const statusMap = { pending: ['#ffc800','⏳ 審核中'], approved: ['var(--green)','✅ 已通過'], rejected: ['var(--red)','❌ 已拒絕'] };
         const [col, label] = statusMap[d.status] || statusMap.pending;
-        return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;margin-bottom:8px">
-          <div>
-            <div style="font-size:13px;font-weight:700;color:var(--text)">${d.storeName}</div>
-            <div style="font-size:11px;color:var(--muted)">${d.date} 送出</div>
-          </div>
-          <span style="font-size:12px;font-weight:700;color:${col}">${label}${d.status==='approved'?' +700元':''}</span>
-        </div>`;
+        return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;margin-bottom:8px"><div><div style="font-size:13px;font-weight:700;color:var(--text)">${d.storeName}</div><div style="font-size:11px;color:var(--muted)">${d.date} 送出</div></div><span style="font-size:12px;font-weight:700;color:${col}">${label}${d.status==='approved'?' +700元':''}</span></div>`;
       }).join('');
     }
-
-    // 控制表單顯示
     if (cooldownMsg) {
-      // 冷卻中，隱藏表單，顯示倒數
       formEl.style.display = 'none';
       document.getElementById('store-cooldown-notice').style.display = 'block';
       document.getElementById('store-cooldown-msg').textContent = cooldownMsg;
-      const nextStr = nextAvailable.toLocaleDateString('zh-TW', { month: 'long', day: 'numeric' }) +
-                      ' ' + nextAvailable.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+      const nextStr = nextAvailable.toLocaleDateString('zh-TW',{month:'long',day:'numeric'}) + ' ' + nextAvailable.toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
       document.getElementById('store-next-date').textContent = nextStr;
     } else {
       formEl.style.display = 'block';
       document.getElementById('store-cooldown-notice').style.display = 'none';
     }
-
   } catch(e) { el.innerHTML = ''; }
 }
 
-// 預設今天日期
 document.getElementById('store-date').value = todayStr();
 
 document.getElementById('store-submit-btn').addEventListener('click', async () => {
   const errEl = document.getElementById('store-form-error');
   errEl.style.display = 'none';
-  const date      = document.getElementById('store-date').value;
+  const date = document.getElementById('store-date').value;
   const storeName = document.getElementById('store-name').value.trim();
-  const answers   = [1,2,3,4,5,6,7,8].map(n => document.getElementById(`store-q${n}`).value.trim());
-
+  const answers = [1,2,3,4,5,6,7,8].map(n => document.getElementById(`store-q${n}`).value.trim());
   if (!date || !storeName) { errEl.textContent = '請填寫任務日期與店家名稱'; errEl.style.display = 'block'; return; }
-  const emptyRequired = answers.slice(0,7).some(a => a.length < 10);
-  if (emptyRequired) { errEl.textContent = '請填寫第1～7題回饋內容（每題至少10字）'; errEl.style.display = 'block'; return; }
-
+  if (answers.slice(0,7).some(a => a.length < 10)) { errEl.textContent = '請填寫第1～7題回饋內容（每題至少10字）'; errEl.style.display = 'block'; return; }
   const btn = document.getElementById('store-submit-btn');
   btn.textContent = '送出中...'; btn.disabled = true;
   try {
-    // 發票圖片（選填）
     let invoiceBase64 = '';
     const invoiceFile = document.getElementById('invoice-file-input').files[0];
     if (invoiceFile) invoiceBase64 = await compressImage(invoiceFile);
-
     const reviewId = `${currentUID}_store_${Date.now()}`;
     await fsUpdate(`store_reviews/${reviewId}`, {
       uid: currentUID, date, storeName,
-      q1: answers[0], q2: answers[1], q3: answers[2], q4: answers[3],
-      q5: answers[4], q6: answers[5], q7: answers[6], q8: answers[7],
-      invoiceBase64,
-      status: 'pending', createdAt: new Date().toISOString()
+      q1:answers[0],q2:answers[1],q3:answers[2],q4:answers[3],q5:answers[4],q6:answers[5],q7:answers[6],q8:answers[7],
+      invoiceBase64, status: 'pending', createdAt: new Date().toISOString()
     });
     showToast('✅ 回饋表已送出，等候審核！');
     document.getElementById('store-name').value = '';
@@ -915,42 +515,22 @@ document.getElementById('store-submit-btn').addEventListener('click', async () =
     document.getElementById('invoice-upload-hint').style.display = 'flex';
     document.getElementById('invoice-file-input').value = '';
     loadStoreHistory();
-  } catch(e) {
-    errEl.textContent = '送出失敗：' + e.message; errEl.style.display = 'block';
-  }
+  } catch(e) { errEl.textContent = '送出失敗：' + e.message; errEl.style.display = 'block'; }
   btn.textContent = '📤 送出回饋表等候審核'; btn.disabled = false;
 });
 
-// 切到店家任務分頁時載入紀錄
-document.querySelector('[data-tab="tab-store"]').addEventListener('click', () => {
-  if (currentUID) loadStoreHistory();
-});
+document.querySelector('[data-tab="tab-store"]').addEventListener('click', () => { if (currentUID) loadStoreHistory(); });
 
-// ── AI 任務 ──
 async function loadAiTaskHistory() {
   const el = document.getElementById('ai-task-history');
   try {
     const docs = await fsList('ai_reviews');
-    const mine = docs.filter(({ data: d }) => d.uid === currentUID)
-                     .sort((a, b) => new Date(b.data.createdAt) - new Date(a.data.createdAt));
-    if (!mine.length) {
-      el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:12px;font-size:13px">尚無任務紀錄</div>';
-      return;
-    }
+    const mine = docs.filter(({ data: d }) => d.uid === currentUID).sort((a,b) => new Date(b.data.createdAt)-new Date(a.data.createdAt));
+    if (!mine.length) { el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:12px;font-size:13px">尚無任務紀錄</div>'; return; }
+    const statusMap = { pending:['#ffc800','⏳ 審核中'], approved:['var(--green)','✅ 已通過'], rejected:['var(--red)','❌ 已拒絕'] };
     el.innerHTML = mine.map(({ data: d }) => {
-      const statusMap = {
-        pending:  ['#ffc800', '⏳ 審核中'],
-        approved: ['var(--green)', '✅ 已通過'],
-        rejected: ['var(--red)', '❌ 已拒絕']
-      };
       const [col, label] = statusMap[d.status] || statusMap.pending;
-      return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;margin-bottom:8px">
-        <div>
-          <div style="font-size:13px;font-weight:700;color:var(--text)">${d.slotName || d.taskName || 'AI數據任務'}</div>
-          <div style="font-size:11px;color:var(--muted)">${d.date}${d.slotLabel ? ' · '+d.slotLabel : ''}</div>
-        </div>
-        <span style="font-size:12px;font-weight:700;color:${col}">${label}${d.status==='approved'&&d.reward?' +'+d.reward+'元':''}</span>
-      </div>`;
+      return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;margin-bottom:8px"><div><div style="font-size:13px;font-weight:700;color:var(--text)">${d.slotName||d.taskName||'AI數據任務'}</div><div style="font-size:11px;color:var(--muted)">${d.date}${d.slotLabel?' · '+d.slotLabel:''}</div></div><span style="font-size:12px;font-weight:700;color:${col}">${label}</span></div>`;
     }).join('');
   } catch(e) { el.innerHTML = ''; }
 }
@@ -959,98 +539,57 @@ async function renderAiSlots() {
   const container = document.getElementById('ai-slots-container');
   container.innerHTML = '';
   const today = todayStr();
-
-  // 讀取後台設定的今日時段
   const config = await fsGet('ai_config/today');
   const slots = [
-    { key: 'slot1', label: config?.slot1 || '時段一（尚未公告）', active: !!config?.slot1 },
-    { key: 'slot2', label: config?.slot2 || '時段二（尚未公告）', active: !!config?.slot2 },
+    { key:'slot1', label: config?.slot1||'時段一（尚未公告）', active: !!config?.slot1 },
+    { key:'slot2', label: config?.slot2||'時段二（尚未公告）', active: !!config?.slot2 },
   ];
-
-  // 讀取今日已提交紀錄
   const docs = await fsList('ai_reviews');
   const todayMine = docs.filter(({ data: d }) => d.uid === currentUID && d.date === today);
   const submittedSlots = new Set(todayMine.map(({ data: d }) => d.slotKey));
-
   for (const slot of slots) {
     const done = submittedSlots.has(slot.key);
     const card = document.createElement('div');
     card.style.cssText = 'background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:16px;margin-bottom:12px';
-
-    const slotColor = slot.key === 'slot1' ? '#7c3aed' : '#2272e8';
-
+    const slotColor = slot.key==='slot1'?'#7c3aed':'#2272e8';
     if (!slot.active) {
-      card.innerHTML = `
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:0">
-          <div style="width:32px;height:32px;border-radius:8px;background:rgba(148,163,184,0.15);display:flex;align-items:center;justify-content:center;font-size:16px">🕐</div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:var(--muted)">${slot.key === 'slot1' ? '時段一' : '時段二'}</div>
-            <div style="font-size:11px;color:var(--muted)">尚未公告，請等候通知</div>
-          </div>
-        </div>`;
+      card.innerHTML = `<div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:8px;background:rgba(148,163,184,0.15);display:flex;align-items:center;justify-content:center;font-size:16px">🕐</div><div><div style="font-size:13px;font-weight:700;color:var(--muted)">${slot.key==='slot1'?'時段一':'時段二'}</div><div style="font-size:11px;color:var(--muted)">尚未公告，請等候通知</div></div></div>`;
     } else if (done) {
       const rec = todayMine.find(({ data: d }) => d.slotKey === slot.key);
-      const st = rec?.data?.status || 'pending';
-      const stMap = { pending: ['#ffc800','⏳ 審核中'], approved: ['var(--green)','✅ 已通過'], rejected: ['var(--red)','❌ 已拒絕'] };
-      const [col, stLabel] = stMap[st] || stMap.pending;
-      card.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:32px;height:32px;border-radius:8px;background:${slotColor}22;display:flex;align-items:center;justify-content:center;font-size:16px">✅</div>
-            <div>
-              <div style="font-size:13px;font-weight:700;color:var(--text)">${slot.label}</div>
-              <div style="font-size:11px;color:var(--muted)">已回報</div>
-            </div>
-          </div>
-          <span style="font-size:12px;font-weight:700;color:${col}">${stLabel}</span>
-        </div>`;
+      const st = rec?.data?.status||'pending';
+      const stMap = { pending:['#ffc800','⏳ 審核中'], approved:['var(--green)','✅ 已通過'], rejected:['var(--red)','❌ 已拒絕'] };
+      const [col, stLabel] = stMap[st]||stMap.pending;
+      card.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:8px;background:${slotColor}22;display:flex;align-items:center;justify-content:center;font-size:16px">✅</div><div><div style="font-size:13px;font-weight:700;color:var(--text)">${slot.label}</div><div style="font-size:11px;color:var(--muted)">已回報</div></div></div><span style="font-size:12px;font-weight:700;color:${col}">${stLabel}</span></div>`;
     } else {
       card.innerHTML = `
         <div style="margin-bottom:12px;display:flex;align-items:center;gap:10px">
           <div style="width:32px;height:32px;border-radius:8px;background:${slotColor}22;display:flex;align-items:center;justify-content:center;font-size:16px">🤖</div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:var(--text)">${slot.label}</div>
-            <div style="font-size:11px;color:var(--muted)">今日 ${slot.key === 'slot1' ? '第一' : '第二'} 時段</div>
-          </div>
+          <div><div style="font-size:13px;font-weight:700;color:var(--text)">${slot.label}</div><div style="font-size:11px;color:var(--muted)">今日 ${slot.key==='slot1'?'第一':'第二'} 時段</div></div>
         </div>
         <div class="upload-area" id="ai-area-${slot.key}" style="cursor:pointer;min-height:80px;margin-bottom:10px">
           <input type="file" accept="image/*" id="ai-file-${slot.key}" style="display:none">
-          <div id="ai-hint-${slot.key}" class="upload-area-hint">
-            <div class="uicon">📸</div>
-            <div>點擊上傳任務截圖</div>
-          </div>
+          <div id="ai-hint-${slot.key}" class="upload-area-hint"><div class="uicon">📸</div><div>點擊上傳任務截圖</div></div>
           <img id="ai-prev-${slot.key}" class="upload-preview" alt="" style="display:none">
         </div>
-        <div style="margin-bottom:10px">
-          <textarea id="ai-note-${slot.key}" placeholder="✍️ 備註（選填）..." rows="2" style="width:100%;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
-        </div>
+        <div style="margin-bottom:10px"><textarea id="ai-note-${slot.key}" placeholder="✍️ 備註（選填）..." rows="2" style="width:100%;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea></div>
         <div id="ai-err-${slot.key}" style="color:#e03f5e;font-size:12px;margin-bottom:8px;display:none"></div>
-        <button id="ai-btn-${slot.key}" data-slot="${slot.key}" data-label="${slot.label}" style="width:100%;padding:12px;background:linear-gradient(135deg,${slotColor},#2272e8);border:none;border-radius:9px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">
-          📤 送出${slot.key === 'slot1' ? '時段一' : '時段二'}回報
-        </button>`;
-
+        <button id="ai-btn-${slot.key}" data-slot="${slot.key}" data-label="${slot.label}" style="width:100%;padding:12px;background:linear-gradient(135deg,${slotColor},#2272e8);border:none;border-radius:9px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">📤 送出${slot.key==='slot1'?'時段一':'時段二'}回報</button>`;
       container.appendChild(card);
-
-      // 綁定上傳事件
       const area = card.querySelector(`#ai-area-${slot.key}`);
       const fileInput = card.querySelector(`#ai-file-${slot.key}`);
       const preview = card.querySelector(`#ai-prev-${slot.key}`);
       const hint = card.querySelector(`#ai-hint-${slot.key}`);
-
       area.addEventListener('click', () => fileInput.click());
       fileInput.addEventListener('change', () => {
-        const file = fileInput.files[0];
-        if (!file) return;
-        preview.src = URL.createObjectURL(file);
-        preview.style.display = 'block';
-        hint.style.display = 'none';
+        if (!fileInput.files[0]) return;
+        preview.src = URL.createObjectURL(fileInput.files[0]);
+        preview.style.display = 'block'; hint.style.display = 'none';
       });
-
-      const submitBtn = card.querySelector(`#ai-btn-${slot.key}`);
-      submitBtn.addEventListener('click', async () => {
+      card.querySelector(`#ai-btn-${slot.key}`).addEventListener('click', async () => {
         const errEl = card.querySelector(`#ai-err-${slot.key}`);
         errEl.style.display = 'none';
         if (!fileInput.files[0]) { errEl.textContent = '請上傳截圖'; errEl.style.display = 'block'; return; }
+        const submitBtn = card.querySelector(`#ai-btn-${slot.key}`);
         submitBtn.textContent = '送出中...'; submitBtn.disabled = true;
         try {
           const base64 = await compressImage(fileInput.files[0]);
@@ -1058,16 +597,14 @@ async function renderAiSlots() {
           const reviewId = `${currentUID}_ai_${slot.key}_${today}`;
           await fsUpdate(`ai_reviews/${reviewId}`, {
             uid: currentUID, date: today,
-            slotKey: slot.key, slotName: slot.label, slotLabel: slot.key === 'slot1' ? '時段一' : '時段二',
-            note, imageBase64: base64,
-            status: 'pending', createdAt: new Date().toISOString()
+            slotKey: slot.key, slotName: slot.label, slotLabel: slot.key==='slot1'?'時段一':'時段二',
+            note, imageBase64: base64, status: 'pending', createdAt: new Date().toISOString()
           });
-          showToast(`✅ ${slot.key === 'slot1' ? '時段一' : '時段二'}已回報！`);
-          loadAiTaskHistory();
-          renderAiSlots();
+          showToast(`✅ ${slot.key==='slot1'?'時段一':'時段二'}已回報！`);
+          loadAiTaskHistory(); renderAiSlots();
         } catch(e) {
           errEl.textContent = '送出失敗：' + e.message; errEl.style.display = 'block';
-          submitBtn.textContent = `📤 送出${slot.key === 'slot1' ? '時段一' : '時段二'}回報`;
+          submitBtn.textContent = `📤 送出${slot.key==='slot1'?'時段一':'時段二'}回報`;
           submitBtn.disabled = false;
         }
       });
@@ -1077,179 +614,44 @@ async function renderAiSlots() {
   }
 }
 
+document.querySelector('[data-tab="tab-news"]').addEventListener('click', () => { renderTravelList(); });
 document.querySelector('[data-tab="tab-ai"]').addEventListener('click', () => {
   if (currentUID) { loadAiTaskHistory(); renderAiSlots(); }
 });
 
-// ── 發票上傳 ──
 document.getElementById('invoice-upload-area').addEventListener('click', () => {
   document.getElementById('invoice-file-input').click();
 });
 document.getElementById('invoice-file-input').addEventListener('change', () => {
   const file = document.getElementById('invoice-file-input').files[0];
   if (!file) return;
-  const preview = document.getElementById('invoice-preview');
-  preview.src = URL.createObjectURL(file);
-  preview.style.display = 'block';
+  document.getElementById('invoice-preview').src = URL.createObjectURL(file);
+  document.getElementById('invoice-preview').style.display = 'block';
   document.getElementById('invoice-upload-hint').style.display = 'none';
 });
 
-// ── 修改密碼 ──
 document.getElementById('pw-save-btn').addEventListener('click', async () => {
   const errEl = document.getElementById('pw-error');
   errEl.style.display = 'none';
   const current = document.getElementById('pw-current').value.trim();
-  const newPw   = document.getElementById('pw-new').value.trim();
+  const newPw = document.getElementById('pw-new').value.trim();
   const confirm = document.getElementById('pw-confirm').value.trim();
-  if (!current || !newPw || !confirm) {
-    errEl.textContent = '請填寫所有欄位'; errEl.style.display = 'block'; return;
-  }
-  if (newPw.length < 6) {
-    errEl.textContent = '新密碼至少需要6位'; errEl.style.display = 'block'; return;
-  }
-  if (newPw !== confirm) {
-    errEl.textContent = '兩次輸入的新密碼不一致'; errEl.style.display = 'block'; return;
-  }
+  if (!current||!newPw||!confirm) { errEl.textContent = '請填寫所有欄位'; errEl.style.display = 'block'; return; }
+  if (newPw.length < 6) { errEl.textContent = '新密碼至少需要6位'; errEl.style.display = 'block'; return; }
+  if (newPw !== confirm) { errEl.textContent = '兩次輸入的新密碼不一致'; errEl.style.display = 'block'; return; }
   const btn = document.getElementById('pw-save-btn');
   btn.textContent = '儲存中...'; btn.disabled = true;
   try {
     const data = await fsGet(`members/${currentUID}`);
-    if (!data || data.password !== current) {
-      errEl.textContent = '目前密碼錯誤'; errEl.style.display = 'block';
-      btn.textContent = '儲存新密碼'; btn.disabled = false; return;
-    }
+    if (!data || data.password !== current) { errEl.textContent = '目前密碼錯誤'; errEl.style.display = 'block'; btn.textContent = '儲存新密碼'; btn.disabled = false; return; }
     await fsUpdate(`members/${currentUID}`, { password: newPw });
-    localStorage.setItem('saved_pass', newPw);
+    localStorage.setItem('omni_pass', newPw);
     showToast('✅ 密碼已成功修改！');
-    document.getElementById('pw-current').value = '';
-    document.getElementById('pw-new').value = '';
-    document.getElementById('pw-confirm').value = '';
-  } catch(e) {
-    errEl.textContent = '儲存失敗：' + e.message; errEl.style.display = 'block';
-  }
+    ['pw-current','pw-new','pw-confirm'].forEach(id => document.getElementById(id).value = '');
+  } catch(e) { errEl.textContent = '儲存失敗：' + e.message; errEl.style.display = 'block'; }
   btn.textContent = '儲存新密碼'; btn.disabled = false;
 });
 
-// ── 新聞抓取 ──
-// 使用 allorigins 代理抓 Google News RSS（繁中科技/財經）
-const RSS_SOURCES = [
-  { url: 'https://news.google.com/rss/search?q=科技+AI&hl=zh-TW&gl=TW&ceid=TW:zh-Hant', tag: 'AI 科技', icon: '🤖' },
-  { url: 'https://news.google.com/rss/search?q=財經+股市&hl=zh-TW&gl=TW&ceid=TW:zh-Hant', tag: '財經', icon: '💹' },
-  { url: 'https://news.google.com/rss/search?q=人才+科技業&hl=zh-TW&gl=TW&ceid=TW:zh-Hant', tag: '人才', icon: '👔' },
-];
-
-async function fetchRSS(rssUrl) {
-  const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
-  const res = await fetch(proxy);
-  const json = await res.json();
-  const xml = new DOMParser().parseFromString(json.contents, 'text/xml');
-  const items = [...xml.querySelectorAll('item')].slice(0, 6);
-  return items.map(item => ({
-    title: item.querySelector('title')?.textContent || '',
-    link:  item.querySelector('link')?.textContent || '#',
-    pubDate: item.querySelector('pubDate')?.textContent || '',
-    thumbnail: '',
-  }));
-}
-
-function timeAgo(dateStr) {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const h = Math.floor(diff / 3600000);
-  const m = Math.floor(diff / 60000);
-  if (h > 24) return Math.floor(h/24) + ' 天前';
-  if (h > 0) return h + ' 小時前';
-  return m + ' 分鐘前';
-}
-
-function newsCardHTML(item, tag, icon) {
-  const title = item.title || '';
-  const link  = item.link || '#';
-  const time  = item.pubDate ? timeAgo(item.pubDate) : '';
-  const thumb = item.thumbnail || item.enclosure?.link || '';
-  return `
-    <a class="news-card" href="${link}" target="_blank" rel="noopener">
-      ${thumb
-        ? `<img class="news-card-img" src="${thumb}" onerror="this.parentNode.querySelector('.news-card-img-placeholder').style.display='flex';this.style.display='none'" loading="lazy">`
-        : ''}
-      <div class="news-card-img-placeholder" style="${thumb ? 'display:none' : ''}">${icon}</div>
-      <div class="news-card-body">
-        <div class="news-card-tag">${tag}</div>
-        <div class="news-card-title">${title}</div>
-        <div class="news-card-time">${time}</div>
-      </div>
-    </a>`;
-}
-
-function newsListHTML(item, tag, icon) {
-  const title = item.title || '';
-  const link  = item.link || '#';
-  const time  = item.pubDate ? timeAgo(item.pubDate) : '';
-  return `
-    <a class="news-list-item" href="${link}" target="_blank" rel="noopener">
-      <div class="news-list-icon">${icon}</div>
-      <div class="news-list-text">
-        <div class="tag">${tag}</div>
-        <div class="title">${title}</div>
-        <div class="time">${time}</div>
-      </div>
-    </a>`;
-}
-
-async function loadNews() {
-  // 首頁預覽（簽到頁）
-  const previewEl = document.getElementById('news-preview');
-  // 新聞頁大圖
-  const featuredEl = document.getElementById('news-featured');
-  const aiEl = document.getElementById('news-ai');
-  const industryEl = document.getElementById('news-industry');
-
-  try {
-    const [src0, src1, src2] = await Promise.allSettled(RSS_SOURCES.map(s => fetchRSS(s.url)));
-
-    const items0 = src0.status === 'fulfilled' ? src0.value : [];
-    const items1 = src1.status === 'fulfilled' ? src1.value : [];
-    const items2 = src2.status === 'fulfilled' ? src2.value : [];
-
-    // 簽到頁預覽：前3則清單
-    const previewItems = [...items0.slice(0,2), ...items2.slice(0,1)];
-    if (previewItems.length) {
-      previewEl.innerHTML = previewItems.map(it => newsListHTML(it, '科技', RSS_SOURCES[0].icon)).join('');
-    } else {
-      previewEl.innerHTML = '<div class="news-error">暫無資料，請稍後再試</div>';
-    }
-
-    // 大圖卡（新聞頁頂部）
-    const featured = [...items2.slice(0,2), ...items0.slice(0,2)];
-    if (featured.length) {
-      featuredEl.innerHTML = featured.map((it, i) => {
-        const src = i < 2 ? RSS_SOURCES[2] : RSS_SOURCES[0];
-        return newsCardHTML(it, src.tag, src.icon);
-      }).join('');
-    } else {
-      featuredEl.innerHTML = '<div class="news-error">暫無資料</div>';
-    }
-
-    // AI 與人才（數位時代）
-    if (items1.length) {
-      aiEl.innerHTML = items1.slice(0,4).map(it => newsListHTML(it, RSS_SOURCES[1].tag, RSS_SOURCES[1].icon)).join('');
-    } else {
-      aiEl.innerHTML = '<div class="news-error">暫無資料</div>';
-    }
-
-    // 產業即時（科技新聞）
-    if (items0.length) {
-      industryEl.innerHTML = items0.slice(2,6).map(it => newsListHTML(it, RSS_SOURCES[0].tag, RSS_SOURCES[0].icon)).join('');
-    } else {
-      industryEl.innerHTML = '<div class="news-error">暫無資料</div>';
-    }
-
-  } catch(e) {
-    featuredEl.innerHTML = '<div class="news-error">新聞載入失敗，請稍後再試</div>';
-    previewEl.innerHTML = '';
-  }
-}
-
-// ── 登入 ──
 document.getElementById('login-btn').addEventListener('click', doLogin);
 document.getElementById('uid-input').addEventListener('keydown', e => e.key === 'Enter' && doLogin());
 document.getElementById('pass-input').addEventListener('keydown', e => e.key === 'Enter' && doLogin());
@@ -1268,7 +670,7 @@ async function doLogin() {
     const fullUID = uid.startsWith('U') ? uid : 'U' + uid;
     const data = await fsGet(`members/${fullUID}`);
     if (!data) { errEl.textContent = '找不到此會員編號'; btn.textContent = '登 入'; btn.disabled = false; return; }
-    if (data.password !== pass) { errEl.textContent = '密碼錯誤'; btn.textContent = '登 入'; btn.disabled = false; return; }
+    if (data.password !== pass) { errEl.textContent = '密碼錯誤'; btn.textContent = '開始任務 →'; btn.disabled = false; return; }
     currentUID = fullUID;
     localStorage.setItem('omni_uid', fullUID);
     localStorage.setItem('omni_pass', pass);
@@ -1276,18 +678,13 @@ async function doLogin() {
     document.getElementById('member-app').style.display = 'block';
     document.getElementById('member-uid-badge').textContent = fullUID;
     initMember();
-  } catch(e) {
-    errEl.textContent = '連線錯誤：' + e.message;
-    btn.textContent = '登 入'; btn.disabled = false;
-  }
+  } catch(e) { errEl.textContent = '連線錯誤：' + e.message; btn.textContent = '開始任務 →'; btn.disabled = false; }
 }
 
-// ── 自動登入（重整不跳出）──
 (async () => {
   const savedUID  = localStorage.getItem('omni_uid');
   const savedPass = localStorage.getItem('omni_pass');
   if (savedUID && savedPass) {
-    // 先隱藏登入畫面，避免重整時閃現
     document.getElementById('auth-screen').style.display = 'none';
     try {
       await signInAnonymously(auth);
@@ -1296,12 +693,10 @@ async function doLogin() {
         currentUID = savedUID;
         document.getElementById('member-app').style.display = 'block';
         document.getElementById('member-uid-badge').textContent = savedUID;
-        initMember();
-        return;
+        initMember(); return;
       }
     } catch(_) {}
-    localStorage.removeItem('omni_uid');
-    localStorage.removeItem('omni_pass');
+    localStorage.removeItem('omni_uid'); localStorage.removeItem('omni_pass');
     document.getElementById('auth-screen').style.display = 'flex';
   }
 })();
@@ -1317,28 +712,12 @@ function initMember() {
     document.getElementById(btn.dataset.tab).classList.add('active');
   }));
   document.getElementById('logout-btn').addEventListener('click', () => {
-    localStorage.removeItem('omni_uid');
-    localStorage.removeItem('omni_pass');
-    location.reload();
+    localStorage.removeItem('omni_uid'); localStorage.removeItem('omni_pass'); location.reload();
   });
   renderCalendar();
   renderTasks();
-  loadNews();
 }
 
-async function markYtDone(ytId, today) {
-  try {
-    const data = await fsGet(`members/${currentUID}`);
-    const ytTasks = (data && data.ytTasks) || {};
-    if (!ytTasks[ytId]) ytTasks[ytId] = {};
-    ytTasks[ytId][today] = true;
-    await fsUpdate(`members/${currentUID}`, { ytTasks });
-    showToast('✅ YT任務完成！');
-    renderTasks();
-  } catch(e) {
-    showToast('標記失敗：' + e.message, true);
-  }
-}
 async function renderCalendar() {
   try {
     const data = await fsGet(`members/${currentUID}`);
@@ -1350,7 +729,6 @@ async function renderCalendar() {
     document.getElementById('stat-total').textContent = totalCheckins;
     document.getElementById('stat-streak').textContent = streak;
     document.getElementById('cal-month-label').textContent = `${calYear}年${calMonth+1}月`;
-
     const firstDay = new Date(calYear, calMonth, 1);
     const lastDay  = new Date(calYear, calMonth+1, 0);
     const startDow = firstDay.getDay();
@@ -1377,11 +755,9 @@ async function renderCalendar() {
     if (todayIsSunday) { btn.textContent = '🚫 週日不開放簽到'; btn.disabled = true; }
     else if (checkins[today]) { btn.textContent = '✅ 今日已簽到'; btn.disabled = true; }
     else { btn.textContent = '📡 立即簽到'; btn.disabled = false; btn.onclick = () => doCheckin(today); }
-    document.getElementById('cal-prev').onclick = () => { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar(); };
-    document.getElementById('cal-next').onclick = () => { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar(); };
-  } catch(e) {
-    showToast('載入失敗：' + e.message, true);
-  }
+    document.getElementById('cal-prev').onclick = () => { calMonth--; if (calMonth<0){calMonth=11;calYear--;} renderCalendar(); };
+    document.getElementById('cal-next').onclick = () => { calMonth++; if (calMonth>11){calMonth=0;calYear++;} renderCalendar(); };
+  } catch(e) { showToast('載入失敗：' + e.message, true); }
 }
 
 async function doCheckin(today) {
@@ -1394,12 +770,8 @@ async function doCheckin(today) {
     if (checkins[today]) { showToast('今日已簽到', true); renderCalendar(); return; }
     checkins[today] = true;
     await fsUpdate(`members/${currentUID}`, { checkins, lastCheckin: today });
-    showToast('✅ 簽到成功！');
-    renderCalendar();
-  } catch(e) {
-    showToast('簽到失敗：' + e.message, true);
-    btn.textContent = '📡 立即簽到'; btn.disabled = false;
-  }
+    showToast('✅ 簽到成功！'); renderCalendar();
+  } catch(e) { showToast('簽到失敗：' + e.message, true); btn.textContent = '📡 立即簽到'; btn.disabled = false; }
 }
 
 async function renderTasks() {
@@ -1410,100 +782,61 @@ async function renderTasks() {
     const ytReviews       = (memberData && memberData.ytReviews)       || {};
     const ytRejectReasons = (memberData && memberData.ytRejectReasons) || {};
     const bonus           = (memberData && memberData.bonus)           || 0;
-
-    // 獎金卡
     document.getElementById('global-bonus-bar').style.display = 'flex';
     document.getElementById('global-bonus-amount').textContent = bonus;
-
-
-    // YT 任務 — 每部影片各自上傳截圖
     const ytDocs = await fsList('yt_tasks');
     const ytEl = document.getElementById('yt-slots-list');
     ytEl.innerHTML = '';
-
-    if (isSunday()) {
-      ytEl.innerHTML = '<div class="task-card"><div class="task-name" style="color:var(--muted)">📅 今日（週日）無 YT 任務</div></div>';
-      return;
-    }
-    if (!ytDocs.length) {
-      ytEl.innerHTML = '<div class="task-card"><div class="task-name" style="color:var(--muted)">目前沒有 YT 影片任務</div></div>';
-      return;
-    }
-
+    if (isSunday()) { ytEl.innerHTML = '<div class="task-card"><div class="task-name" style="color:var(--muted)">📅 今日（週日）無 YT 任務</div></div>'; return; }
+    if (!ytDocs.length) { ytEl.innerHTML = '<div class="task-card"><div class="task-name" style="color:var(--muted)">目前沒有 YT 影片任務</div></div>'; return; }
     ytDocs.forEach(({ id: taskId, data: t }, idx) => {
-      // 每2部自動分時段標籤顯示用
       const slotNum = Math.floor(idx / 2) + 1;
-      // reviewStatus 以 ytReviews 為主（後台審核寫入）
       const reviewStatus = (ytReviews[taskId] && ytReviews[taskId][today]) || null;
-      // isDone = 後台已通過（ytReviews approved）
       const isDone = reviewStatus === 'approved';
-
       let badgeClass = 'todo', badgeText = '未上傳';
       if (isDone)                          { badgeClass = 'approved'; badgeText = '✅ 已通過'; }
       else if (reviewStatus === 'pending') { badgeClass = 'pending';  badgeText = '⏳ 審核中'; }
       else if (reviewStatus === 'rejected'){ badgeClass = 'rejected'; badgeText = '❌ 已拒絕'; }
-
       const section = document.createElement('div');
       section.className = 'slot-section';
-
       const canUpload = !isDone && reviewStatus !== 'pending';
       const rejectReason = reviewStatus === 'rejected' ? ((ytRejectReasons[taskId] && ytRejectReasons[taskId][today]) || '') : '';
       const uploadHTML = canUpload ? `
         <div class="upload-area" id="upload-area-${taskId}">
           <input type="file" accept="image/*" id="file-input-${taskId}">
-          <div class="upload-area-hint">
-            <div class="uicon">📸</div>
-            <div>上傳截圖（按讚＋訂閱）</div>
-            <div style="font-size:10px;margin-top:3px">送出後等候審核，通過入帳 <strong style="color:var(--green)">100元</strong></div>
-          </div>
+          <div class="upload-area-hint"><div class="uicon">📸</div><div>上傳截圖（按讚＋訂閱）</div><div style="font-size:10px;margin-top:3px">送出後等候審核，通過入帳 <strong style="color:var(--green)">100元</strong></div></div>
           <img class="upload-preview" id="preview-${taskId}" alt="預覽">
         </div>
         <textarea id="comment-${taskId}" placeholder="✍️ 請輸入觀看心得（至少10字）..." style="width:100%;margin-top:10px;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(0,144,255,0.3);border-radius:9px;color:var(--text);font-size:13px;font-family:inherit;resize:vertical;min-height:80px;outline:none;box-sizing:border-box"></textarea>
         <button class="upload-submit-btn" id="submit-btn-${taskId}">📤 送出截圖與心得等候審核</button>
-        ${rejectReason ? `<div style="background:rgba(255,95,126,0.08);border:1px solid rgba(255,95,126,0.3);border-radius:9px;padding:10px 14px;margin-top:8px"><div style="color:var(--red);font-size:12px;font-weight:700;margin-bottom:4px">⚠️ 拒絕原因</div><div style="color:#c0392b;font-size:13px">${rejectReason}</div></div>` : '<div style="color:var(--red);font-size:11px;margin-top:6px;text-align:center">⚠️ 截圖或心得不符，請重新上傳</div>'}
+        ${rejectReason?`<div style="background:rgba(255,95,126,0.08);border:1px solid rgba(255,95,126,0.3);border-radius:9px;padding:10px 14px;margin-top:8px"><div style="color:var(--red);font-size:12px;font-weight:700;margin-bottom:4px">⚠️ 拒絕原因</div><div style="color:#c0392b;font-size:13px">${rejectReason}</div></div>`:'<div style="color:var(--red);font-size:11px;margin-top:6px;text-align:center">⚠️ 截圖或心得不符，請重新上傳</div>'}
       ` : '';
-
       section.innerHTML = `
-        <div class="slot-label">
-          <span>時段${slotNum} ▶️ ${t.name}</span>
-          <span class="slot-badge ${badgeClass}">${badgeText}</span>
-        </div>
-        ${t.url ? `<a class="yt-watch-btn" href="${t.url}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:${canUpload?'10px':'0'}">▶ 前往觀看</a>` : ''}
-        ${uploadHTML}
-      `;
-
+        <div class="slot-label"><span>時段${slotNum} ▶️ ${t.name}</span><span class="slot-badge ${badgeClass}">${badgeText}</span></div>
+        ${t.url?`<a class="yt-watch-btn" href="${t.url}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:${canUpload?'10px':'0'}">▶ 前往觀看</a>`:''}
+        ${uploadHTML}`;
       ytEl.appendChild(section);
-
       if (!canUpload) return;
-
       const fileInput = document.getElementById(`file-input-${taskId}`);
       const preview   = document.getElementById(`preview-${taskId}`);
       const submitBtn = document.getElementById(`submit-btn-${taskId}`);
-
       fileInput.addEventListener('change', () => {
-        const file = fileInput.files[0];
-        if (!file) return;
-        preview.src = URL.createObjectURL(file);
-        preview.style.display = 'block';
-        submitBtn.style.display = 'block';
+        if (!fileInput.files[0]) return;
+        preview.src = URL.createObjectURL(fileInput.files[0]);
+        preview.style.display = 'block'; submitBtn.style.display = 'block';
       });
-
       submitBtn.addEventListener('click', () => {
         const comment = document.getElementById(`comment-${taskId}`);
         uploadScreenshot(taskId, t.name, fileInput, submitBtn, comment);
       });
     });
-  } catch(e) {
-    showToast('載入任務失敗：' + e.message, true);
-  }
+  } catch(e) { showToast('載入任務失敗：' + e.message, true); }
 }
 
-// ── 申請領款 ──────────────────────────────────────
 document.getElementById('global-withdraw-btn').addEventListener('click', async () => {
   const panel = document.getElementById('withdraw-panel');
   const isOpen = panel.style.display !== 'none';
   if (!isOpen) {
-    // 檢查是否已有待審核申請
     try {
       const reqs = await fsList('withdrawal_requests');
       const hasPending = reqs.some(r => r.data.uid === currentUID && r.data.status === 'pending');
@@ -1517,31 +850,20 @@ document.getElementById('global-withdraw-btn').addEventListener('click', async (
 document.getElementById('withdraw-submit-btn').addEventListener('click', async () => {
   const amt = parseInt(document.getElementById('withdraw-amount').value);
   if (!amt || amt <= 0) { showToast('請輸入有效金額', true); return; }
-
   const memberData = await fsGet(`members/${currentUID}`);
   const bonus = (memberData && memberData.bonus) || 0;
-  if (amt > bonus) { showToast(`金額超過獎金餘額（$${bonus}）`, true); return; }
-
+  if (amt > bonus) { showToast(`金額超過旅遊專用金餘額（$${bonus}）`, true); return; }
   const btn = document.getElementById('withdraw-submit-btn');
   btn.textContent = '送出中...'; btn.disabled = true;
   try {
     const reqId = `wr_${currentUID}_${Date.now()}`;
-    await fsUpdate(`withdrawal_requests/${reqId}`, {
-      uid: currentUID,
-      amount: amt,
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-    });
+    await fsUpdate(`withdrawal_requests/${reqId}`, { uid: currentUID, amount: amt, status: 'pending', createdAt: new Date().toISOString() });
     showToast('✅ 申請已送出，等待管理員確認');
     document.getElementById('withdraw-panel').style.display = 'none';
     document.getElementById('withdraw-amount').value = '';
-  } catch(e) {
-    showToast('送出失敗：' + e.message, true);
-    btn.textContent = '送出申請'; btn.disabled = false;
-  }
+  } catch(e) { showToast('送出失敗：' + e.message, true); btn.textContent = '送出申請'; btn.disabled = false; }
 });
 
-// 壓縮圖片為 base64
 function compressImage(file) {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -1549,18 +871,14 @@ function compressImage(file) {
     img.onload = () => {
       const MAX = 800;
       let w = img.width, h = img.height;
-      if (w > MAX || h > MAX) {
-        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
-        else       { w = Math.round(w * MAX / h); h = MAX; }
-      }
+      if (w > MAX || h > MAX) { if (w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;} }
       const canvas = document.createElement('canvas');
       canvas.width = w; canvas.height = h;
       canvas.getContext('2d').drawImage(img, 0, 0, w, h);
       URL.revokeObjectURL(url);
       resolve(canvas.toDataURL('image/jpeg', 0.7));
     };
-    img.onerror = reject;
-    img.src = url;
+    img.onerror = reject; img.src = url;
   });
 }
 
@@ -1574,34 +892,202 @@ async function uploadScreenshot(taskId, taskName, fileInput, submitBtn, commentE
     const today    = todayStr();
     const base64   = await compressImage(file);
     const reviewId = `${currentUID}_${taskId}_${today}`;
-
-    // 存截圖與心得到 pending_reviews
     await fsUpdate(`pending_reviews/${reviewId}`, {
-      uid:         currentUID,
-      taskId,
-      taskName,
-      date:        today,
-      imageBase64: base64,
-      comment:     comment,
-      status:      'pending',
-      createdAt:   new Date().toISOString(),
+      uid: currentUID, taskId, taskName, date: today,
+      imageBase64: base64, comment, status: 'pending', createdAt: new Date().toISOString()
     });
-
-    // 更新會員 ytReviews 狀態
     const data      = await fsGet(`members/${currentUID}`);
     const ytReviews = (data && data.ytReviews) || {};
     if (!ytReviews[taskId]) ytReviews[taskId] = {};
     ytReviews[taskId][today] = 'pending';
     await fsUpdate(`members/${currentUID}`, { ytReviews });
-
-    showToast('✅ 截圖與心得已送出，等候審核！');
-    renderTasks();
+    showToast('✅ 截圖與心得已送出，等候審核！'); renderTasks();
   } catch(e) {
     showToast('上傳失敗：' + e.message, true);
-    submitBtn.textContent = '📤 送出截圖與心得等候審核';
-    submitBtn.disabled = false;
+    submitBtn.textContent = '📤 送出截圖與心得等候審核'; submitBtn.disabled = false;
   }
 }
+
+// ── 旅遊行程資料 ──
+const TRAVEL_DATA = [
+  { id:1, cat:'japan', flag:'🇯🇵', country:'日本', img:'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80', title:'九州仲夏風·由布院之森（草原星空夜·夢語湯布院5日）', date:'7月12/26', price:'$61,900起', days:5, highlight:'草原星空・由布院温泉・森之呼吸',
+    desc:'被《米其林旅遊指南》評為三星級的由布院，是九州最夢幻的溫泉小鎮。金鱗湖在晨霧中波光粼粼，湖畔古樸的木造建築倒映水中，宛如一幅浮世繪。\n\n沿著湯の坪街道信步而行，特色小店、手工藝品、和牛料理一字排開，讓人流連忘返。夜晚入住傳統旅館，身披浴衣於露天風呂中仰望星河，蟲鳴與溫泉聲交織，是城市人最渴望的療癒時光。\n\n行程亦涵蓋阿蘇火山、九重夢大吊橋及久布白溪谷等九州秘景，山林壯闊與溫泉雅致完美結合，帶你感受截然不同的日本。',
+    features:['🌸 金鱗湖晨霧散策，攝影絕佳聖地','♨️ 入住正統日式溫泉旅館，附露天風呂','🐄 品嚐九州名產豐後牛炭火燒肉','🌋 近距離觀賞阿蘇活火山壯觀景色','🌉 九重夢大吊橋，日本最高懸吊橋'] },
+
+  { id:2, cat:'japan', flag:'🇯🇵', country:'日本', img:'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80', title:'步履寫詩·走進山海秘境（熊野古道·東方朝聖之路6日）', date:'9月03/10', price:'$99,900起', days:6, highlight:'熊野古道・世界遺產・山海秘境',
+    desc:'熊野古道是日本唯一入選UNESCO世界遺產的朝聖之路，千年以來無數皇族、武將沿此道前往熊野三山朝拜。穿行於杉林蔽天的古道，腳踩苔蘚青石，彷彿穿越回平安時代。\n\n熊野本宮大社、那智大瀧、速玉大社三大聖地各有神韻——那智瀑布落差133公尺，水聲轟然，被視為神的化身供奉千年。鄰近的勝浦溫泉藏於峭壁洞窟之中，乘小舟入浴，堪稱世界絕景。\n\n行程精選中邊路核心段步道，難度適中，導覽員全程陪同解說，讓你在山林間讀懂日本最深層的精神文化。',
+    features:['🏛️ 世界遺產熊野古道導覽健行','💧 那智大瀧——日本落差最大神聖瀑布','🚣 勝浦洞窟溫泉，舟渡入浴絕世體驗','⛩️ 熊野三山完整參拜，感受千年靈氣','🌊 紀伊半島海岸線，奇岩怪石景色壯麗'] },
+
+  { id:3, cat:'japan', flag:'🇯🇵', country:'日本', img:'https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&q=80', title:'立山三段染·秋畫上高地（峽谷鐵道縱·犬山英迪格6日）', date:'11月10/17', price:'$78,900起', days:6, highlight:'立山秋色・上高地・峽谷鐵道',
+    desc:'立山黑部阿爾卑斯山脈路線，是日本最壯麗的山岳觀光路線，11月的「三段染」奇景——山頂白雪、腰間金紅、谷底翠綠，三層色彩同時呈現，美得令人屏息。\n\n搭乘纜車、高原巴士、電動軌道車接力換乘，穿越海拔3,000公尺的雄山，俯瞰黑部水庫碧藍湖面。上高地被稱為「日本的優勝美地」，梓川倒映岳樺紅葉，大正池靜謐如鏡，每一步都是風景明信片。\n\n最後一站犬山城，是日本現存最古老的天守閣之一，入住時尚的英迪格設計酒店，古城風情與現代美學完美融合。',
+    features:['🏔️ 立山黑部三段染，一山看盡三季色彩','🚠 纜車＋電車＋高原巴士，五種交通工具接力','💧 黑部水庫——日本最大拱壩壯觀放水','🍁 上高地梓川楓紅，鏡面倒映絕美秋景','🏯 犬山城，日本現存最古老天守閣之一'] },
+
+  { id:4, cat:'japan', flag:'🇯🇵', country:'日本', img:'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80', title:'東京迪士尼·富士急樂園（歐風輕井澤·哈利波特三大樂園6日）', date:'8月01/22', price:'$79,900起', days:6, highlight:'迪士尼・富士急・哈利波特',
+    desc:'一次解鎖日本三大頂級主題樂園！東京迪士尼樂園是全球最受歡迎的迪士尼之一，園內的「美女與野獸」城堡及「星際旅遊」等全新設施令人讚嘆；富士急樂園坐擁四座世界級極限雲霄飛車，刺激指數爆表，富士山正好作為最壯麗的背景。\n\n環球影城大阪的哈利波特魔法世界，讓你走進電影場景，品嚐奶油啤酒、與巫師為伍。三大樂園截然不同的體驗，滿足所有年齡層。\n\n樂園以外，輕井澤的歐式街道、高原空氣與美食購物，是完美的放鬆中繼站，讓你在刺激與悠閒之間找到最美的平衡。',
+    features:['🏰 東京迪士尼——最新城堡區全體驗','🎢 富士急最強雲霄飛車，挑戰極限','🧙 哈利波特魔法世界，走進電影現場','🌿 輕井澤高原散步，舊輕銀座購物','🗻 富士山遠眺，絕美自然背景'] },
+
+  { id:5, cat:'japan', flag:'🇯🇵', country:'日本', img:'https://images.unsplash.com/photo-1522383225653-ed111181a951?w=800&q=80', title:'北海道道東·阿寒湖秋水（層雲峽伊人·秋色紅葉狩7日）', date:'10月03/17', price:'$104,900起', days:7, highlight:'阿寒湖・層雲峽・北海道紅葉',
+    desc:'道東是北海道最後一塊秘境，遠離觀光人潮，保留著最原始的北方自然風貌。阿寒湖是日本最大的火口湖，湖中生長著全球珍稀的毬藻，愛努族原住民在湖畔世代守護著這份神秘。\n\n層雲峽的楓紅在10月達到巔峰，峭壁夾谷間火紅與橘黃相互輝映，搭乘纜車登上黑岳，可將大雪山系的壯麗秋景盡收眼底。摩周湖因能見度極高、湖水純淨蔚藍，被稱為「神之湖」，靜謐神秘令人動容。\n\n行程特別安排道東三湖遊覽，搭配新鮮帝王蟹、生鮮海膽的道東海鮮饗宴，讓每一天都充滿驚喜。',
+    features:['🌿 阿寒湖毬藻觀察，全球珍稀自然奇觀','🍁 層雲峽纜車，大雪山頂俯瞰秋景','🌊 摩周湖「神之湖」，透明度世界第一','🦀 道東海鮮饗宴，帝王蟹＋生海膽直送','🪶 愛努族傳統文化體驗，了解北海道原住民'] },
+
+  { id:6, cat:'korea', flag:'🇰🇷', country:'韓國', img:'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?w=800&q=80', title:'穿越過去到現在·遇見千年歷史（釜山+慶洲私家遊5日）', date:'10月05/18', price:'$114,500起', days:5, highlight:'慶洲古都・釜山海景・千年文化',
+    desc:'慶洲是韓國保存最完整的千年古都，曾是新羅王朝的首都長達一千年，整座城市本身就是一座露天博物館。佛國寺的八九座建築被列為國寶，石窟庵的佛像雕刻堪稱東亞藝術巔峰；大陵苑的巨型皇陵靜臥平原，夕陽映照下莊嚴而神秘。\n\n釜山是韓國最生猛的港口城市——札嘎其魚市場的新鮮海產比比皆是，甘川洞文化村的彩色階梯建築宛如韓版馬丘比丘，海雲台白沙灘是韓劇取景聖地。\n\n兩座城市，一古一今，形成強烈而迷人的對比，是認識韓國最完整的旅行方式。',
+    features:['⛩️ 佛國寺＋石窟庵，UNESCO世界遺產','🏺 慶洲國立博物館，新羅千年寶藏','🎨 甘川洞彩色文化村，韓劇熱門取景地','🦐 札嘎其魚市場，現撈現吃最新鮮','🌊 海雲台海灘散步，感受釜山海港風情'] },
+
+  { id:7, cat:'korea', flag:'🇰🇷', country:'韓國', img:'https://images.unsplash.com/photo-1601621915196-2621bfb0cd6e?w=800&q=80', title:'走進韓國·饕餮韓食（首爾+仁川私家遊5日）', date:'10月16/25', price:'$138,000起', days:5, highlight:'首爾美食・仁川・韓食文化',
+    desc:'這趟旅程以「吃遍韓國」為核心——清晨廣藏市場的綠豆煎餅與蒸蛋，正午益善洞韓屋村的傳統韓定食，傍晚弘大街頭的炸雞配生啤，深夜東大門熱炒小攤的辣炒年糕，讓你的每一餐都是全新體驗。\n\n景福宮的宏偉宮殿群、北村韓屋村的巷弄古情、Coex購物中心的星空圖書館，首爾在傳統與現代之間自在穿梭。仁川唐人街保留著百年華人移民痕跡，炸醬麵的起源地，一碗麵就是一段歷史。\n\n行程特別安排韓食料理課程，由專業大廚帶領親手製作泡菜、石鍋拌飯，帶走最道地的韓國味道。',
+    features:['🍜 廣藏市場、弘大、東大門美食全攻略','👑 景福宮換崗儀式，宮廷文化親身體驗','📚 Coex星空圖書館，首爾最美打卡聖地','🥬 韓食料理課程，學做泡菜帶回家','🌃 N首爾塔夜景，首爾燈火盡收眼底'] },
+
+  { id:8, cat:'thai', flag:'🇹🇭', country:'泰國', img:'https://images.unsplash.com/photo-1563492065599-3520f775eeed?w=800&q=80', title:'清邁百年私房（靜謐Anantara·洲際古韻風華5日）', date:'7月17/22', price:'$59,900起', days:5, highlight:'清邁古城・Anantara酒店・蘭納文化',
+    desc:'清邁是泰北蘭納王朝的舊都，護城河環繞的古城內藏有三百多座金碧輝煌的古廟，其中素帖寺高踞山巔，俯瞰清邁全景，是泰北最神聖的朝聖地。\n\n本次入住榮獲金旅獎肯定的頂級Anantara渡假村，融入蘭納傳統建築美學，每間房間都是藝術品。專屬管家服務、私人泳池、泰式精油按摩，讓你的每個早晨都從奢華開始。\n\n周日夜市的手工藝品、瀾滄江畔的搖椅咖啡廳、大象生態保護區的近距離互動……清邁用溫柔而從容的步調，讓你忘記所有煩惱。',
+    features:['🏛️ 素帖山寺，泰北最神聖的山頂寺廟','🐘 大象生態保護區，道德旅遊近距離互動','💆 Anantara頂級SPA，泰式草藥全身療程','🛍️ 周日夜市，手工藝品血拼天堂','☕ 瀾滄江畔咖啡，清邁最悠閒的午後'] },
+
+  { id:9, cat:'thai', flag:'🇹🇭', country:'泰國', img:'https://images.unsplash.com/photo-1506665531195-3566af2b4dfa?w=800&q=80', title:'蘇梅·泰Chill旅（藏在海角的優雅·悠時光輕奢6日）', date:'9月03/16', price:'$79,900起', days:6, highlight:'蘇梅島・海景泳池・輕奢度假',
+    desc:'蘇梅島是泰國灣最耀眼的明珠，純白沙灘、椰影婆娑、清澈見底的碧藍海水，構成一幅讓人沉醉的熱帶畫卷。查汶海灘的活力、媚公海灘的浪漫、安通海洋國家公園的原始，讓每一天都有不同的精彩。\n\n本次住宿精選島上最具口碑的輕奢度假村，無邊際泳池直面泰國灣，每個傍晚都能欣賞到夕陽沉入海平線的震撼瞬間。行程特別安排出海浮潛，珊瑚礁間熱帶魚群環繞，如入水中仙境。\n\n日落沙灘BBQ晚宴、泰式按摩、海鮮市場探訪……在蘇梅，每一刻都值得細細品味。',
+    features:['🏊 無邊際泳池，俯瞰泰國灣絕美海景','🤿 安通海洋公園浮潛，珊瑚礁熱帶魚群','🌅 日落沙灘BBQ晚宴，最浪漫的海邊時光','💆 正統泰式SPA，全身精油按摩放鬆身心','🦞 查汶海鮮市場，生猛活跳直接烤來吃'] },
+
+  { id:10, cat:'thai', flag:'🇹🇭', country:'泰國', img:'https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80', title:'泰北雙城·清邁洲際美學（清萊安納塔拉·蘭納文化饗旅6日）', date:'8月05/26', price:'$93,900起', days:6, highlight:'清邁・清萊・白廟・蘭納文化',
+    desc:'泰北最迷人的雙城之旅——清邁的古典蘭納優雅與清萊的當代藝術震撼，形成最精彩的對比。\n\n清萊白廟（Wat Rong Khun）是泰國當代最知名的藝術建築，全白的廟身鑲嵌鏡片，在陽光下如鑽石般閃耀，出自泰國藝術家查侖猜之手，融入佛教寓意與現代想象力，令所有訪客嘆為觀止。藍廟的深邃寶藍與白廟形成強烈對比，同樣令人過目難忘。\n\n清邁週日夜市的蘭納傳統工藝、洲際酒店的古韻現代融合設計、清萊安納塔拉的私密山林泳池，讓這趟旅程兼具藝術深度與度假質感。',
+    features:['⚪ 清萊白廟——泰國最美當代佛教建築','💙 藍廟深邃寶藍，藝術震撼指數滿分','🌿 安納塔拉山林泳池，私密度假天堂','🏮 清邁週日夜市，蘭納傳統手工藝品','🛕 雙城古廟巡禮，感受泰北千年文化積澱'] },
+
+  { id:11, cat:'sea', flag:'🇻🇳', country:'越南', img:'https://images.unsplash.com/photo-1555921015-5532091f6026?w=800&q=80', title:'潮中越·慢遊會安（奢旅峴港洲際·星廚美味饗宴5日）', date:'7月17/31', price:'$71,900起', days:5, highlight:'會安古鎮・峴港洲際・米其林',
+    desc:'會安古鎮是越南保存最完好的歷史貿易港，黃色牆壁、紅燈籠、木雕拱廊，百年前中國、日本、歐洲商人在此交匯留下的痕跡隨處可見，被UNESCO列為世界文化遺產。\n\n最迷人的是夜晚的會安——每逢農曆十四，古鎮關閉電燈，只點亮成千上萬盞彩色燈籠，整條河流都倒映著彩光，那是世界上最浪漫的夜晚之一。\n\n入住榮獲金旅獎的峴港洲際度假村，私人沙灘綿延三公里，品嚐駐店星廚以在地食材詮釋的精緻越南料理，每一口都是對這片土地最深情的致敬。',
+    features:['🏮 會安燈籠節，世界最浪漫的古鎮夜晚','🌊 峴港洲際私人沙灘，三公里純白細沙','⭐ 米其林星廚料理，精緻越南美食體驗','🚲 古鎮自行車漫遊，探索百年歷史巷弄','🎨 燈籠DIY手作課程，帶走會安的浪漫'] },
+
+  { id:12, cat:'sea', flag:'🇻🇳', country:'越南', img:'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80', title:'北越雙城記·下龍灣洲際（海景2晚·鐵道景觀列車·索菲特傳奇5日）', date:'8月08/29', price:'$61,900起', days:5, highlight:'下龍灣・河內・鐵道咖啡街',
+    desc:'下龍灣是大自然最壯麗的傑作——一千六百多座石灰岩島嶼自海面拔地而起，晨霧環繞間如同仙境。UNESCO世界遺產的頭銜實至名歸，乘坐豪華郵輪在島嶼間穿行，每個轉彎都是新的驚嘆。\n\n行程搭乘越南最具傳奇色彩的統一鐵道列車，窗外稻田、山脈、海岸線的連續變換，是最治癒的旅行電影。河內老城36行街區，法國殖民時期的黃色建築與越南傳統混搭，獨特的城市氣質令人著迷。\n\n鐵道咖啡街是河內最新打卡勝地，火車從咖啡桌旁呼嘯而過，驚險與趣味並存，是河內最獨特的體驗。',
+    features:['⛵ 下龍灣豪華郵輪2晚，世界遺產海上探索','🚂 越南統一鐵道景觀列車，窗外山海美景','🏛️ 河內舊城36行街，法式殖民建築漫步','☕ 鐵道咖啡街，火車從身旁呼嘯而過','🍜 河內老字號河粉Pho，正統北越味道'] },
+
+  { id:13, cat:'sea', flag:'🇲🇾', country:'馬來西亞', img:'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80', title:'吉隆坡璀璨夜·馬六甲古風華（Fun玩馬來西亞5日）', date:'7月08/22', price:'$57,900起', days:5, highlight:'吉隆坡・馬六甲古城・多元文化',
+    desc:'馬來西亞是東南亞最多元文化的國度，馬來、華人、印度三大族群在此和諧共處，孕育出獨一無二的混搭文化與美食。\n\n吉隆坡的雙峰塔夜景是全球最上鏡的都市景觀之一，空中橋廊俯瞰城市燈海，壯觀令人難忘。茨廠街的嘈雜市井、KLCC購物廊的精品名店，兩種吉隆坡同樣迷人。\n\n馬六甲是UNESCO世界遺產古城，荷蘭廣場的磚紅色古建築、雞場街的南洋老店、娘惹傳統料理的酸辣甜香，五百年的殖民歷史在此留下最精彩的印記。晚上的河岸燈光秀讓整座古城煥然一新。',
+    features:['🏙️ 雙峰塔空中橋廊，俯瞰吉隆坡全景','🍲 娘惹料理體驗，南洋最獨特的混搭風味','🏛️ 馬六甲UNESCO古城，五百年歷史建築群','🛺 三輪車漫遊雞場街，老城最道地的遊法','🌆 河岸燈光秀，馬六甲夜間最美的風景'] },
+
+  { id:14, cat:'sea', flag:'🇲🇾', country:'馬來西亞', img:'https://images.unsplash.com/photo-1567449303183-ae0d6ed1498b?w=800&q=80', title:'馬國Chill旅·私享綠中海（宿泊天際Hyatt·米其林饗宴5日）', date:'7月15/29', price:'$73,900起', days:5, highlight:'天際Hyatt・米其林・綠中海',
+    desc:'想在吉隆坡體驗最頂級的奢華生活，天際Hyatt（Park Hyatt Kuala Lumpur）是無可取代的選擇。坐落雙峰塔旁的超高樓層，每間房間都將城市天際線變為私人風景，入夜後萬家燈火盡在眼底。\n\n酒店頂樓的米其林餐廳由國際名廚主理，以馬來西亞在地食材結合法式料理技藝，創作出令人驚豔的當代馬來料理。Pool Bar的無邊際泳池浮在雲端，一邊游泳一邊俯瞰吉隆坡，這就是所謂的「天際生活」。\n\n行程亦納入森林空中步道公園（Forest Research Institute Malaysia），吉隆坡市中心的原始熱帶雨林體驗，城市與自然的極致反差，正是馬來西亞的迷人之處。',
+    features:['🏨 天際Hyatt頂樓無邊際泳池，雲端泳池體驗','⭐ 米其林餐廳晚宴，當代馬來料理饗宴','🌳 FRIM熱帶雨林空中步道，市區內的原始自然','🌃 雙峰塔夜景，吉隆坡最美的城市天際線','🍹 Sky Bar Cockt日落時刻，天空下的雞尾酒時光'] },
+
+  { id:15, cat:'sea', flag:'🇲🇾', country:'馬來西亞', img:'https://images.unsplash.com/photo-1501780392773-287d506245a5?w=800&q=80', title:'大馬三城慢旅（舌尖南洋食光·漫步殖民風華6日）', date:'8月07/21', price:'$61,900起', days:6, highlight:'三城慢旅・南洋美食・殖民建築',
+    desc:'以美食為地圖，用腳步丈量馬來西亞三座個性迥異的城市——吉隆坡、喬治市、馬六甲，每座城市都是一篇獨特的南洋故事。\n\n喬治市是CNN評選的「全球最值得探訪街頭美食城市」之首，炭燒蝦麵、咖哩魚頭、桂花糕的香味從清晨就開始飄散。街頭藝術壁畫讓整座城市變成露天美術館，娘惹藍屋的瓷磚裝飾令人流連。\n\n馬六甲的葡式、荷式、英式殖民建築層層疊疊，每一街每一巷都是歷史課本的活化石。吉隆坡的現代摩天樓與老茨廠街並存，展現馬來西亞最真實的當代面貌。',
+    features:['🍜 喬治市街頭美食，CNN全球第一美食城','🎨 喬治市壁畫藝術街，露天美術館散步','🏛️ 荷蘭廣場、聖地牙哥城堡，五百年歷史遺跡','💙 娘惹藍屋，馬來西亞最精緻的歷史宅邸','🛒 中央市場購物，馬來傳統工藝精品挑選'] },
+
+  { id:16, cat:'sea', flag:'🇲🇻', country:'馬爾地夫', img:'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80', title:'FUN趣馬爾地夫~海上豪華樂園~五星思雅瑪世界渡假村7日', date:'10月05/12/19', price:'$118,000起', days:7, highlight:'水上屋・珊瑚礁・五星渡假村',
+    desc:'馬爾地夫是地球上最接近天堂的地方——26個自然環礁、1,200座島嶼，每一座都被純淨到透明的印度洋環抱。本次入住頂級的思雅瑪世界渡假村（Siyam World），是馬爾地夫面積最大的水上屋渡假村，專屬碼頭直連水上屋，踏出房門即是無盡蔚藍。\n\n水下房間可直接欣賞珊瑚礁魚群悠游，Slide & Splash水上樂園讓家庭旅客盡情歡笑。行程包含深潛、浮潛、獨木舟、日落遊船等豐富水上活動，還有清晨的海豚watch及沙洲野餐。\n\n這裡的星空沒有光汙染，躺在水上屋甲板仰望銀河，是此生最難忘的夜晚。',
+    features:['🏠 海上水上屋，踏出門即是印度洋','🐠 水晶清澈珊瑚礁，與魚群共舞','🐬 海豚watch出海，與野生海豚同游','⭐ 零光汙染星空，沙洲上的銀河夜晚','🤿 深潛＋浮潛＋獨木舟，水上活動全包套'] },
+
+  { id:17, cat:'europe', flag:'🇬🇧', country:'英國/法國', img:'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=80', title:'倫敦風華：藍牌導遊·皇室足跡·藝術盛宴10日', date:'10月16', price:'$298,000起', days:10, highlight:'倫敦・巴黎・藍牌導遊',
+    desc:'倫敦藍牌導遊（Blue Badge Guide）是英國最高規格的官方認證，全英僅數百人取得此資格，代表最深度、最正確的歷史詮釋。本次行程由藍牌導遊全程帶領，帶你走進白金漢宮、西敏寺、溫莎城堡的真實歷史脈絡，讓每一幢建築都開口說話。\n\n大英博物館珍藏人類文明七千年；泰特現代藝術館是全球當代藝術殿堂；科芬園的街頭藝人、碎片大廈的倫敦天際線、波特貝羅市集的古董挖寶，讓倫敦在歷史之外展現最生動活潑的一面。\n\n行程亦納入巴黎二日，凡爾賽宮的金碧輝煌、羅浮宮的藝術震撼、塞納河的落日遊船，讓這趟歐洲之旅無懈可擊。',
+    features:['🏅 藍牌導遊全程帶領，英國最高認證解說','👑 白金漢宮衛兵交接，皇室傳統親身目睹','🏛️ 大英博物館深度導覽，人類文明七千年','🗼 巴黎凡爾賽宮，法國皇室奢華極致','🚢 塞納河日落遊船，巴黎最浪漫的夜晚'] },
+
+  { id:18, cat:'europe', flag:'🇫🇷', country:'法國', img:'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&q=80', title:'雙師帶路-南法建築·法國孛艮地酒莊12日', date:'10月03', price:'$269,000起', days:12, highlight:'南法・孛艮地酒莊・建築美學',
+    desc:'這是一趟為熱愛建築與美酒的旅人量身設計的深度之旅。由兩位專業導師——建築史學者與侍酒師大師——聯袂帶路，從不同維度詮釋法國南部的人文之美。\n\n普羅旺斯的薰衣草田在陽光下散發醉人紫色，亞維農教皇宮是中世紀哥德建築的巔峰之作，盧貝宏山區的石砌小村宛如時光凝固。孛艮地（Burgundy）是全球最頂尖的葡萄酒產區，頂級酒莊的地下酒窖巡禮、專業侍酒師的品酒課程，讓你真正讀懂一瓶好酒背後的風土哲學。\n\n尼斯的蔚藍海岸陽光燦爛，摩納哥的高端奢華令人目眩，每一天都是新的精彩。',
+    features:['🏛️ 建築史學者帶路，南法建築深度解析','🍷 頂級酒莊品酒課程，侍酒師大師親授','💜 普羅旺斯薰衣草田，最詩意的法國風景','🏰 亞維農教皇宮，UNESCO世界遺產哥德建築','🌊 蔚藍海岸尼斯、摩納哥，歐洲最美海岸線'] },
+
+  { id:19, cat:'europe', flag:'🇨🇭', country:'瑞士', img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80', title:'瑞士鐵道—三大景觀列車·五大名峰·策馬特·頭等艙Swiss Pass15日', date:'9月18', price:'$253,000起', days:15, highlight:'景觀列車・馬特洪峰・策馬特',
+    desc:'瑞士景觀列車是全球鐵道旅行的最高境界，本次行程搭乘三大傳奇列車：冰河快車（Glacier Express）穿越291座橋樑、91個隧道，橫貫阿爾卑斯核心；伯連納快車（Bernina Express）以UNESCO遺產路線攀越海拔2,253公尺；黃金山脈列車（GoldenPass）沿途湖光山色如詩如畫。\n\n策馬特是無車城市，平靜街道盡頭是馬特洪峰（Matterhorn）那標誌性的三角輪廓，搭乘齒輪火車登上戈爾內格拉特，五座四千公尺以上雪峰同框，是一生必看的風景。\n\n全程享用瑞士鐵道頭等艙Swiss Pass，超大全景窗是最奢華的「移動風景台」。',
+    features:['🚂 冰河快車頭等艙，橫貫阿爾卑斯最美路線','🏔️ 馬特洪峰全景，瑞士最標誌性的山岳景觀','❄️ 戈爾內格拉特五峰同框，海拔3,089公尺雪景','🎿 策馬特無車小鎮，阿爾卑斯最純淨的山村','🌄 伯連納UNESCO鐵道，高山雪原穿越'] },
+
+  { id:20, cat:'europe', flag:'🇨🇭', country:'瑞士', img:'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80', title:'瑞士巴士—悠然慢遊·絕美三大名峰·秘境雙湖13日', date:'9月21', price:'$266,000起', days:13, highlight:'三大名峰・秘境雙湖・慢旅瑞士',
+    desc:'這是一趟拒絕趕行程的瑞士慢旅。以巴士為主要交通，沿途停靠最美的觀景台，讓你有充裕的時間感受每一處風景，而不只是走馬看花。\n\n少女峰（Jungfrau）是「歐洲之巔」，海拔3,454公尺的頂峰車站是歐洲最高的鐵路終點站，冰原廣袤白茫，令人震撼。艾格峰（Eiger）北壁是登山界的終極挑戰，卡拉羅峰（Schilthorn）是007電影拍攝地，迴轉餐廳360度俯瞰群峰。\n\n秘境雙湖——奧施南（Oeschinen Lake）與托馬湖（Tomasee），前者是萊茵河的源頭，後者碧藍如寶石，人跡罕至。在湖畔的木屋享用起司火鍋，這才是瑞士最真實的樣子。',
+    features:['🏔️ 少女峰「歐洲之巔」，海拔3,454公尺冰原','🎬 艾格峰＋卡拉羅007迴轉餐廳，電影場景','💎 奧施南秘境湖，少有人知的瑞士瑰寶','🧀 山間木屋起司火鍋，最道地的瑞士晚餐','🌸 格林德瓦花谷健行，山腳最美的高山牧場'] },
+
+  { id:21, cat:'other', flag:'🇦🇪', country:'杜拜', img:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80', title:'創意杜拜阿布達比沙迦（帆船酒店·法拉利樂園·羅浮宮·沙漠滑沙8日）', date:'9月06', price:'$194,900起', days:8, highlight:'帆船酒店・沙漠滑沙・羅浮宮',
+    desc:'杜拜是人類野心與創造力的最高展現——世界最高樓哈里發塔、人工棕櫚島、沙漠中的滑雪場，這座城市每一天都在刷新「不可能」的定義。\n\n帆船酒店（Burj Al Arab）是全球最奢華酒店的代名詞，七星級的下午茶體驗讓你感受何謂極致禮遇；卓美亞棕櫚島的私人沙灘是最夢幻的度假背景。入夜後，哈里發塔燈光秀以世界最大的投影幕為畫布，壯觀無比。\n\n阿布達比的羅浮宮是建築奇蹟，圓頂將阿拉伯文化編織成光影；法拉利世界的極速雲霄飛車是全球最快的室內過山車。沙迦傳統集市讓你找到另一個更古典的阿拉伯靈魂。',
+    features:['🛳️ 帆船酒店七星午茶，全球最奢華體驗','⚡ 哈里發塔頂層觀景台，124樓俯瞰杜拜','🏎️ 法拉利世界極速雲霄飛車，全球最快室內過山車','🎨 阿布達比羅浮宮，建築本身就是藝術','🐪 沙漠營地滑沙＋駱駝騎乘，夕陽下的阿拉伯夜晚'] },
+
+  { id:22, cat:'other', flag:'🇨🇦', country:'加拿大', img:'https://images.unsplash.com/photo-1531169628054-836a35a6a56b?w=800&q=80', title:'美麗星世界黃刀鎮洛磯12日（黃刀極光·班夫國家公園·硫磺山纜車）', date:'10月14', price:'$209,900起', days:12, highlight:'極光・洛磯山・班夫國家公園',
+    desc:'黃刀鎮（Yellowknife）位於北緯62度，是全球觀賞北極光機率最高的城市之一，10月的黑夜長達16小時，極光出現頻率超過70%。當綠色光帶在夜空中搖曳舞動，那份震撼是任何文字都無法描述的——這是許多人一生中最想完成的旅行清單第一名。\n\n洛磯山脈國家公園群是UNESCO世界遺產，班夫的碧藍冰川湖（露易絲湖、佩托湖）在夕陽下發出令人心醉的藍綠色光芒，那是冰川礦物質帶來的神奇色彩。傑士伯國家公園的哥倫比亞冰原，搭乘冰原雪車踏上一萬年歷史的古老冰川。\n\n硫磺山纜車俯瞰班夫小鎮與弓河谷，楓紅與白雪的交替，構成加拿大最壯麗的秋日畫卷。',
+    features:['🌌 黃刀鎮極光觀測，出現率70%以上夢幻體驗','💙 露易絲湖冰川藍，世界最美高山湖泊之一','❄️ 哥倫比亞冰原雪車，踏上萬年古老冰川','🍁 班夫楓紅季，洛磯山脈最美的秋天','🐺 傑士伯國家公園，野生麋鹿與灰狼棲息地'] },
+];
+
+let currentFilter = 'all';
+
+function filterTravel(cat) {
+  currentFilter = cat;
+  document.querySelectorAll('.travel-filter').forEach(b => b.classList.remove('active-filter'));
+  document.getElementById('filter-' + cat).classList.add('active-filter');
+  renderTravelList();
+}
+
+const CAT_GRADIENTS = {
+  japan:  'linear-gradient(135deg,#e8767a,#c0392b)',
+  korea:  'linear-gradient(135deg,#5b86e5,#36d1dc)',
+  thai:   'linear-gradient(135deg,#f7971e,#ffd200)',
+  sea:    'linear-gradient(135deg,#11998e,#38ef7d)',
+  europe: 'linear-gradient(135deg,#667eea,#764ba2)',
+  other:  'linear-gradient(135deg,#f953c6,#b91d73)',
+};
+const CAT_EMOJI = { japan:'🗻', korea:'🏯', thai:'🛕', sea:'🌊', europe:'🏰', other:'✈️' };
+
+function renderTravelList() {
+  const list = document.getElementById('travel-list');
+  const data = currentFilter === 'all' ? TRAVEL_DATA : TRAVEL_DATA.filter(t => t.cat === currentFilter);
+  if (!data.length) { list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:30px">此分類暫無行程</div>'; return; }
+  list.innerHTML = data.map(t => {
+    const grad = CAT_GRADIENTS[t.cat] || CAT_GRADIENTS.other;
+    const emoji = CAT_EMOJI[t.cat] || '✈️';
+    return `
+    <div class="travel-card" onclick="showTravelDetail(${t.id})">
+      <div style="width:100%;height:160px;border-radius:10px;overflow:hidden;margin-bottom:10px;position:relative;background:${grad}">
+        ${t.img ? `<img src="${t.img}" alt="${t.country}" style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0" onerror="this.style.display='none'">` : ''}
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:56px;opacity:0.25;pointer-events:none">${emoji}</div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,rgba(0,0,0,0.45));border-radius:0 0 10px 10px"></div>
+        <div style="position:absolute;bottom:8px;left:10px;color:#fff;font-size:11px;font-weight:700;letter-spacing:.5px;text-shadow:0 1px 4px rgba(0,0,0,.5)">${t.flag} ${t.country}</div>
+        <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.45);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;backdrop-filter:blur(4px)">${t.days}天</div>
+      </div>
+      <div class="travel-card-header">
+        <div class="travel-card-title">${t.title}</div>
+        <div class="travel-price">${t.price}</div>
+      </div>
+      <div class="travel-card-meta">
+        <span class="travel-tag" style="background:rgba(10,171,110,0.1);color:var(--green);border:1px solid rgba(10,171,110,0.25)">📅 ${t.date}</span>
+        <span class="travel-tag" style="background:rgba(34,114,232,0.1);color:var(--accent2);border:1px solid rgba(34,114,232,0.2)">🗓 ${t.days}天</span>
+        <span class="travel-tag" style="background:rgba(100,140,200,0.1);color:var(--muted);border:1px solid var(--border)">📍 ${t.country}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showTravelDetail(id) {
+  const t = TRAVEL_DATA.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('modal-title').textContent = t.flag + ' ' + t.title;
+  const descParagraphs = t.desc.split('\n\n').map(p => `<p style="margin-bottom:10px">${p}</p>`).join('');
+  const featuresHtml = t.features ? `
+    <div style="background:rgba(34,114,232,0.05);border:1px solid rgba(34,114,232,0.18);border-radius:10px;padding:12px 14px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--accent2);margin-bottom:10px;letter-spacing:1px">🗺️ 行程特色</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        ${t.features.map(f => `<div style="display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--text);line-height:1.5"><span style="flex-shrink:0">${f}</span></div>`).join('')}
+      </div>
+    </div>` : '';
+  document.getElementById('modal-body').innerHTML = `
+    ${t.img ? `<div style="width:100%;height:200px;border-radius:12px;overflow:hidden;margin-bottom:14px"><img src="${t.img}" alt="${t.country}" style="width:100%;height:100%;object-fit:cover;display:block"></div>` : ''}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+      <span class="travel-tag" style="background:rgba(10,171,110,0.1);color:var(--green);border:1px solid rgba(10,171,110,0.25);font-size:12px;padding:5px 12px">📅 出發：${t.date}</span>
+      <span class="travel-tag" style="background:rgba(34,114,232,0.1);color:var(--accent2);border:1px solid rgba(34,114,232,0.2);font-size:12px;padding:5px 12px">🗓 ${t.days}天行程</span>
+      <span class="travel-tag" style="background:rgba(100,140,200,0.1);color:var(--muted);border:1px solid var(--border);font-size:12px;padding:5px 12px">📍 ${t.country}</span>
+    </div>
+    <div style="background:rgba(10,171,110,0.06);border:1px solid rgba(10,171,110,0.2);border-radius:10px;padding:12px 14px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:6px">✨ 行程亮點</div>
+      <div style="font-size:13px;color:var(--text);font-weight:500">${t.highlight}</div>
+    </div>
+    <div style="font-size:13px;color:var(--text);line-height:1.9;margin-bottom:14px;opacity:0.85">${descParagraphs}</div>
+    ${featuresHtml}
+    <div style="background:linear-gradient(135deg,rgba(224,63,94,0.08),rgba(224,63,94,0.04));border:1px solid rgba(224,63,94,0.2);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:11px;color:var(--muted)">旅遊專用金可折抵</div>
+        <div style="font-size:20px;font-weight:800;color:#e03f5e">${t.price}</div>
+      </div>
+      <div style="font-size:28px">✈️</div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px">詳細行程請洽助理，用旅遊專用金圓你的夢！</div>
+  `;
+  document.getElementById('travel-modal').style.display = 'flex';
+}
+window.filterTravel = filterTravel;
+window.showTravelDetail = showTravelDetail;
+
+// 初始渲染旅遊
+if (document.getElementById("travel-list")) renderTravelList();
 </script>
 </body>
 </html>
