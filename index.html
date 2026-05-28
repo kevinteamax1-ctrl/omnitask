@@ -178,40 +178,32 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
         </div>
       </div>
       <h2>會員簽到平台</h2>
-      <!-- 裝飾插圖 -->
       <svg viewBox="0 0 320 90" style="width:100%;max-width:320px;margin:10px auto 0;display:block;opacity:0.85" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0090ff"/><stop offset="100%" stop-color="#00e5a0"/></linearGradient>
           <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1655c0"/><stop offset="100%" stop-color="#0090ff"/></linearGradient>
         </defs>
-        <!-- 星星裝飾 -->
         <circle cx="20" cy="20" r="2" fill="#00c8ff" opacity="0.7"/>
         <circle cx="300" cy="15" r="3" fill="#00e5a0" opacity="0.6"/>
         <circle cx="160" cy="8" r="1.5" fill="#fff" opacity="0.5"/>
         <circle cx="260" cy="40" r="2" fill="#0090ff" opacity="0.6"/>
         <circle cx="50" cy="60" r="1.5" fill="#00e5a0" opacity="0.5"/>
-        <!-- 手機圖示 -->
         <rect x="120" y="10" width="36" height="60" rx="6" fill="url(#lg2)" opacity="0.9"/>
         <rect x="124" y="15" width="28" height="42" rx="3" fill="#0a0f1e"/>
         <circle cx="138" cy="63" r="2.5" fill="#00c8ff" opacity="0.8"/>
-        <!-- 螢幕內容 -->
         <rect x="127" y="19" width="22" height="3" rx="1.5" fill="#0090ff" opacity="0.8"/>
         <rect x="127" y="25" width="16" height="2" rx="1" fill="#334466"/>
         <rect x="127" y="30" width="19" height="2" rx="1" fill="#334466"/>
         <rect x="127" y="35" width="14" height="2" rx="1" fill="#334466"/>
         <rect x="127" y="42" width="22" height="8" rx="3" fill="url(#lg1)" opacity="0.9"/>
         <text x="138" y="48" text-anchor="middle" font-size="4" fill="#fff" font-family="sans-serif">簽到</text>
-        <!-- 勾選圓 -->
         <circle cx="185" cy="40" r="22" fill="url(#lg1)" opacity="0.15"/>
         <circle cx="185" cy="40" r="17" fill="none" stroke="url(#lg1)" stroke-width="2" opacity="0.5"/>
         <text x="185" y="46" text-anchor="middle" font-size="18" fill="url(#lg1)">✓</text>
-        <!-- 獎勵圖示 -->
         <circle cx="82" cy="42" r="18" fill="#1a2a4a"/>
         <text x="82" y="49" text-anchor="middle" font-size="20">💰</text>
-        <!-- 連線虛線 -->
         <line x1="100" y1="42" x2="118" y2="42" stroke="#0090ff" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
         <line x1="156" y1="42" x2="168" y2="42" stroke="#00e5a0" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
-        <!-- 底部文字 -->
         <text x="160" y="83" text-anchor="middle" font-size="8" fill="#334466" font-family="sans-serif" letter-spacing="1">完成任務 · 累積收益 · 每日簽到</text>
       </svg>
     </div>
@@ -238,8 +230,7 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
     <button class="logout-btn" id="logout-btn">登出</button>
   </div>
 
-  <!-- 累積獎金 固定顯示在所有分頁上方 -->
-  <div id="global-bonus-bar" style="display:none;background:linear-gradient(135deg,rgba(0,229,160,0.12),rgba(0,144,255,0.08));border-bottom:1px solid rgba(0,229,160,0.25);padding:10px 18px;display:none;align-items:center;gap:12px;position:sticky;top:52px;z-index:90;backdrop-filter:blur(12px)">
+  <div id="global-bonus-bar" style="display:none;background:linear-gradient(135deg,rgba(0,229,160,0.12),rgba(0,144,255,0.08));border-bottom:1px solid rgba(0,229,160,0.25);padding:10px 18px;align-items:center;gap:12px;position:sticky;top:52px;z-index:90;backdrop-filter:blur(12px)">
     <div style="font-size:18px">💰</div>
     <div style="flex:1">
       <div style="display:flex;align-items:baseline;gap:6px">
@@ -285,7 +276,6 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
     <button class="checkin-btn" id="checkin-btn">📡 立即簽到</button>
     <p style="color:var(--muted);font-size:10px;text-align:center;letter-spacing:.5px">⚠️ 只能簽今天，不能補簽</p>
 
-    <!-- 簽到插圖 banner -->
     <div style="margin-top:14px;background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;overflow:hidden;position:relative">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#005aff,#00e5a0)"></div>
       <svg viewBox="0 0 70 70" width="70" height="70" style="flex-shrink:0" xmlns="http://www.w3.org/2000/svg">
@@ -302,7 +292,6 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       </div>
     </div>
 
-    <!-- 幣託一條 banner，點進去跳幣託介紹頁 -->
     <div style="margin-top:18px;margin-bottom:6px">
       <button onclick="document.querySelectorAll('.tab-btn')[1].click()" style="width:100%;background:linear-gradient(135deg,rgba(0,30,80,0.95),rgba(0,15,50,0.98));border:1px solid rgba(0,144,255,0.35);border-radius:14px;padding:12px 16px;cursor:pointer;text-align:left;position:relative;overflow:hidden;transition:border-color .2s,transform .2s" onmouseover="this.style.borderColor='rgba(0,200,255,0.6)';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='rgba(0,144,255,0.35)';this.style.transform='none'">
         <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#005aff,#0090ff,#00c8ff,#00e5a0)"></div>
@@ -320,7 +309,6 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
 
   <!-- 幣託介紹 TAB -->
   <div class="tab-pane" id="tab-news">
-    <!-- 頂部 Banner -->
     <div style="background: linear-gradient(135deg, rgba(0,40,100,0.8), rgba(0,20,60,0.95)); border: 1px solid var(--border2); border-radius: 16px; padding: 20px 18px 16px; margin-bottom: 14px; position: relative; overflow: hidden;">
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#005aff,#0090ff,#00c8ff,#00e5a0)"></div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
@@ -333,7 +321,6 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       <p style="font-size:13px;color:#99bbdd;line-height:1.7">幣託（BitoPro）是台灣最早取得金管會登記的合法加密貨幣交易平台之一，專為個人與企業提供安全、快速的數位資產管理服務。</p>
     </div>
 
-    <!-- 什麼是加密貨幣？ -->
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px">
       <div style="font-size:12px;font-weight:800;color:var(--accent2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">💡 新手必看：什麼是 USDT？</div>
       <p style="font-size:13px;color:#aaccee;line-height:1.8;margin-bottom:10px">USDT（泰達幣）是一種「穩定幣」，1 USDT ≈ 1 美元，價格不像比特幣那樣大漲大跌，非常適合用於跨境轉帳與企業出金。</p>
@@ -351,7 +338,6 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       </div>
     </div>
 
-    <!-- 為什麼選幣託 -->
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px">
       <div style="font-size:12px;font-weight:800;color:var(--accent2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">🏆 為什麼選擇幣託？</div>
       <div style="display:flex;flex-direction:column;gap:10px">
@@ -379,7 +365,6 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       </div>
     </div>
 
-    <!-- 出金流程 -->
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px">
       <div style="font-size:12px;font-weight:800;color:var(--accent2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px">📤 出金流程（超簡單 3 步驟）</div>
       <div style="display:flex;flex-direction:column;gap:8px">
@@ -407,30 +392,16 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       </div>
     </div>
 
-    <!-- 安全提示 -->
     <div style="background:linear-gradient(135deg,rgba(255,95,126,0.08),rgba(255,95,126,0.04));border:1px solid rgba(255,95,126,0.25);border-radius:14px;padding:16px;margin-bottom:10px">
       <div style="font-size:12px;font-weight:800;color:#ff8fa3;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🔒 安全機制說明</div>
       <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="color:var(--green);font-size:14px">✓</span>
-          <span style="font-size:12px;color:#aaccee">僅建議透過<strong style="color:var(--text)">官方平台</strong>下載 App 或前往官網</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="color:var(--green);font-size:14px">✓</span>
-          <span style="font-size:12px;color:#aaccee">請勿透過<strong style="color:var(--text)">第三方連結</strong>或不明網站登入帳戶</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="color:var(--green);font-size:14px">✓</span>
-          <span style="font-size:12px;color:#aaccee">啟用<strong style="color:var(--text)">雙重驗證（2FA）</strong>，增加帳戶安全層級</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="color:var(--green);font-size:14px">✓</span>
-          <span style="font-size:12px;color:#aaccee">定期確認登入紀錄，發現異常立即聯繫客服</span>
-        </div>
+        <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--green);font-size:14px">✓</span><span style="font-size:12px;color:#aaccee">僅建議透過<strong style="color:var(--text)">官方平台</strong>下載 App 或前往官網</span></div>
+        <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--green);font-size:14px">✓</span><span style="font-size:12px;color:#aaccee">請勿透過<strong style="color:var(--text)">第三方連結</strong>或不明網站登入帳戶</span></div>
+        <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--green);font-size:14px">✓</span><span style="font-size:12px;color:#aaccee">啟用<strong style="color:var(--text)">雙重驗證（2FA）</strong>，增加帳戶安全層級</span></div>
+        <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--green);font-size:14px">✓</span><span style="font-size:12px;color:#aaccee">定期確認登入紀錄，發現異常立即聯繫客服</span></div>
       </div>
     </div>
 
-    <!-- OmniTask 合作說明 -->
     <div style="background:linear-gradient(135deg,rgba(0,229,160,0.08),rgba(0,144,255,0.06));border:1px solid rgba(0,229,160,0.25);border-radius:14px;padding:16px;margin-bottom:6px">
       <div style="font-size:12px;font-weight:800;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🎁 OmniTask 任鏈科技 × 幣託</div>
       <p style="font-size:12px;color:#aaccee;line-height:1.8">新用戶完成幣託身份驗證（KYC）後，即可獲得 <strong style="color:var(--green)">OmniTask 任鏈科技專屬活動獎勵</strong>。詳情請洽助理，把握機會！</p>
@@ -443,46 +414,32 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
 
   <!-- 店家任務 TAB -->
   <div class="tab-pane" id="tab-store">
-
-    <!-- 說明區 -->
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:18px 16px;margin-bottom:14px">
-      <!-- 店家插圖 header -->
       <svg viewBox="0 0 340 100" style="width:100%;max-width:340px;margin:0 auto 14px;display:block" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="sg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1655c0"/><stop offset="100%" stop-color="#2272e8"/></linearGradient>
           <linearGradient id="sg2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#00b894"/><stop offset="100%" stop-color="#00e5a0"/></linearGradient>
         </defs>
-        <!-- 店面圖 -->
         <rect x="100" y="28" width="80" height="55" rx="4" fill="url(#sg1)" opacity="0.9"/>
         <rect x="95" y="20" width="90" height="14" rx="3" fill="#0090ff"/>
-        <!-- 招牌 -->
         <rect x="112" y="25" width="56" height="8" rx="2" fill="#fff" opacity="0.2"/>
-        <!-- 門 -->
         <rect x="126" y="55" width="24" height="28" rx="3" fill="#0a1a3a"/>
         <circle cx="148" cy="70" r="1.5" fill="#00c8ff"/>
-        <!-- 窗戶 -->
         <rect x="108" y="40" width="18" height="14" rx="2" fill="#fff" opacity="0.25"/>
         <rect x="154" y="40" width="18" height="14" rx="2" fill="#fff" opacity="0.25"/>
-        <!-- 遮陽棚條紋 -->
         <rect x="95" y="20" width="12" height="14" rx="0" fill="#005aff" opacity="0.5"/>
         <rect x="119" y="20" width="12" height="14" fill="#005aff" opacity="0.5"/>
         <rect x="143" y="20" width="12" height="14" fill="#005aff" opacity="0.5"/>
         <rect x="167" y="20" width="12" height="14" fill="#005aff" opacity="0.5"/>
-        <!-- 地點標記 -->
         <circle cx="200" cy="30" r="12" fill="#ff5f7e" opacity="0.9"/>
         <text x="200" y="35" text-anchor="middle" font-size="12">📍</text>
-        <!-- 金幣 -->
         <circle cx="240" cy="60" r="16" fill="#ffd700" opacity="0.15"/>
         <circle cx="240" cy="60" r="12" fill="none" stroke="#ffd700" stroke-width="1.5" opacity="0.5"/>
         <text x="240" y="65" text-anchor="middle" font-size="14">💰</text>
-        <!-- 箭頭連線 -->
         <path d="M183 55 Q210 48 228 55" stroke="#00e5a0" stroke-width="1.5" fill="none" stroke-dasharray="4,3" opacity="0.7"/>
-        <!-- 左側裝飾 -->
         <circle cx="60" cy="50" r="20" fill="url(#sg1)" opacity="0.12"/>
         <text x="60" y="57" text-anchor="middle" font-size="22">🏪</text>
-        <!-- 右側裝飾 -->
         <text x="295" y="55" text-anchor="middle" font-size="22">✅</text>
-        <!-- 底部標語 -->
         <text x="170" y="92" text-anchor="middle" font-size="8.5" fill="#334466" font-family="sans-serif" letter-spacing="1">探店體驗 · 填寫回饋 · 入帳 700元</text>
       </svg>
       <div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:3px">🏪 店家實境收益任務</div>
@@ -534,7 +491,6 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       </div>
     </div>
 
-    <!-- 可前往店家 -->
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:14px">
       <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">📍 可前往店家類型</div>
       <div style="margin-bottom:10px">
@@ -566,13 +522,11 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       </div>
     </div>
 
-    <!-- 我的店家任務紀錄 -->
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:14px">
       <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">📋 我的任務紀錄</div>
       <div id="store-task-history" style="font-size:13px;color:var(--muted);text-align:center;padding:12px">載入中...</div>
     </div>
 
-    <!-- 冷卻提示（送出後7天內顯示） -->
     <div id="store-cooldown-notice" style="display:none;background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.3);border-radius:14px;padding:18px 16px;margin-bottom:14px;text-align:center">
       <div style="font-size:28px;margin-bottom:8px">⏳</div>
       <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">本週任務已完成</div>
@@ -583,7 +537,6 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       </div>
     </div>
 
-    <!-- 回饋表單 -->
     <div id="store-form-section">
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:18px 16px;margin-bottom:16px">
       <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:2px">📝 店家實境任務回饋表</div>
@@ -606,43 +559,36 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：服務態度、專業介紹、親切程度、應對方式等</div>
         <textarea id="store-q1" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
       </div>
-
       <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">2️⃣ 店內環境與氛圍體驗</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：整潔度、舒適感、空間氣氛、音樂、燈光等</div>
         <textarea id="store-q2" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
       </div>
-
       <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">3️⃣ 本次消費／體驗過程中印象最深刻的地方</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">可分享讓您加分或特別有感的細節</div>
         <textarea id="store-q3" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
       </div>
-
       <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">4️⃣ 對於商品／服務內容的實際感受</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：品質、效果、實用性、價格感受等</div>
         <textarea id="store-q4" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
       </div>
-
       <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">5️⃣ 店內動線與整體安排是否順暢</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">例如：等候流程、座位安排、空間規劃等</div>
         <textarea id="store-q5" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
       </div>
-
       <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">6️⃣ 是否會願意再次回訪？原因是什麼？</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">請說明您的原因</div>
         <textarea id="store-q6" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
       </div>
-
       <div style="margin-bottom:16px;background:rgba(0,144,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px">
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">7️⃣ 如果推薦給朋友，您會怎麼介紹這間店？</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">請說明您會如何推薦</div>
         <textarea id="store-q7" placeholder="✍️ 請填寫回饋內容..." rows="3" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical"></textarea>
       </div>
-
       <div style="margin-bottom:16px;background:rgba(148,163,184,0.05);border:1px solid var(--border2);border-radius:10px;padding:12px">
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">8️⃣ 其他建議或希望店家改善的地方 <span style="font-size:11px;font-weight:400;color:var(--muted)">（選填）</span></div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">任何額外想回饋的都可以填寫</div>
@@ -651,7 +597,6 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
 
       <div id="store-form-error" style="color:#e03f5e;font-size:13px;margin-bottom:10px;display:none"></div>
 
-      <!-- 發票上傳 -->
       <div style="background:rgba(255,193,7,0.06);border:1px solid rgba(255,193,7,0.25);border-radius:12px;padding:14px;margin-bottom:12px">
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">🧾 發票上傳</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:10px">請上傳消費發票截圖或照片</div>
@@ -665,7 +610,6 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
         </div>
       </div>
 
-      <!-- 影片提示 -->
       <div style="background:rgba(0,144,255,0.06);border:1px solid rgba(0,144,255,0.2);border-radius:12px;padding:14px;margin-bottom:16px">
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">🎬 影片心得</div>
         <div style="font-size:12px;color:var(--muted);line-height:1.7">請將影片心得直接傳給助理，助理確認後會同步審核資料。</div>
@@ -675,13 +619,11 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
         📤 送出回饋表等候審核
       </button>
     </div>
-    </div><!-- end store-form-section -->
+    </div>
   </div>
 
   <!-- AI任務 TAB -->
   <div class="tab-pane" id="tab-ai">
-
-    <!-- 說明 banner -->
     <div style="background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(0,144,255,0.08));border:1px solid rgba(124,58,237,0.25);border-radius:16px;padding:18px 16px;margin-bottom:14px;position:relative;overflow:hidden">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#7c3aed,#2272e8,#00e5a0)"></div>
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
@@ -696,15 +638,12 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       </div>
     </div>
 
-    <!-- 我的AI任務紀錄 -->
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:14px">
       <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">📋 我的 AI 任務紀錄</div>
       <div id="ai-task-history"><div style="color:var(--muted);text-align:center;padding:12px;font-size:13px">載入中...</div></div>
     </div>
 
-    <!-- 今日時段（從Firebase動態載入） -->
     <div id="ai-slots-container"></div>
-
   </div>
 
   <!-- 設定 TAB -->
@@ -712,34 +651,24 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
     <div style="max-width:420px;margin:0 auto;padding-top:8px">
       <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:22px 20px;margin-bottom:16px">
         <div style="font-weight:700;font-size:15px;color:var(--text);margin-bottom:18px">🔐 修改密碼</div>
-
         <div style="margin-bottom:14px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:6px">目前密碼</div>
-          <input type="password" id="pw-current" placeholder="請輸入目前密碼" autocomplete="off"
-            style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+          <input type="password" id="pw-current" placeholder="請輸入目前密碼" autocomplete="off" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
         </div>
-
         <div style="margin-bottom:14px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:6px">新密碼</div>
-          <input type="password" id="pw-new" placeholder="請輸入新密碼（至少6位）" autocomplete="off"
-            style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+          <input type="password" id="pw-new" placeholder="請輸入新密碼（至少6位）" autocomplete="off" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
         </div>
-
         <div style="margin-bottom:20px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:6px">確認新密碼</div>
-          <input type="password" id="pw-confirm" placeholder="再輸入一次新密碼" autocomplete="off"
-            style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
+          <input type="password" id="pw-confirm" placeholder="再輸入一次新密碼" autocomplete="off" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.85);border:1px solid rgba(100,140,200,0.3);border-radius:9px;font-size:14px;color:#1a2540;outline:none;box-sizing:border-box;font-family:inherit">
         </div>
-
         <div id="pw-error" style="color:#e03f5e;font-size:13px;margin-bottom:12px;display:none"></div>
-
-        <button id="pw-save-btn"
-          style="width:100%;padding:13px;background:linear-gradient(135deg,#1655c0,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">
-          儲存新密碼
-        </button>
+        <button id="pw-save-btn" style="width:100%;padding:13px;background:linear-gradient(135deg,#1655c0,#2272e8);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">儲存新密碼</button>
       </div>
     </div>
   </div>
+
     <!-- 申請領款面板 -->
     <div id="withdraw-panel" style="display:none;background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.25);border-radius:14px;padding:16px;margin-bottom:14px">
       <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px">💸 申請領款</div>
@@ -749,7 +678,6 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; background-ima
       <button id="withdraw-submit-btn" style="width:100%;padding:12px;background:linear-gradient(135deg,#00b894,var(--green));border:none;border-radius:9px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">送出申請</button>
     </div>
     <div class="section-title">▶️ YT 影音任務</div>
-    <!-- YT任務插圖 -->
     <div style="background:linear-gradient(135deg,rgba(255,0,0,0.06),rgba(0,144,255,0.06));border:1px solid rgba(255,0,0,0.15);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px">
       <svg viewBox="0 0 50 50" width="50" height="50" style="flex-shrink:0" xmlns="http://www.w3.org/2000/svg">
         <rect x="2" y="8" width="46" height="32" rx="8" fill="#ff0000" opacity="0.9"/>
@@ -816,16 +744,13 @@ async function fsList(col) {
 async function loadStoreHistory() {
   const el = document.getElementById('store-task-history');
   const formEl = document.getElementById('store-form-section');
-  const submitBtn = document.getElementById('store-submit-btn');
   try {
     const docs = await fsList('store_reviews');
     const mine = docs.filter(({ data: d }) => d.uid === currentUID);
 
-    // 找最新一筆（不管狀態）
     const sorted = mine.sort((a, b) => new Date(b.data.createdAt) - new Date(a.data.createdAt));
     const latest = sorted[0];
 
-    // 計算下次可送出時間
     let nextAvailable = null;
     let cooldownMsg = '';
     if (latest) {
@@ -840,7 +765,6 @@ async function loadStoreHistory() {
       }
     }
 
-    // 顯示紀錄
     if (!mine.length) {
       el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:8px">尚無任務紀錄</div>';
     } else {
@@ -861,9 +785,7 @@ async function loadStoreHistory() {
       }).join('');
     }
 
-    // 控制表單顯示
     if (cooldownMsg) {
-      // 冷卻中，隱藏表單，顯示倒數
       formEl.style.display = 'none';
       document.getElementById('store-cooldown-notice').style.display = 'block';
       document.getElementById('store-cooldown-msg').textContent = cooldownMsg;
@@ -878,7 +800,6 @@ async function loadStoreHistory() {
   } catch(e) { el.innerHTML = ''; }
 }
 
-// 預設今天日期
 document.getElementById('store-date').value = todayStr();
 
 document.getElementById('store-submit-btn').addEventListener('click', async () => {
@@ -895,7 +816,6 @@ document.getElementById('store-submit-btn').addEventListener('click', async () =
   const btn = document.getElementById('store-submit-btn');
   btn.textContent = '送出中...'; btn.disabled = true;
   try {
-    // 發票圖片（選填）
     let invoiceBase64 = '';
     const invoiceFile = document.getElementById('invoice-file-input').files[0];
     if (invoiceFile) invoiceBase64 = await compressImage(invoiceFile);
@@ -921,7 +841,6 @@ document.getElementById('store-submit-btn').addEventListener('click', async () =
   btn.textContent = '📤 送出回饋表等候審核'; btn.disabled = false;
 });
 
-// 切到店家任務分頁時載入紀錄
 document.querySelector('[data-tab="tab-store"]').addEventListener('click', () => {
   if (currentUID) loadStoreHistory();
 });
@@ -960,14 +879,14 @@ async function renderAiSlots() {
   container.innerHTML = '';
   const today = todayStr();
 
-  // 讀取後台設定的今日時段
   const config = await fsGet('ai_config/today');
   const slots = [
     { key: 'slot1', label: config?.slot1 || '時段一（尚未公告）', active: !!config?.slot1 },
     { key: 'slot2', label: config?.slot2 || '時段二（尚未公告）', active: !!config?.slot2 },
   ];
 
-  // 讀取今日已提交紀錄
+  // ✅ FIX: 讀取今日已提交紀錄，使用 reviewId 格式 = ${uid}_ai_${slotKey}_${today}
+  // 這樣每個時段每天只能提交一次，且相同 ID 覆蓋寫入不會產生重複
   const docs = await fsList('ai_reviews');
   const todayMine = docs.filter(({ data: d }) => d.uid === currentUID && d.date === today);
   const submittedSlots = new Set(todayMine.map(({ data: d }) => d.slotKey));
@@ -999,7 +918,7 @@ async function renderAiSlots() {
             <div style="width:32px;height:32px;border-radius:8px;background:${slotColor}22;display:flex;align-items:center;justify-content:center;font-size:16px">✅</div>
             <div>
               <div style="font-size:13px;font-weight:700;color:var(--text)">${slot.label}</div>
-              <div style="font-size:11px;color:var(--muted)">已回報</div>
+              <div style="font-size:11px;color:var(--muted)">今日已回報</div>
             </div>
           </div>
           <span style="font-size:12px;font-weight:700;color:${col}">${stLabel}</span>
@@ -1031,7 +950,6 @@ async function renderAiSlots() {
 
       container.appendChild(card);
 
-      // 綁定上傳事件
       const area = card.querySelector(`#ai-area-${slot.key}`);
       const fileInput = card.querySelector(`#ai-file-${slot.key}`);
       const preview = card.querySelector(`#ai-prev-${slot.key}`);
@@ -1053,8 +971,22 @@ async function renderAiSlots() {
         if (!fileInput.files[0]) { errEl.textContent = '請上傳截圖'; errEl.style.display = 'block'; return; }
         submitBtn.textContent = '送出中...'; submitBtn.disabled = true;
         try {
+          // ✅ FIX: 送出前再次確認今日此時段尚未提交（防並發）
+          const freshDocs = await fsList('ai_reviews');
+          const alreadySubmitted = freshDocs.some(({ data: d }) =>
+            d.uid === currentUID && d.date === today && d.slotKey === slot.key
+          );
+          if (alreadySubmitted) {
+            showToast(`今日${slot.key === 'slot1' ? '時段一' : '時段二'}已回報，請勿重複送出`, true);
+            submitBtn.textContent = `📤 送出${slot.key === 'slot1' ? '時段一' : '時段二'}回報`;
+            submitBtn.disabled = false;
+            renderAiSlots();
+            return;
+          }
+
           const base64 = await compressImage(fileInput.files[0]);
           const note = card.querySelector(`#ai-note-${slot.key}`).value.trim();
+          // ✅ 固定 reviewId 格式，同一天同時段 = 同一個 doc，無法重複建立
           const reviewId = `${currentUID}_ai_${slot.key}_${today}`;
           await fsUpdate(`ai_reviews/${reviewId}`, {
             uid: currentUID, date: today,
@@ -1101,15 +1033,9 @@ document.getElementById('pw-save-btn').addEventListener('click', async () => {
   const current = document.getElementById('pw-current').value.trim();
   const newPw   = document.getElementById('pw-new').value.trim();
   const confirm = document.getElementById('pw-confirm').value.trim();
-  if (!current || !newPw || !confirm) {
-    errEl.textContent = '請填寫所有欄位'; errEl.style.display = 'block'; return;
-  }
-  if (newPw.length < 6) {
-    errEl.textContent = '新密碼至少需要6位'; errEl.style.display = 'block'; return;
-  }
-  if (newPw !== confirm) {
-    errEl.textContent = '兩次輸入的新密碼不一致'; errEl.style.display = 'block'; return;
-  }
+  if (!current || !newPw || !confirm) { errEl.textContent = '請填寫所有欄位'; errEl.style.display = 'block'; return; }
+  if (newPw.length < 6) { errEl.textContent = '新密碼至少需要6位'; errEl.style.display = 'block'; return; }
+  if (newPw !== confirm) { errEl.textContent = '兩次輸入的新密碼不一致'; errEl.style.display = 'block'; return; }
   const btn = document.getElementById('pw-save-btn');
   btn.textContent = '儲存中...'; btn.disabled = true;
   try {
@@ -1129,125 +1055,6 @@ document.getElementById('pw-save-btn').addEventListener('click', async () => {
   }
   btn.textContent = '儲存新密碼'; btn.disabled = false;
 });
-
-// ── 新聞抓取 ──
-// 使用 allorigins 代理抓 Google News RSS（繁中科技/財經）
-const RSS_SOURCES = [
-  { url: 'https://news.google.com/rss/search?q=科技+AI&hl=zh-TW&gl=TW&ceid=TW:zh-Hant', tag: 'AI 科技', icon: '🤖' },
-  { url: 'https://news.google.com/rss/search?q=財經+股市&hl=zh-TW&gl=TW&ceid=TW:zh-Hant', tag: '財經', icon: '💹' },
-  { url: 'https://news.google.com/rss/search?q=人才+科技業&hl=zh-TW&gl=TW&ceid=TW:zh-Hant', tag: '人才', icon: '👔' },
-];
-
-async function fetchRSS(rssUrl) {
-  const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
-  const res = await fetch(proxy);
-  const json = await res.json();
-  const xml = new DOMParser().parseFromString(json.contents, 'text/xml');
-  const items = [...xml.querySelectorAll('item')].slice(0, 6);
-  return items.map(item => ({
-    title: item.querySelector('title')?.textContent || '',
-    link:  item.querySelector('link')?.textContent || '#',
-    pubDate: item.querySelector('pubDate')?.textContent || '',
-    thumbnail: '',
-  }));
-}
-
-function timeAgo(dateStr) {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const h = Math.floor(diff / 3600000);
-  const m = Math.floor(diff / 60000);
-  if (h > 24) return Math.floor(h/24) + ' 天前';
-  if (h > 0) return h + ' 小時前';
-  return m + ' 分鐘前';
-}
-
-function newsCardHTML(item, tag, icon) {
-  const title = item.title || '';
-  const link  = item.link || '#';
-  const time  = item.pubDate ? timeAgo(item.pubDate) : '';
-  const thumb = item.thumbnail || item.enclosure?.link || '';
-  return `
-    <a class="news-card" href="${link}" target="_blank" rel="noopener">
-      ${thumb
-        ? `<img class="news-card-img" src="${thumb}" onerror="this.parentNode.querySelector('.news-card-img-placeholder').style.display='flex';this.style.display='none'" loading="lazy">`
-        : ''}
-      <div class="news-card-img-placeholder" style="${thumb ? 'display:none' : ''}">${icon}</div>
-      <div class="news-card-body">
-        <div class="news-card-tag">${tag}</div>
-        <div class="news-card-title">${title}</div>
-        <div class="news-card-time">${time}</div>
-      </div>
-    </a>`;
-}
-
-function newsListHTML(item, tag, icon) {
-  const title = item.title || '';
-  const link  = item.link || '#';
-  const time  = item.pubDate ? timeAgo(item.pubDate) : '';
-  return `
-    <a class="news-list-item" href="${link}" target="_blank" rel="noopener">
-      <div class="news-list-icon">${icon}</div>
-      <div class="news-list-text">
-        <div class="tag">${tag}</div>
-        <div class="title">${title}</div>
-        <div class="time">${time}</div>
-      </div>
-    </a>`;
-}
-
-async function loadNews() {
-  // 首頁預覽（簽到頁）
-  const previewEl = document.getElementById('news-preview');
-  // 新聞頁大圖
-  const featuredEl = document.getElementById('news-featured');
-  const aiEl = document.getElementById('news-ai');
-  const industryEl = document.getElementById('news-industry');
-
-  try {
-    const [src0, src1, src2] = await Promise.allSettled(RSS_SOURCES.map(s => fetchRSS(s.url)));
-
-    const items0 = src0.status === 'fulfilled' ? src0.value : [];
-    const items1 = src1.status === 'fulfilled' ? src1.value : [];
-    const items2 = src2.status === 'fulfilled' ? src2.value : [];
-
-    // 簽到頁預覽：前3則清單
-    const previewItems = [...items0.slice(0,2), ...items2.slice(0,1)];
-    if (previewItems.length) {
-      previewEl.innerHTML = previewItems.map(it => newsListHTML(it, '科技', RSS_SOURCES[0].icon)).join('');
-    } else {
-      previewEl.innerHTML = '<div class="news-error">暫無資料，請稍後再試</div>';
-    }
-
-    // 大圖卡（新聞頁頂部）
-    const featured = [...items2.slice(0,2), ...items0.slice(0,2)];
-    if (featured.length) {
-      featuredEl.innerHTML = featured.map((it, i) => {
-        const src = i < 2 ? RSS_SOURCES[2] : RSS_SOURCES[0];
-        return newsCardHTML(it, src.tag, src.icon);
-      }).join('');
-    } else {
-      featuredEl.innerHTML = '<div class="news-error">暫無資料</div>';
-    }
-
-    // AI 與人才（數位時代）
-    if (items1.length) {
-      aiEl.innerHTML = items1.slice(0,4).map(it => newsListHTML(it, RSS_SOURCES[1].tag, RSS_SOURCES[1].icon)).join('');
-    } else {
-      aiEl.innerHTML = '<div class="news-error">暫無資料</div>';
-    }
-
-    // 產業即時（科技新聞）
-    if (items0.length) {
-      industryEl.innerHTML = items0.slice(2,6).map(it => newsListHTML(it, RSS_SOURCES[0].tag, RSS_SOURCES[0].icon)).join('');
-    } else {
-      industryEl.innerHTML = '<div class="news-error">暫無資料</div>';
-    }
-
-  } catch(e) {
-    featuredEl.innerHTML = '<div class="news-error">新聞載入失敗，請稍後再試</div>';
-    previewEl.innerHTML = '';
-  }
-}
 
 // ── 登入 ──
 document.getElementById('login-btn').addEventListener('click', doLogin);
@@ -1282,12 +1089,10 @@ async function doLogin() {
   }
 }
 
-// ── 自動登入（重整不跳出）──
 (async () => {
   const savedUID  = localStorage.getItem('omni_uid');
   const savedPass = localStorage.getItem('omni_pass');
   if (savedUID && savedPass) {
-    // 先隱藏登入畫面，避免重整時閃現
     document.getElementById('auth-screen').style.display = 'none';
     try {
       await signInAnonymously(auth);
@@ -1323,7 +1128,6 @@ function initMember() {
   });
   renderCalendar();
   renderTasks();
-  loadNews();
 }
 
 async function markYtDone(ytId, today) {
@@ -1339,6 +1143,7 @@ async function markYtDone(ytId, today) {
     showToast('標記失敗：' + e.message, true);
   }
 }
+
 async function renderCalendar() {
   try {
     const data = await fsGet(`members/${currentUID}`);
@@ -1411,12 +1216,9 @@ async function renderTasks() {
     const ytRejectReasons = (memberData && memberData.ytRejectReasons) || {};
     const bonus           = (memberData && memberData.bonus)           || 0;
 
-    // 獎金卡
     document.getElementById('global-bonus-bar').style.display = 'flex';
     document.getElementById('global-bonus-amount').textContent = bonus;
 
-
-    // YT 任務 — 每部影片各自上傳截圖
     const ytDocs = await fsList('yt_tasks');
     const ytEl = document.getElementById('yt-slots-list');
     ytEl.innerHTML = '';
@@ -1431,22 +1233,28 @@ async function renderTasks() {
     }
 
     ytDocs.forEach(({ id: taskId, data: t }, idx) => {
-      // 每2部自動分時段標籤顯示用
       const slotNum = Math.floor(idx / 2) + 1;
-      // reviewStatus 以 ytReviews 為主（後台審核寫入）
-      const reviewStatus = (ytReviews[taskId] && ytReviews[taskId][today]) || null;
-      // isDone = 後台已通過（ytReviews approved）
-      const isDone = reviewStatus === 'approved';
+
+      // ✅ FIX: 檢查所有日期的審核狀態，防止跨日重複上傳
+      const taskReviews = (ytReviews[taskId]) || {};
+      const allStatuses = Object.values(taskReviews);
+      // isDone = 任何一天已通過
+      const isDone = allStatuses.includes('approved');
+      // hasPending = 任何一天審核中
+      const hasPending = allStatuses.includes('pending');
+      // reviewStatus 用今天的（供顯示拒絕原因）
+      const reviewStatus = taskReviews[today] || (isDone ? 'approved' : hasPending ? 'pending' : (allStatuses.includes('rejected') ? 'rejected' : null));
 
       let badgeClass = 'todo', badgeText = '未上傳';
-      if (isDone)                          { badgeClass = 'approved'; badgeText = '✅ 已通過'; }
-      else if (reviewStatus === 'pending') { badgeClass = 'pending';  badgeText = '⏳ 審核中'; }
+      if (isDone)         { badgeClass = 'approved'; badgeText = '✅ 已通過'; }
+      else if (hasPending){ badgeClass = 'pending';  badgeText = '⏳ 審核中'; }
       else if (reviewStatus === 'rejected'){ badgeClass = 'rejected'; badgeText = '❌ 已拒絕'; }
 
       const section = document.createElement('div');
       section.className = 'slot-section';
 
-      const canUpload = !isDone && reviewStatus !== 'pending';
+      // ✅ FIX: 只要有 approved 或 pending（任何日期），就不允許再上傳
+      const canUpload = !isDone && !hasPending;
       const rejectReason = reviewStatus === 'rejected' ? ((ytRejectReasons[taskId] && ytRejectReasons[taskId][today]) || '') : '';
       const uploadHTML = canUpload ? `
         <div class="upload-area" id="upload-area-${taskId}">
@@ -1498,12 +1306,11 @@ async function renderTasks() {
   }
 }
 
-// ── 申請領款 ──────────────────────────────────────
+// ── 申請領款 ──
 document.getElementById('global-withdraw-btn').addEventListener('click', async () => {
   const panel = document.getElementById('withdraw-panel');
   const isOpen = panel.style.display !== 'none';
   if (!isOpen) {
-    // 檢查是否已有待審核申請
     try {
       const reqs = await fsList('withdrawal_requests');
       const hasPending = reqs.some(r => r.data.uid === currentUID && r.data.status === 'pending');
@@ -1571,11 +1378,31 @@ async function uploadScreenshot(taskId, taskName, fileInput, submitBtn, commentE
   if (comment.length < 10) { showToast('請輸入至少10字的觀看心得', true); return; }
   submitBtn.textContent = '壓縮中...'; submitBtn.disabled = true;
   try {
-    const today    = todayStr();
+    const today = todayStr();
+
+    // ✅ FIX: 送出前從 Firebase 再次確認無 pending/approved（三層防護）
+    const freshData = await fsGet(`members/${currentUID}`);
+    const freshYtReviews = (freshData && freshData.ytReviews) || {};
+    const freshStatuses = Object.values((freshYtReviews[taskId]) || {});
+    if (freshStatuses.includes('approved')) {
+      showToast('此任務已通過，無需重複上傳', true);
+      submitBtn.textContent = '📤 送出截圖與心得等候審核';
+      submitBtn.disabled = false;
+      renderTasks();
+      return;
+    }
+    if (freshStatuses.includes('pending')) {
+      showToast('此任務審核中，請等候結果', true);
+      submitBtn.textContent = '📤 送出截圖與心得等候審核';
+      submitBtn.disabled = false;
+      renderTasks();
+      return;
+    }
+
     const base64   = await compressImage(file);
+    // ✅ reviewId 包含日期，可讓管理員看到哪天提交；但前端已防止重複送出
     const reviewId = `${currentUID}_${taskId}_${today}`;
 
-    // 存截圖與心得到 pending_reviews
     await fsUpdate(`pending_reviews/${reviewId}`, {
       uid:         currentUID,
       taskId,
@@ -1587,7 +1414,6 @@ async function uploadScreenshot(taskId, taskName, fileInput, submitBtn, commentE
       createdAt:   new Date().toISOString(),
     });
 
-    // 更新會員 ytReviews 狀態
     const data      = await fsGet(`members/${currentUID}`);
     const ytReviews = (data && data.ytReviews) || {};
     if (!ytReviews[taskId]) ytReviews[taskId] = {};
